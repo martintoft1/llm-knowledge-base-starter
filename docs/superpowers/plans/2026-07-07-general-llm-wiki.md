@@ -16,6 +16,8 @@
 - The six universal page types are exactly `source`, `subject`, `note`, `synthesis`, `decision`, and `plan`.
 - Allowed statuses are exactly `fragment`, `draft`, `review`, `current`, `completed`, and `archived`.
 - Every knowledge template contains required `type`, `title`, `description`, `status`, `tags`, `created`, and `updated` fields; `subtype`, `resource`, and `raw` are optional.
+- Tags provide broad cross-cutting categorization; portable relative Markdown links express specific semantic relationships in explanatory context.
+- `raw/` and `wiki/` have no mandatory subdirectories. `wiki/` is flat by default, and semantic page type lives in frontmatter rather than directory placement.
 - All datetimes use ISO 8601 with an explicit timezone offset.
 - Templates use a required core, omit irrelevant optional sections, and contain removable HTML-comment guidance.
 - The agent proposes all writes and waits for explicit user approval before applying them.
@@ -80,7 +82,7 @@ Create `README.md` with these exact top-level sections:
 ## Version 1 boundaries
 ```
 
-The quick start must give two paths: copy `BOOTSTRAP.md` into a new agent context, or inspect and adapt the modular kit. Include the distinction `raw = preserved evidence` and `wiki = evolving understanding` and link to every canonical core file.
+The quick start must give two paths: copy `BOOTSTRAP.md` into a new agent context, or inspect and adapt the modular kit. Include the distinction `raw = preserved evidence` and `wiki = evolving understanding`, explain that tags categorize while links state relationships, and link to every canonical core file.
 
 - [ ] **Step 2: Verify the entry point fails before the core exists**
 
@@ -148,6 +150,8 @@ core/safety.md
 
 Use normative `must`, `must not`, `should`, and `may` language. Define the exact write cycle, six page types, six statuses, and common frontmatter fields once in the appropriate canonical file. Cross-link instead of duplicating long definitions in other core files.
 
+In `core/structure.md`, specify that `raw/` has human-chosen organization, `wiki/` is flat by default, neither root has mandatory subdirectories, binary raw files do not require frontmatter, and optional wiki subdirectories never determine page type. In `core/conventions.md`, distinguish broad tags from contextual relative Markdown links, require unique filenames in a flat wiki, prefer links in explanatory prose, and require inbound-link repair and verification during approved renames or moves.
+
 - [ ] **Step 4: Verify core coverage and terminology**
 
 Run:
@@ -205,7 +209,7 @@ Create `templates/config.md` with headings for purpose, scope, excluded scope, s
 Create `templates/index.md` with category headings for sources, subjects, notes, syntheses, decisions, and plans. Include this removable example under each category:
 
 ```markdown
-<!-- - [[relative/page|Display title]] — One-sentence description. (`status`, updated YYYY-MM-DD) -->
+<!-- - [Display title](relative-page.md) — One-sentence description. (`status`, updated YYYY-MM-DD) -->
 ```
 
 Create `templates/log.md` with this parseable entry form:
@@ -237,7 +241,7 @@ status: draft
 tags: []
 # resource: https://example.com/canonical-resource
 # raw:
-#   - ../../raw/path/to/evidence.ext
+#   - ../raw/path/to/evidence.ext
 created: 2026-07-07T12:00:00+02:00
 updated: 2026-07-07T12:00:00+02:00
 ---
@@ -306,7 +310,7 @@ plan.md
   ## Related decisions and evidence
 ```
 
-Every heading gets one HTML comment explaining what belongs there. Mark optional headings in their comments and tell the agent to remove unused optional headings before promoting a page to `review`, `current`, or `completed`.
+Every heading gets one HTML comment explaining what belongs there. Mark optional headings in their comments and tell the agent to remove unused optional headings before promoting a page to `review`, `current`, or `completed`. Prompts for `Connections`, `Relationships`, evidence, and related decisions must request contextual relative Markdown links and a short explanation of each relationship rather than bare filenames.
 
 - [ ] **Step 4: Verify template schema and structure**
 
@@ -367,7 +371,7 @@ Each profile begins with its domain purpose and these sections:
 ## Combination guidance
 ```
 
-State explicitly that profile content is optional, the six universal types do not change, local configuration wins, and combined profiles must merge suggestions without duplicating pages solely because two profiles name them differently.
+State explicitly that profile content is optional, the six universal types do not change, local configuration wins, and combined profiles must merge suggestions without duplicating pages solely because two profiles name them differently. Suggested tags are broad discovery facets; profile-specific relationships belong in relative Markdown links within the page body.
 
 - [ ] **Step 2: Add personal-profile suggestions**
 
@@ -532,7 +536,9 @@ Include a hard boundary that the agent must not overwrite existing files during 
 
 - [ ] **Step 2: Embed the generated-wiki contract**
 
-Include the generated directory tree, raw/wiki ownership model, six page types, subtype model, common frontmatter fields, status lifecycle, source-page bridge, body-template contract, universal write cycle, ingest/query/maintenance behavior, and error/safety behavior.
+Include the generated directory tree with only `raw/` and flat-by-default `wiki/` roots, raw/wiki ownership model, six page types, subtype model, common frontmatter fields, status lifecycle, source-page bridge, body-template contract, universal write cycle, ingest/query/maintenance behavior, and error/safety behavior. State that raw organization is human-chosen, optional wiki subdirectories do not determine type, and filenames must be unique in a flat wiki.
+
+Define tags as broad cross-cutting categorization and relative Markdown links as contextual semantic connections. Require every generated page template to provide `Connections` or a type-specific equivalent. Require approved renames and moves to update and verify inbound links.
 
 Use the exact field names and status values from `core/conventions.md`. Explain that `config.md` must contain the final tailored operating rules so the generated wiki remains self-contained.
 
@@ -569,6 +575,7 @@ Require the receiving agent to verify:
 - config.md contains the complete local contract;
 - every page template has valid common frontmatter and the correct type;
 - raw/ has not been modified beyond approved creation of empty directories;
+- generated wiki templates use contextual relative Markdown links and do not require type-based subdirectories;
 - index.md and log.md are initialized;
 - no placeholder setup answers remain in generated operational files.
 ```
@@ -688,9 +695,13 @@ Run:
 rg -n '\bfinishe[d]\b|\bki[n]d:' README.md BOOTSTRAP.md core profiles adapters templates tests || true
 for t in source subject note synthesis decision plan; do rg -q "type: $t" templates/page-types/$t.md || exit 1; done
 for s in fragment draft review current completed archived; do rg -q "$s" core/conventions.md BOOTSTRAP.md || exit 1; done
+rg -q 'tags.*cross-cutting' core/conventions.md BOOTSTRAP.md
+rg -q 'relative Markdown links' core/conventions.md BOOTSTRAP.md
+rg -n 'wiki/(sources|subjects|notes|syntheses|decisions|plans)/' README.md BOOTSTRAP.md core profiles adapters templates tests --pcre2 || true
+rg -n '\[\[[^]]+\]\]' README.md BOOTSTRAP.md core profiles adapters templates tests || true
 ```
 
-Expected: no drift matches and all loops exit 0.
+Expected: no drift, mandatory type-directory, or tool-specific wiki-link matches and all required-term checks exit 0.
 
 - [ ] **Step 8: Manually exercise the highest-risk scenario**
 

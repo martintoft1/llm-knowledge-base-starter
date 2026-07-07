@@ -91,26 +91,16 @@ Templates define the initial shape of configuration, index, log, and knowledge p
 ```text
 wiki-root/
 ├── raw/
-│   ├── documents/
-│   ├── media/
-│   ├── data/
-│   └── transcripts/
 ├── wiki/
-│   ├── sources/
-│   ├── subjects/
-│   ├── notes/
-│   ├── syntheses/
-│   ├── decisions/
-│   └── plans/
 ├── config.md
 ├── index.md
 ├── log.md
 └── <agent-adapter>
 ```
 
-`raw/` contains exact source material in its original useful format. The agent may inspect and cite raw files but must never edit, rename, move, or delete them.
+`raw/` contains exact source material in its original useful format. It has no required internal structure: the human may keep it flat or group files by provenance, source bundle, project, or another useful local convention. Format-based directories are not required, and binary raw files are not expected to carry frontmatter. The agent may inspect and cite raw files but must never edit, rename, move, or delete them.
 
-`wiki/` contains agent-generated Markdown and may change as understanding evolves. All changes require prior user approval.
+`wiki/` contains agent-generated Markdown and may change as understanding evolves. It is flat by default because the `type` field already provides semantic classification and a flat layout keeps links short. Optional subdirectories may be introduced with approval when scale or a local workflow justifies them, but directory placement must never redefine page type. Filenames must be unique within a flat `wiki/` directory. All changes require prior user approval.
 
 `config.md`, `index.md`, `log.md`, and the chosen adapter are operational files. They are not knowledge page types.
 
@@ -136,14 +126,14 @@ A source page links evolving interpretation to immutable evidence. It summarizes
 Example relationship:
 
 ```text
-raw/transcripts/customer-12.txt
+raw/customer-12-interview/transcript.txt
               ↓
-wiki/sources/customer-12-interview.md
+wiki/customer-12-interview.md
               ↓
-wiki/subjects/customer-12.md
-wiki/syntheses/onboarding-friction.md
-wiki/decisions/simplify-onboarding.md
-wiki/plans/onboarding-redesign.md
+wiki/customer-12.md
+wiki/onboarding-friction.md
+wiki/simplify-onboarding.md
+wiki/onboarding-redesign.md
 ```
 
 ## Common frontmatter
@@ -162,7 +152,7 @@ tags:
   - onboarding
 resource: https://example.com/canonical-resource
 raw:
-  - ../../raw/transcripts/customer-12.txt
+  - ../raw/customer-12-interview/transcript.txt
 created: 2026-07-07T14:30:00+02:00
 updated: 2026-07-07T16:10:00+02:00
 ---
@@ -175,7 +165,7 @@ updated: 2026-07-07T16:10:00+02:00
 - `title` is required for agent-created pages. Consumers may derive it from the filename when processing imported or legacy pages.
 - `description` is required and contains one plain-text sentence suitable for indexes, search snippets, and previews.
 - `status` is required and uses the controlled lifecycle below.
-- `tags` is required and is a YAML list of short strings. Use `tags: []` when there are none.
+- `tags` is required and is a YAML list of short strings used for broad, cross-cutting categorization and discovery. Use `tags: []` when there are none.
 - `resource` is optional and contains the canonical URI for an external or identifiable resource. Abstract subjects generally omit it.
 - `raw` is optional and is always a YAML list of relative paths to locally preserved evidence.
 - `created` is required, uses an ISO 8601 datetime with timezone, and never changes after creation.
@@ -203,6 +193,23 @@ The normal progression is `fragment → draft → review → current`. Pages may
 Templates may add fields that enable navigation, filtering, provenance, or maintenance. Examples include `author` and `published` for sources; `decided`, `supersedes`, and `superseded_by` for decisions; `start`, `due`, and `owner` for plans; and `question` and `confidence` for syntheses.
 
 Information used only for reading belongs in the body rather than frontmatter.
+
+## Tags and semantic links
+
+Tags and links are complementary. Tags group pages across broad dimensions such as `onboarding`, `customer-research`, or `methodology`. Links express a specific relationship between two documents.
+
+Wiki pages use portable relative Markdown links rather than tool-specific link syntax. Links should normally appear in explanatory prose so the relationship remains intelligible:
+
+```markdown
+This plan implements [Adopt self-serve onboarding](adopt-self-serve-onboarding.md)
+and is supported by [Onboarding friction](onboarding-friction.md).
+```
+
+Links to raw evidence also use paths relative to the wiki page, for example `[interview transcript](../raw/customer-12-interview/transcript.txt)`.
+
+Each page template includes `Connections` or a more specific equivalent such as `Relationships`, `Supporting evidence`, or `Related decisions and evidence`. Generic relationship lists are not duplicated in frontmatter by default. Type-specific link fields such as `supersedes` and `superseded_by` may be used when structured filtering or maintenance requires them.
+
+When a page is renamed or moved, the agent must propose updates to inbound links as part of the same approved operation and verify that the resulting relative links resolve.
 
 ## Body-template contract
 
@@ -317,6 +324,8 @@ Version 1 is complete when:
 - Raw files remain untouched.
 - Every knowledge page uses a universal type and valid common frontmatter.
 - Body templates implement the required-core, optional-module, removable-guidance model.
+- Tags support broad cross-cutting categorization, while relative Markdown links express specific contextual relationships.
+- The default flat wiki has unique filenames and all relative wiki and raw-evidence links resolve.
 - Evidence-based wiki content can be traced to raw evidence where applicable.
 - All writes follow `Inspect → Propose → Approve → Apply → Verify → Log`.
 - Codex, Claude Code, and generic adapters produce materially consistent behavior.
