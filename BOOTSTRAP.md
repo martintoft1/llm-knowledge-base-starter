@@ -40,7 +40,7 @@ From the first answer, determine as much as possible about:
 - Target directory and whether it sits inside an existing repository.
 - Material that belongs inside or outside scope.
 - Likely raw sources.
-- Useful domain vocabulary or classification tags.
+- Useful business functions, industries or domains, evidence forms, recurring topics, work modes, and other classification tags.
 - Sensitive-data constraints.
 - The agent instruction convention already used by the surrounding project.
 
@@ -58,7 +58,7 @@ Before writing, present:
 ### Purpose and scope
 ### Location and repository integration
 ### Directory structure
-### Local terminology and tags
+### Local terminology and proposed tag vocabulary
 ### Sensitive-data rules
 ### Files to create
 ### Existing files to modify
@@ -66,6 +66,8 @@ Before writing, present:
 ```
 
 End with a direct approval question. Approval applies only to the files and changes explicitly shown. If the user qualifies the approval, revise the proposal or apply only the accepted subset.
+
+As part of the proposal, suggest a small initial vocabulary—normally 8–15 tags—based on the user's description. Group suggestions by useful dimensions, give a short meaning for each, and omit dimensions that add no value. The user should be able to approve, remove, rename, or add tags before they are written to `config.md`.
 
 ## Ownership and write protocol
 
@@ -151,6 +153,18 @@ The usual progression is `fragment → draft → review → current`. New eviden
 ## Tags and links
 
 Tags provide broad, cross-cutting categorization and discovery. Use short, stable, lowercase kebab-case tags.
+
+Tags may describe several independent dimensions:
+
+- Business function, such as `operations`, `admin`, `technology`, `marketing`, `sales`, or `finance`.
+- Industry or domain, such as `circular-economy`, `climate`, `health`, or `agriculture`.
+- Evidence or document form, such as `customer-interview`, `research-paper`, `dataset`, or `meeting`.
+- Topic or theme, such as `pricing`, `onboarding`, `retention`, or `supply-chain`.
+- Work mode, such as `hypothesis`, `experiment`, or `analysis`.
+
+These examples are prompts, not a fixed taxonomy. Infer an initial set from the user's actual context. Record the approved vocabulary in `config.md`, grouped by useful dimensions, with one-line meanings.
+
+Reuse approved tags before creating new ones. Avoid synonyms and near-duplicates, do not use `type` or `status` values as redundant tags, and propose vocabulary additions before first use. Multiple tags are appropriate when a page genuinely crosses dimensions. Maintenance should flag unused tags, accidental synonyms, and tags that have become too broad.
 
 Relative Markdown links express specific relationships. Put them in explanatory prose so the connection remains understandable:
 
@@ -252,7 +266,7 @@ Periodically check for missing or invalid frontmatter, broken links, orphan page
 Create only what the approved proposal requires. The minimal default is:
 
 1. Empty `raw/` and `wiki/` directories.
-2. `config.md` containing the tailored purpose, scope, terminology, sensitive-data rules, ownership rules, universal schema, page-body guidance, and write protocol from this document.
+2. `config.md` containing the tailored purpose, scope, approved tag vocabulary with one-line meanings, sensitive-data rules, ownership rules, universal schema, page-body guidance, and write protocol from this document.
 3. `index.md` with a short usage note, `Start here`, `Topics`, and `Recent and active work` sections.
 4. `log.md` with an append-only entry format beginning `## [ISO datetime] operation | Title`.
 5. One agent instruction file using the convention recognized in the target environment, such as `AGENTS.md` or `CLAUDE.md`. Keep it thin: instruct the agent to read `config.md`, use `index.md` to orient, protect `raw/`, obtain approval before writes, verify changes, and append to `log.md`.
@@ -265,6 +279,7 @@ Verify that:
 
 - The approved directories and files exist and no unapproved file changed.
 - `config.md` is complete enough to operate the wiki without this bootstrap document.
+- `config.md` contains the approved initial tag vocabulary and its meanings.
 - The agent instruction file points to `config.md` and preserves the approval boundary.
 - `raw/` and `wiki/` have no unnecessary mandatory subdirectories.
 - The index and log are initialized.

@@ -136,6 +136,10 @@ The normal progression is `fragment → draft → review → current`. New evide
 
 Tags provide broad, cross-cutting categorization and discovery. Relative Markdown links express specific relationships between documents.
 
+During initialization, the agent infers relevant dimensions from the user's context and proposes a seed vocabulary of roughly 8–15 tags for approval. Useful dimensions may include business function, industry or domain, evidence or document form, topic or theme, and work mode. The approved tags and one-line meanings are stored in `config.md`.
+
+Tags use lowercase kebab-case. The agent reuses approved tags, avoids synonyms, does not redundantly copy type or status values into tags, and proposes additions before first use. Maintenance checks for unused tags, near-duplicates, and tags that have become too broad. The seed vocabulary is intentionally extensible rather than exhaustive.
+
 Links normally appear in explanatory prose:
 
 ```markdown

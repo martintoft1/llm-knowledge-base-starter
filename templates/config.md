@@ -14,7 +14,41 @@
 
 ## Local terminology
 
-<!-- List useful tags, naming conventions, and domain vocabulary. Do not replace the six universal page types. -->
+<!-- Record naming conventions and domain vocabulary. Do not replace the six universal page types. -->
+
+## Tag vocabulary
+
+<!-- Keep only dimensions useful to this wiki. Seed roughly 8–15 tags during initialization rather than trying to predict everything. -->
+
+### Business functions
+
+<!-- Example: `sales` — Customer acquisition and commercial relationships. -->
+
+### Industries and domains
+
+<!-- Example: `circular-economy` — Systems that retain material and product value. -->
+
+### Evidence and document forms
+
+<!-- Example: `customer-interview` — Evidence obtained through a customer conversation. -->
+
+### Topics and themes
+
+<!-- Example: `onboarding` — Initial adoption and setup experience. -->
+
+### Work modes
+
+<!-- Example: `experiment` — A bounded test intended to reduce uncertainty. -->
+
+Tag rules:
+
+- Use short lowercase kebab-case strings.
+- Reuse an approved tag before proposing a new one.
+- Avoid synonyms and near-duplicates.
+- Do not repeat `type` or `status` values as tags merely for classification.
+- Use several tags when a page genuinely crosses dimensions.
+- Propose and approve vocabulary additions before first use, then record them here with one-line meanings.
+- During maintenance, flag unused tags, accidental synonyms, and tags that have become too broad.
 
 ## Ownership
 
@@ -56,7 +90,7 @@ updated: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 
 Use a canonical URI for `resource`, or `null` when absent. Use relative paths from the wiki page in `raw`, or `[]` when no raw file applies. Never omit these keys and do not add a `subtype` field; use tags for narrower classifications.
 
-Tags provide broad categorization. Portable relative Markdown links explain specific relationships. Evidence-based statements should link to the relevant source page or raw file.
+Tags provide broad categorization across the approved dimensions above. Portable relative Markdown links explain specific relationships. Evidence-based statements should link to the relevant source page or raw file.
 
 ## Raw intake
 

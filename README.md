@@ -42,6 +42,36 @@ Local vocabulary belongs in tags such as `customer-interview`, `research-paper`,
 
 Tags provide broad, cross-cutting categorization. Relative Markdown links explain specific relationships in context.
 
+## Frontmatter
+
+Every knowledge page keeps the same nine keys, even when some values are empty:
+
+```yaml
+---
+type: source
+title: Display name
+description: One plain-text sentence suitable for indexes and previews.
+status: draft
+tags: []
+resource: null
+raw: []
+created: "YYYY-MM-DDTHH:MM:SS±HH:MM"
+updated: "YYYY-MM-DDTHH:MM:SS±HH:MM"
+---
+```
+
+Use `resource: null` when there is no canonical URI and `raw: []` when no preserved source file applies. Tags are short lowercase kebab-case strings. The initializer proposes a small vocabulary based on the wiki's context rather than inventing tags page by page.
+
+Tag suggestions may cover several dimensions:
+
+- Business function: `operations`, `admin`, `technology`, `marketing`, `sales`, `finance`
+- Industry or domain: `circular-economy`, `climate`, `health`, `agriculture`
+- Evidence or document form: `customer-interview`, `research-paper`, `dataset`, `meeting`
+- Topic or theme: `pricing`, `onboarding`, `retention`, `supply-chain`
+- Work mode: `hypothesis`, `experiment`, `analysis`
+
+These are examples, not a universal taxonomy. Each initialized wiki records its approved vocabulary and meanings in `config.md`.
+
 ## Operating model
 
 The human owns sources, scope, and approval. The agent performs the bookkeeping: summarizing, connecting, updating, checking contradictions, and maintaining navigation.

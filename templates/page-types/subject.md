@@ -10,7 +10,7 @@ created: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 updated: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 ---
 
-<!-- Replace example values when creating the page. Keep every frontmatter key. Use null and [] for empty resource and raw values. Remove irrelevant optional body sections. -->
+<!-- Replace example values when creating the page. Choose tags from the approved vocabulary in config.md. Keep every frontmatter key. Use null and [] for empty resource and raw values. Remove irrelevant optional body sections. -->
 
 # {{ title }}
 
