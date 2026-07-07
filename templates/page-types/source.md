@@ -1,18 +1,16 @@
 ---
 type: source
-# subtype: research-paper
 title: Display name
 description: One-sentence summary suitable for indexes and previews.
 status: draft
 tags: []
-# resource: https://example.com/canonical-resource
-# raw:
-#   - ../raw/path/to/evidence.ext
+resource: null
+raw: []
 created: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 updated: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 ---
 
-<!-- Replace example values when creating the page. Remove unused optional fields and irrelevant optional sections. -->
+<!-- Replace example values when creating the page. Keep every frontmatter key. Use null and [] for empty resource and raw values. Remove irrelevant optional body sections. -->
 
 # {{ title }}
 

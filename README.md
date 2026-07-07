@@ -38,7 +38,7 @@ Every wiki page uses one of six universal types:
 - `decision`: a choice and its rationale
 - `plan`: intended action and progress
 
-Local vocabulary belongs in optional subtypes such as `customer-interview`, `research-paper`, `strategy`, or `roadmap`.
+Local vocabulary belongs in tags such as `customer-interview`, `research-paper`, `strategy`, or `roadmap`. This keeps the schema small while allowing several useful classifications on one page.
 
 Tags provide broad, cross-cutting categorization. Relative Markdown links explain specific relationships in context.
 

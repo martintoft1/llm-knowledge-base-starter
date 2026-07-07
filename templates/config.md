@@ -14,7 +14,7 @@
 
 ## Local terminology
 
-<!-- List useful subtypes, tags, naming conventions, and domain vocabulary. Do not replace the six universal page types. -->
+<!-- List useful tags, naming conventions, and domain vocabulary. Do not replace the six universal page types. -->
 
 ## Ownership
 

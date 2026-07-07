@@ -44,7 +44,7 @@ Before writing, the agent proposes:
 - Purpose and scope.
 - Target location and interaction with an existing repository.
 - Directory and operational files.
-- Useful local subtypes or terminology.
+- Useful local tags or terminology.
 - Sensitive-data constraints.
 - Files it will create or modify.
 
@@ -82,7 +82,7 @@ Inspect → Propose → Approve → Apply → Verify → Log
 
 Every knowledge page uses one of six values in `type`:
 
-| Type | Purpose | Example subtypes |
+| Type | Purpose | Example tags |
 |---|---|---|
 | `source` | Describe and evaluate imported evidence | `book`, `research-paper`, `image`, `dataset`, `customer-interview` |
 | `subject` | Maintain knowledge about a topic or entity | `person`, `company`, `concept`, `event`, `project` |
@@ -91,7 +91,7 @@ Every knowledge page uses one of six values in `type`:
 | `decision` | Record a choice and its rationale | `product`, `strategy`, `research-direction` |
 | `plan` | Describe intended action and progress | `strategy`, `roadmap`, `experiment`, `project-plan` |
 
-Subtypes are optional and locally defined. New contexts customize subtypes rather than adding universal types.
+New contexts customize tags rather than adding universal types or a separate subtype field.
 
 ## Common frontmatter
 
@@ -100,7 +100,6 @@ Every knowledge page contains:
 ```yaml
 ---
 type: source
-subtype: customer-interview
 title: Customer 12 Interview
 description: Interview covering onboarding friction and purchasing criteria.
 status: review
@@ -116,13 +115,12 @@ updated: 2026-07-07T16:10:00+02:00
 ```
 
 - `type` is required and uses one of the six universal values.
-- `subtype` is optional and provides local specialization.
 - `title` is required for agent-created pages.
 - `description` is required and contains one plain-text sentence.
 - `status` is required.
 - `tags` is required and may be an empty YAML list.
-- `resource` is an optional canonical URI.
-- `raw` is an optional list of relative paths to preserved evidence.
+- `resource` is required and contains a canonical URI or `null`.
+- `raw` is required and contains a list of relative paths to preserved evidence or `[]`.
 - `created` and `updated` are required ISO 8601 datetimes with explicit timezone offsets.
 - `created` never changes. `updated` changes only after a meaningful content or metadata change.
 
@@ -189,7 +187,7 @@ Version 1 is validated by using the completed `BOOTSTRAP.md` to initialize one r
 
 > Create a knowledge base for my startup inside an existing software monorepo. It should hold customer interviews, product ideas, strategic analyses, decisions, and plans without mixing generated knowledge into the application code.
 
-The trial passes when the agent proposes a minimal placement, waits for approval, creates a self-contained wiki, uses the universal schema with startup-specific subtypes, preserves raw ownership, and does not depend on this starter repository.
+The trial passes when the agent proposes a minimal placement, waits for approval, creates a self-contained wiki, uses the universal schema with startup-specific tags, preserves raw ownership, and does not depend on this starter repository.
 
 ## Version 1 boundaries
 

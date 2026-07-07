@@ -40,7 +40,7 @@ From the first answer, determine as much as possible about:
 - Target directory and whether it sits inside an existing repository.
 - Material that belongs inside or outside scope.
 - Likely raw sources.
-- Useful domain vocabulary or subtypes.
+- Useful domain vocabulary or classification tags.
 - Sensitive-data constraints.
 - The agent instruction convention already used by the surrounding project.
 
@@ -58,7 +58,7 @@ Before writing, present:
 ### Purpose and scope
 ### Location and repository integration
 ### Directory structure
-### Local terminology and subtypes
+### Local terminology and tags
 ### Sensitive-data rules
 ### Files to create
 ### Existing files to modify
@@ -92,7 +92,7 @@ Renames, moves, merges, splits, archival, and deletion always require explicit a
 
 Every knowledge page under `wiki/` uses exactly one universal `type`:
 
-| Type | Use it for | Example subtypes |
+| Type | Use it for | Example tags |
 |---|---|---|
 | `source` | One imported piece of evidence | `book`, `research-paper`, `image`, `dataset`, `customer-interview` |
 | `subject` | An enduring topic or entity | `person`, `company`, `customer`, `concept`, `event`, `project` |
@@ -101,7 +101,7 @@ Every knowledge page under `wiki/` uses exactly one universal `type`:
 | `decision` | A choice and its rationale | `product`, `strategy`, `research-direction` |
 | `plan` | Intended action and progress | `strategy`, `roadmap`, `experiment`, `project-plan` |
 
-Adapt a new context through optional `subtype` values, tags, and body sections. Do not invent another universal type unless the six-type model has failed repeatedly in actual use and the user approves a schema change.
+Adapt a new context through tags and body sections. A tag such as `customer-interview`, `research-paper`, or `strategy` can provide a narrower classification without another schema field. Do not invent another universal type unless the six-type model has failed repeatedly in actual use and the user approves a schema change.
 
 Claims and quotes are content within pages, not separate page types. Attachments remain under `raw/`. Indexes, logs, tags, and statuses are not page types.
 
@@ -112,14 +112,12 @@ Every knowledge page contains:
 ```yaml
 ---
 type: source
-# subtype: customer-interview
 title: Display name
 description: One plain-text sentence suitable for indexes and previews.
 status: draft
 tags: []
-# resource: https://example.com/canonical-resource
-# raw:
-#   - ../raw/path/to/evidence.ext
+resource: null
+raw: []
 created: "2026-07-07T14:30:00+02:00"
 updated: "2026-07-07T14:30:00+02:00"
 ---
@@ -127,10 +125,10 @@ updated: "2026-07-07T14:30:00+02:00"
 
 Rules:
 
-- `type`, `title`, `description`, `status`, `tags`, `created`, and `updated` are required.
-- `subtype`, `resource`, and `raw` are optional and omitted when unused.
-- `resource` is a canonical URI for an identifiable external resource.
-- `raw` is always a YAML list of paths relative to the wiki page.
+- `type`, `title`, `description`, `status`, `tags`, `resource`, `raw`, `created`, and `updated` are all required keys.
+- `resource` is a canonical URI for an identifiable external resource, or `null` when absent.
+- `raw` is always a YAML list of paths relative to the wiki page, or `[]` when no raw file applies.
+- Keep every key in every knowledge page. Do not comment out or omit empty fields.
 - Timestamps use ISO 8601 with an explicit timezone offset.
 - `created` never changes. `updated` changes only for meaningful content or metadata changes, not formatting or link repair alone.
 - Filenames are lowercase kebab-case and unique within a flat `wiki/` directory.
@@ -259,7 +257,7 @@ Create only what the approved proposal requires. The minimal default is:
 4. `log.md` with an append-only entry format beginning `## [ISO datetime] operation | Title`.
 5. One agent instruction file using the convention recognized in the target environment, such as `AGENTS.md` or `CLAUDE.md`. Keep it thin: instruct the agent to read `config.md`, use `index.md` to orient, protect `raw/`, obtain approval before writes, verify changes, and append to `log.md`.
 
-Do not create empty knowledge pages merely to demonstrate the schema. Do not add domain-specific folders when frontmatter and the index already express the distinction. Add local subtypes and examples to `config.md` based on the user's actual context.
+Do not create empty knowledge pages merely to demonstrate the schema. Do not add domain-specific folders when frontmatter, tags, and the index already express the distinction. Add local tag vocabulary and examples to `config.md` based on the user's actual context.
 
 ## Verification after creation
 
@@ -270,7 +268,7 @@ Verify that:
 - The agent instruction file points to `config.md` and preserves the approval boundary.
 - `raw/` and `wiki/` have no unnecessary mandatory subdirectories.
 - The index and log are initialized.
-- Example frontmatter uses only the six universal types and allowed statuses.
+- Example frontmatter uses only the six universal types and allowed statuses, includes all nine required keys, and contains no `subtype` field.
 - Relative paths are correct for the chosen placement.
 - No unanswered setup prompts or placeholder decisions remain in operational files.
 

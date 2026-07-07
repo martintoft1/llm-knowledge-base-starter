@@ -64,7 +64,7 @@
 - [ ] Use the startup-in-monorepo request from the design specification as the trial input.
 - [ ] Simulate the minimal follow-up conversation and proposed generated structure.
 - [ ] Materialize the approved proposal under `/tmp/llm-wiki-startup-trial/` without copying starter-repository dependencies.
-- [ ] Verify the trial is self-contained, raw remains protected, wiki files are flat, startup terminology uses subtypes, links are relative, and operational files explain approval-gated maintenance.
+- [ ] Verify the trial is self-contained, raw remains protected, wiki files are flat, startup terminology uses tags, links are relative, every page template contains all nine required frontmatter keys, no `subtype` field exists, and operational files explain approval-gated maintenance.
 - [ ] Correct only issues revealed by the trial, then rerun the checks.
 - [ ] Remove the temporary trial after inspection.
 - [ ] Commit any refinements and report the finished initializer.
