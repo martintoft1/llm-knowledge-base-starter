@@ -38,6 +38,24 @@ Allowed types: `source`, `subject`, `note`, `synthesis`, `decision`, `plan`.
 
 Allowed statuses: `fragment`, `draft`, `review`, `current`, `completed`, `archived`.
 
+Every knowledge page keeps all nine frontmatter keys in this order:
+
+```yaml
+---
+type: source
+title: Display name
+description: One plain-text sentence suitable for indexes and previews.
+status: draft
+tags: []
+resource: null
+raw: []
+created: "YYYY-MM-DDTHH:MM:SS±HH:MM"
+updated: "YYYY-MM-DDTHH:MM:SS±HH:MM"
+---
+```
+
+Use a canonical URI for `resource`, or `null` when absent. Use relative paths from the wiki page in `raw`, or `[]` when no raw file applies. Never omit these keys and do not add a `subtype` field; use tags for narrower classifications.
+
 Tags provide broad categorization. Portable relative Markdown links explain specific relationships. Evidence-based statements should link to the relevant source page or raw file.
 
 ## Raw intake
