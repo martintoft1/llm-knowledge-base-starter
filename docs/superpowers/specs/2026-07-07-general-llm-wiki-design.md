@@ -91,7 +91,7 @@ Every knowledge page uses one of six values in `type`:
 | `decision` | Record a choice and its rationale | `product`, `strategy`, `research-direction` |
 | `plan` | Describe intended action and progress | `strategy`, `roadmap`, `experiment`, `project-plan` |
 
-New contexts customize tags rather than adding universal types or a separate subtype field.
+New contexts customize tags rather than adding universal page types.
 
 ## Common frontmatter
 

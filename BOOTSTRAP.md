@@ -283,7 +283,7 @@ Verify that:
 - The agent instruction file points to `config.md` and preserves the approval boundary.
 - `raw/` and `wiki/` have no unnecessary mandatory subdirectories.
 - The index and log are initialized.
-- Example frontmatter uses only the six universal types and allowed statuses, includes all nine required keys, and contains no `subtype` field.
+- Example frontmatter uses only the six universal types and allowed statuses and includes all nine required keys.
 - Relative paths are correct for the chosen placement.
 - No unanswered setup prompts or placeholder decisions remain in operational files.
 

@@ -72,6 +72,22 @@ Tag suggestions may cover several dimensions:
 
 These are examples, not a universal taxonomy. Each initialized wiki records its approved vocabulary and meanings in `config.md`.
 
+## Tags and links
+
+Tags and links do different jobs:
+
+- Tags place a page in broad, cross-cutting categories such as `climate`, `sales`, `customer-interview`, or `onboarding`.
+- Relative Markdown links connect a page to a specific source, subject, synthesis, decision, or plan and explain that relationship in context.
+
+For example:
+
+```markdown
+This plan implements [Adopt self-serve onboarding](adopt-self-serve-onboarding.md)
+and is supported by [Onboarding friction](onboarding-friction.md).
+```
+
+Links to raw evidence are also relative, for example `[interview transcript](../raw/customer-12/transcript.txt)`. The wiki uses standard Markdown links rather than tool-specific wiki-link syntax.
+
 ## Operating model
 
 The human owns sources, scope, and approval. The agent performs the bookkeeping: summarizing, connecting, updating, checking contradictions, and maintaining navigation.

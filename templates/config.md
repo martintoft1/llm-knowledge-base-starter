@@ -88,7 +88,7 @@ updated: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 ---
 ```
 
-Use a canonical URI for `resource`, or `null` when absent. Use relative paths from the wiki page in `raw`, or `[]` when no raw file applies. Never omit these keys and do not add a `subtype` field; use tags for narrower classifications.
+Use a canonical URI for `resource`, or `null` when absent. Use relative paths from the wiki page in `raw`, or `[]` when no raw file applies. Never omit these keys. Use tags for narrower classifications.
 
 Tags provide broad categorization across the approved dimensions above. Portable relative Markdown links explain specific relationships. Evidence-based statements should link to the relevant source page or raw file.
 
