@@ -19,6 +19,7 @@
 - Every write follows `Inspect → Propose → Approve → Apply → Verify → Log`.
 - The bootstrap asks only necessary questions, one at a time, and waits for approval before writing.
 - The generated wiki is self-contained.
+- Schema illustrations use explicit angle-bracket placeholders and state that allowed type and status values are not defaults.
 
 ### Task 1: Create the templates and README
 
@@ -34,7 +35,7 @@
 - Create: `templates/page-types/decision.md`
 - Create: `templates/page-types/plan.md`
 
-- [ ] Write a concise README covering the pattern, quick start, generated structure, eight-key frontmatter, tag initialization, six types, approval model, and version 1 boundaries.
+- [ ] Write a concise README covering page structure, quick start, generated structure, placeholder-only eight-key frontmatter, field definitions, tag initialization, approval model, and version 1 boundaries.
 - [ ] Write a self-contained config template containing purpose, scope, tag vocabulary, sensitive-data constraints, ownership rules, schema, and the write cycle.
 - [ ] Write index and append-only log templates using portable relative Markdown links.
 - [ ] Write six page templates with the agreed frontmatter, structured-but-elastic headings, removable guidance, and an optional final citation section using the strict numeric format.
@@ -48,7 +49,7 @@
 
 - [ ] Start with the broad question: “What kind of knowledge base do you want to create, where should it live, and what will you use it for?”
 - [ ] Instruct the receiving agent to ask only necessary follow-ups, one at a time, while inferring reasonable defaults.
-- [ ] Embed the raw/wiki ownership model, universal types, frontmatter, statuses, context-driven tag initialization, links, citations, templates, operations, and safety rules.
+- [ ] Embed the raw/wiki ownership model, page structure, placeholder-only frontmatter, field definitions, context-driven tag initialization, links, citations, templates, operations, and safety rules.
 - [ ] Require a file-level proposal and explicit approval before creation or overwrite.
 - [ ] Require post-write verification and a concise creation report.
 - [ ] Verify the bootstrap contains the complete contract and does not rely on other repository files.

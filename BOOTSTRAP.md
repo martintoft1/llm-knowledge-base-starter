@@ -90,11 +90,36 @@ For each operation:
 
 Renames, moves, merges, splits, archival, and deletion always require explicit approval. Update and verify inbound links in the same operation. Prefer archival or a small redirect-style page over destructive deletion.
 
-## Universal page model
+## Knowledge pages
 
-Every knowledge page under `wiki/` uses exactly one universal `type`:
+Every file under `wiki/` has two parts: YAML frontmatter containing consistent machine-readable metadata, and a Markdown body containing the actual knowledge, contextual links, and—when needed—a final citations section. Frontmatter describes the page; the body explains the subject.
 
-| Type | Use it for | Example tags |
+Claims and quotes belong in the body. Attachments remain under `raw/`. Indexes, logs, tags, and statuses are not page types.
+
+## Frontmatter
+
+Every knowledge page contains the same eight keys. The block below is a schema illustration, not copy-ready YAML. Every value inside angle brackets is a placeholder that must be replaced from the actual page context. The listed choices are allowed values, not defaults or recommendations.
+
+```yaml
+---
+type: <source | subject | note | synthesis | decision | plan>
+title: <human-readable display name>
+description: <one-sentence summary>
+status: <fragment | draft | review | current | completed | archived>
+tags: [<zero or more approved tags>]
+resource: <absolute URL | relative path | null>
+created: <ISO 8601 datetime with timezone>
+updated: <ISO 8601 datetime with timezone>
+---
+```
+
+Keep every key in every knowledge page. Do not comment out or omit empty fields. Filenames are lowercase kebab-case and unique within a flat `wiki/` directory.
+
+### `type`
+
+Choose the value that matches the page's purpose. No type is preferred by default.
+
+| Value | Use it for | Example tags |
 |---|---|---|
 | `source` | One imported piece of evidence | `book`, `research-paper`, `image`, `dataset`, `customer-interview` |
 | `subject` | An enduring topic or entity | `person`, `company`, `customer`, `concept`, `event`, `project` |
@@ -103,43 +128,15 @@ Every knowledge page under `wiki/` uses exactly one universal `type`:
 | `decision` | A choice and its rationale | `product`, `strategy`, `research-direction` |
 | `plan` | Intended action and progress | `strategy`, `roadmap`, `experiment`, `project-plan` |
 
-Adapt a new context through tags and body sections. A tag such as `customer-interview`, `research-paper`, or `strategy` can provide a narrower classification without another schema field. Do not invent another universal type unless the six-type model has failed repeatedly in actual use and the user approves a schema change.
+Adapt a new context through tags and body sections. Do not invent another universal type unless the six-value model has failed repeatedly in actual use and the user approves a schema change.
 
-Claims and quotes are content within pages, not separate page types. Attachments remain under `raw/`. Indexes, logs, tags, and statuses are not page types.
+### `title` and `description`
 
-## Common frontmatter
+`title` is the human-readable display name. `description` is one plain-text sentence suitable for indexes, previews, and search results.
 
-Every knowledge page contains:
+### `status`
 
-```yaml
----
-type: source
-title: Display name
-description: One plain-text sentence suitable for indexes and previews.
-status: draft
-tags: []
-resource: null
-created: "2026-07-07T14:30:00+02:00"
-updated: "2026-07-07T14:30:00+02:00"
----
-```
-
-Rules:
-
-- `type`, `title`, `description`, `status`, `tags`, `resource`, `created`, and `updated` are all required keys.
-- `resource` identifies the primary underlying asset described by the page. It may be an absolute URL or a relative path such as `../raw/customer-orders.csv`.
-- Use `resource: null` when the page describes an abstract idea or knowledge product—such as a synthesis, business plan, strategy, or decision—rather than one specific underlying asset.
-- Use claim-level citations for additional supporting files and sources.
-- Keep every key in every knowledge page. Do not comment out or omit empty fields.
-- Timestamps use ISO 8601 with an explicit timezone offset.
-- `created` never changes. `updated` changes only for meaningful content or metadata changes, not formatting or link repair alone.
-- Filenames are lowercase kebab-case and unique within a flat `wiki/` directory.
-
-Allowed statuses:
-
-```text
-fragment | draft | review | current | completed | archived
-```
+Choose the value from the page's actual lifecycle state. No status is a universal default.
 
 - `fragment`: captured but not sufficiently developed.
 - `draft`: coherent but incomplete.
@@ -148,11 +145,11 @@ fragment | draft | review | current | completed | archived
 - `completed`: a fixed record or plan whose intended process has concluded.
 - `archived`: retained but no longer active or authoritative.
 
-The usual progression is `fragment → draft → review → current`. New evidence may return a current page to draft or review.
+The usual progression is `fragment → draft → review → current`, but it is not mandatory. New evidence may return a current page to draft or review.
 
-## Tags and links
+### `tags`
 
-Tags provide broad, cross-cutting categorization and discovery. Use short, stable, lowercase kebab-case tags.
+Tags provide broad, cross-cutting categorization and discovery. Use short, stable, lowercase kebab-case strings.
 
 Tags may describe several independent dimensions:
 
@@ -165,6 +162,16 @@ Tags may describe several independent dimensions:
 These examples are prompts, not a fixed taxonomy. Infer an initial set from the user's actual context. Record the approved vocabulary in `config.md`, grouped by useful dimensions, with one-line meanings.
 
 Reuse approved tags before creating new ones. Avoid synonyms and near-duplicates, do not use `type` or `status` values as redundant tags, and propose vocabulary additions before first use. Multiple tags are appropriate when a page genuinely crosses dimensions. Maintenance should flag unused tags, accidental synonyms, and tags that have become too broad.
+
+### `resource`
+
+`resource` identifies the primary underlying asset described by the page. It may be an absolute URL or a relative path such as `../raw/customer-orders.csv`. Use `null` when the page describes an abstract idea or knowledge product—such as a synthesis, business plan, strategy, or decision—rather than one specific underlying asset. Use claim-level citations for additional supporting files and sources.
+
+### `created` and `updated`
+
+Both use ISO 8601 datetimes with explicit timezone offsets. `created` never changes. Update `updated` only after a meaningful content or metadata change, not for formatting or link repair alone.
+
+## Links
 
 Relative Markdown links express specific relationships. Put them in explanatory prose so the connection remains understandable:
 
@@ -198,7 +205,7 @@ Follow these rules:
 - Keep `## Citations` as the final section and omit it when no externally sourced claims appear.
 - Never invent a source or missing citation details; mark unsupported claims explicitly.
 
-`resource` provides page-level identity for the primary underlying asset. The citation section provides claim-level provenance and may reference additional raw files. Links between wiki pages still serve a separate purpose: explaining semantic relationships.
+The citation section provides claim-level provenance and may reference raw files. Links between wiki pages still serve a separate purpose: explaining semantic relationships.
 
 ## Page bodies
 
@@ -212,7 +219,7 @@ Use these structures as helpful defaults, not bureaucratic forms. Include a smal
 - Limitations
 - Connections
 
-A source page is the bridge from immutable evidence to evolving interpretation. It does not replace the original.
+A source page is the bridge from preserved evidence to evolving interpretation. It does not replace the original.
 
 ### Subject
 

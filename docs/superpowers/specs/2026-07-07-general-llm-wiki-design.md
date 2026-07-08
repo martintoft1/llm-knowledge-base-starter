@@ -78,48 +78,44 @@ Every write follows:
 Inspect → Propose → Approve → Apply → Verify → Log
 ```
 
-## Universal page types
+## Knowledge pages
 
-Every knowledge page uses one of six values in `type`:
+Every knowledge page contains YAML frontmatter followed by a Markdown body. Frontmatter provides consistent metadata; the body contains knowledge, contextual links, and an optional final citations section.
 
-| Type | Purpose | Example tags |
-|---|---|---|
-| `source` | Describe and evaluate imported evidence | `book`, `research-paper`, `image`, `dataset`, `customer-interview` |
-| `subject` | Maintain knowledge about a topic or entity | `person`, `company`, `concept`, `event`, `project` |
-| `note` | Capture provisional authored thinking | `idea`, `hypothesis`, `question`, `observation` |
-| `synthesis` | Combine evidence into a reasoned conclusion | `literature-review`, `comparison`, `market-analysis` |
-| `decision` | Record a choice and its rationale | `product`, `strategy`, `research-direction` |
-| `plan` | Describe intended action and progress | `strategy`, `roadmap`, `experiment`, `project-plan` |
+## Frontmatter
 
-New contexts customize tags rather than adding universal page types.
-
-## Common frontmatter
-
-Every knowledge page contains:
+Every knowledge page contains the same eight keys. The block below is a schema illustration rather than copy-ready YAML; every angle-bracket value is a placeholder, and listed choices are allowed values rather than defaults.
 
 ```yaml
 ---
-type: source
-title: Customer 12 Interview
-description: Interview covering onboarding friction and purchasing criteria.
-status: review
-tags:
-  - customer-research
-  - onboarding
-resource: https://example.com/canonical-resource
-created: 2026-07-07T14:30:00+02:00
-updated: 2026-07-07T16:10:00+02:00
+type: <source | subject | note | synthesis | decision | plan>
+title: <human-readable display name>
+description: <one-sentence summary>
+status: <fragment | draft | review | current | completed | archived>
+tags: [<zero or more approved tags>]
+resource: <absolute URL | relative path | null>
+created: <ISO 8601 datetime with timezone>
+updated: <ISO 8601 datetime with timezone>
 ---
 ```
 
-- `type` is required and uses one of the six universal values.
+- `type` is required and uses one of six values: `source`, `subject`, `note`, `synthesis`, `decision`, or `plan`. Choose from page purpose; no value is preferred by default.
 - `title` is required for agent-created pages.
 - `description` is required and contains one plain-text sentence.
-- `status` is required.
+- `status` is required and reflects actual lifecycle state; no value is a universal default.
 - `tags` is required and may be an empty YAML list.
 - `resource` is required and identifies the primary underlying asset using an absolute URL or relative path. It is `null` for abstract ideas and knowledge products that do not describe one specific asset.
 - `created` and `updated` are required ISO 8601 datetimes with explicit timezone offsets.
 - `created` never changes. `updated` changes only after a meaningful content or metadata change.
+
+The six type values mean:
+
+- `source`: describe and evaluate imported evidence.
+- `subject`: maintain knowledge about a topic or entity.
+- `note`: capture provisional authored thinking.
+- `synthesis`: combine evidence into a reasoned conclusion.
+- `decision`: record a choice and its rationale.
+- `plan`: describe intended action and progress.
 
 Allowed statuses are:
 

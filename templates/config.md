@@ -66,28 +66,39 @@ Inspect → Propose → Approve → Apply → Verify → Log
 
 Before writing, describe the proposed file-level changes and wait for explicit approval. Apply only what was approved. Renames, moves, merges, archival, and deletion always require approval and link repair.
 
-## Page model
+## Knowledge pages
 
-Allowed types: `source`, `subject`, `note`, `synthesis`, `decision`, `plan`.
+Every file under `wiki/` has YAML frontmatter followed by a Markdown body. Frontmatter provides consistent metadata. The body contains the knowledge, contextual links, and an optional final citations section.
 
-Allowed statuses: `fragment`, `draft`, `review`, `current`, `completed`, `archived`.
+## Frontmatter
 
-Every knowledge page keeps all eight frontmatter keys in this order:
+Every knowledge page keeps all eight frontmatter keys in this order. The block below is a schema illustration, not copy-ready YAML. Angle-bracket values are placeholders to replace from the actual page context; listed choices are allowed values, not defaults.
 
 ```yaml
 ---
-type: source
-title: Display name
-description: One plain-text sentence suitable for indexes and previews.
-status: draft
-tags: []
-resource: null
-created: "YYYY-MM-DDTHH:MM:SS±HH:MM"
-updated: "YYYY-MM-DDTHH:MM:SS±HH:MM"
+type: <source | subject | note | synthesis | decision | plan>
+title: <human-readable display name>
+description: <one-sentence summary>
+status: <fragment | draft | review | current | completed | archived>
+tags: [<zero or more approved tags>]
+resource: <absolute URL | relative path | null>
+created: <ISO 8601 datetime with timezone>
+updated: <ISO 8601 datetime with timezone>
 ---
 ```
 
-`resource` identifies the primary underlying asset described by the page. Use an absolute URL or a relative path such as `../raw/customer-orders.csv`. Use `null` for abstract ideas and knowledge products—such as a synthesis, business plan, strategy, or decision—that do not describe one specific asset. Never omit the key. Use citations for additional supporting files and tags for narrower classifications.
+### Field rules
+
+- `type`: choose `source`, `subject`, `note`, `synthesis`, `decision`, or `plan` from the page's purpose. No value is preferred by default.
+- `title`: use the human-readable display name.
+- `description`: use one plain-text sentence suitable for indexes, previews, and search results.
+- `status`: choose `fragment`, `draft`, `review`, `current`, `completed`, or `archived` from the page's actual lifecycle state. No value is a universal default.
+- `tags`: choose from the approved vocabulary above; propose additions before first use.
+- `resource`: identify the primary underlying asset with an absolute URL or relative path such as `../raw/customer-orders.csv`. Use `null` for abstract ideas and knowledge products that do not describe one specific asset. Use citations for additional supporting files.
+- `created`: use an ISO 8601 datetime with an explicit timezone offset and never change it.
+- `updated`: use an ISO 8601 datetime with an explicit timezone offset and change it only after a meaningful content or metadata change.
+
+Never omit a key.
 
 Tags provide broad categorization across the approved dimensions above. Portable relative Markdown links explain specific relationships. Evidence-based statements should link to the relevant source page or raw file.
 
@@ -104,7 +115,7 @@ Place the citation list under `## Citations` as the final section:
 [2] [Internal source](../raw/path/to/source.pdf)
 ```
 
-Citation targets may be absolute URLs or relative paths. Prefer the closest preserved evidence. `resource` provides page-level identity for the primary underlying asset; citations provide claim-level provenance and can reference additional raw files. Omit the section when no externally sourced claims appear. Never invent missing citation details; mark unsupported claims explicitly.
+Citation targets may be absolute URLs or relative paths. Prefer the closest preserved evidence. Citations provide claim-level provenance and can reference raw files. Omit the section when no externally sourced claims appear. Never invent missing citation details; mark unsupported claims explicitly.
 
 ## Raw intake
 

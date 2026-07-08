@@ -27,9 +27,37 @@ knowledge/
 
 Neither `raw/` nor `wiki/` requires subdirectories. Humans may organize raw files however provenance is clearest. Wiki files are flat by default; their frontmatter—not their folder—states what they are.
 
-## Knowledge model
+## Knowledge pages
 
-Every wiki page uses one of six universal types:
+Every file under `wiki/` has two parts:
+
+1. YAML frontmatter containing consistent machine-readable metadata.
+2. A Markdown body containing the actual knowledge, contextual links, and—when needed—a final citations section.
+
+The frontmatter describes the page. The body explains the subject. Links express relationships, while citations establish claim-level provenance.
+
+## Frontmatter
+
+Every knowledge page keeps the same eight keys, even when `resource` is empty:
+
+The block below is a schema illustration, not copy-ready YAML. Every value inside angle brackets is a placeholder that the agent must replace from the actual page context. The listed choices are allowed values, not defaults or recommendations.
+
+```yaml
+---
+type: <source | subject | note | synthesis | decision | plan>
+title: <human-readable display name>
+description: <one-sentence summary>
+status: <fragment | draft | review | current | completed | archived>
+tags: [<zero or more approved tags>]
+resource: <absolute URL | relative path | null>
+created: <ISO 8601 datetime with timezone>
+updated: <ISO 8601 datetime with timezone>
+---
+```
+
+### `type`
+
+Choose the type that matches the page's purpose:
 
 - `source`: one imported piece of evidence
 - `subject`: an enduring topic or entity
@@ -38,28 +66,24 @@ Every wiki page uses one of six universal types:
 - `decision`: a choice and its rationale
 - `plan`: intended action and progress
 
-Local vocabulary belongs in tags such as `customer-interview`, `research-paper`, `strategy`, or `roadmap`. This keeps the schema small while allowing several useful classifications on one page.
+No type is preferred by default. Local vocabulary belongs in tags rather than additional types.
 
-Tags provide broad, cross-cutting categorization. Relative Markdown links explain specific relationships in context.
+### `title` and `description`
 
-## Frontmatter
+`title` is the human-readable display name. `description` is one plain-text sentence suitable for indexes, previews, and search results.
 
-Every knowledge page keeps the same eight keys, even when `resource` is empty:
+### `status`
 
-```yaml
----
-type: source
-title: Display name
-description: One plain-text sentence suitable for indexes and previews.
-status: draft
-tags: []
-resource: null
-created: "YYYY-MM-DDTHH:MM:SS±HH:MM"
-updated: "YYYY-MM-DDTHH:MM:SS±HH:MM"
----
-```
+- `fragment`: captured but not sufficiently developed
+- `draft`: coherent but incomplete
+- `review`: awaiting human approval
+- `current`: approved and presently authoritative
+- `completed`: a fixed record or plan whose intended process has concluded
+- `archived`: retained but no longer active or authoritative
 
-`resource` identifies the primary underlying asset described by the page. It may be an absolute URL or a relative path such as `../raw/customer-orders.csv`. Use `resource: null` for abstract ideas and knowledge products—such as a synthesis, business plan, strategy, or decision—that do not describe one specific asset. Additional supporting material belongs in claim-level citations.
+No status is a universal default. Choose it from the page's actual lifecycle state.
+
+### `tags`
 
 Tags are short lowercase kebab-case strings. The initializer proposes a small vocabulary based on the wiki's context rather than inventing tags page by page.
 
@@ -73,12 +97,17 @@ Tag suggestions may cover several dimensions:
 
 These are examples, not a universal taxonomy. Each initialized wiki records its approved vocabulary and meanings in `config.md`.
 
-## Tags and links
+### `resource`
 
-Tags and links do different jobs:
+`resource` identifies the primary underlying asset described by the page. It may be an absolute URL or a relative path such as `../raw/customer-orders.csv`. Use `null` for abstract ideas and knowledge products—such as a synthesis, business plan, strategy, or decision—that do not describe one specific asset. Additional supporting material belongs in claim-level citations.
 
-- Tags place a page in broad, cross-cutting categories such as `climate`, `sales`, `customer-interview`, or `onboarding`.
-- Relative Markdown links connect a page to a specific source, subject, synthesis, decision, or plan and explain that relationship in context.
+### `created` and `updated`
+
+Both use ISO 8601 datetimes with explicit timezone offsets. `created` never changes. Update `updated` only after a meaningful content or metadata change, not for formatting or link repair alone.
+
+## Links
+
+Relative Markdown links connect a page to a specific source, subject, synthesis, decision, or plan and explain that relationship in context.
 
 For example:
 
@@ -104,7 +133,7 @@ The market grew by 18% during 2025 [1].
 
 Number sources by first appearance, reuse the same number when citing a source again, and use `[1, 2]` when several sources support one claim. Add a locator when useful, such as `[2, p. 14]`, `[3, 01:12:30]`, or `[4, rows 20–35]`. Citation targets may be absolute URLs or relative paths.
 
-`resource` provides page-level identity for the primary underlying asset. Citations provide claim-level provenance and can reference additional raw files. Omit the citations section when no externally sourced claims appear, and never invent missing citation details.
+Citations provide claim-level provenance and can reference raw files. Omit the citations section when no externally sourced claims appear, and never invent missing citation details.
 
 ## Operating model
 
