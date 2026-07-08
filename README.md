@@ -88,6 +88,23 @@ and is supported by [Onboarding friction](onboarding-friction.md).
 
 Links to raw evidence are also relative, for example `[interview transcript](../raw/customer-12/transcript.txt)`. The wiki uses standard Markdown links rather than tool-specific wiki-link syntax.
 
+## Citations
+
+When a page makes claims sourced from external material, place numeric markers directly after those claims and list the sources under `## Citations` at the bottom of the page:
+
+```markdown
+The market grew by 18% during 2025 [1].
+
+## Citations
+
+[1] [Market report](https://example.com/market-report)
+[2] [Internal data-quality runbook](../raw/data-quality-runbook.pdf)
+```
+
+Number sources by first appearance, reuse the same number when citing a source again, and use `[1, 2]` when several sources support one claim. Add a locator when useful, such as `[2, p. 14]`, `[3, 01:12:30]`, or `[4, rows 20–35]`. Citation targets may be absolute URLs or relative paths.
+
+Frontmatter fields such as `resource` and `raw` provide page-level provenance. Citations provide claim-level provenance. Omit the citations section when no externally sourced claims appear, and never invent missing citation details.
+
 ## Operating model
 
 The human owns sources, scope, and approval. The agent performs the bookkeeping: summarizing, connecting, updating, checking contradictions, and maintaining navigation.

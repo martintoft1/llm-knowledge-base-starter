@@ -151,9 +151,15 @@ Links to evidence are also relative, such as `[interview transcript](../raw/cust
 
 Renames and moves require approval, inbound-link updates, and link verification.
 
+## Citations
+
+Externally sourced claims use numeric markers in the body and a final `## Citations` section. Sources are numbered by first appearance and numbers are reused. Multiple supporting sources use a marker such as `[1, 2]`; precise locators may be included as `[2, p. 14]`, `[3, 01:12:30]`, or `[4, rows 20–35]`.
+
+Each entry uses `[n] [Title](target)`, where the target is an absolute URL or relative path. Prefer the closest preserved evidence. `resource` and `raw` express page-level provenance, citations express claim-level provenance, and ordinary relative links express semantic relationships. Pages without externally sourced claims omit the section. Missing citation details must never be invented.
+
 ## Body templates
 
-Templates are structured but elastic. They contain useful default headings and removable HTML-comment guidance. Optional empty sections are removed before a page reaches `review`, `current`, or `completed`.
+Templates are structured but elastic. They contain useful default headings and removable HTML-comment guidance. Optional empty sections are removed before a page reaches `review`, `current`, or `completed`. When present, `## Citations` is always the final section.
 
 - `source`: summary, key claims or observations, evidence, limitations, connections.
 - `subject`: overview, current understanding, attributes, relationships, evidence, open questions.

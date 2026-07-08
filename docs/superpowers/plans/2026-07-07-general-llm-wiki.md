@@ -14,6 +14,7 @@
 - Wiki pages use six universal types and six controlled statuses.
 - Tags categorize broadly; relative Markdown links explain specific relationships.
 - Initialization proposes roughly 8–15 context-relevant tags across useful dimensions and records the approved vocabulary with meanings in `config.md`.
+- Externally sourced claims use numeric markers and a final `## Citations` section with absolute URLs or relative paths.
 - `raw/` and `wiki/` have no mandatory subdirectories; `wiki/` is flat by default.
 - Every write follows `Inspect → Propose → Approve → Apply → Verify → Log`.
 - The bootstrap asks only necessary questions, one at a time, and waits for approval before writing.
@@ -36,7 +37,7 @@
 - [ ] Write a concise README covering the pattern, quick start, generated structure, nine-key frontmatter, tag initialization, six types, approval model, and version 1 boundaries.
 - [ ] Write a self-contained config template containing purpose, scope, tag vocabulary, sensitive-data constraints, ownership rules, schema, and the write cycle.
 - [ ] Write index and append-only log templates using portable relative Markdown links.
-- [ ] Write six page templates with the agreed frontmatter, structured-but-elastic headings, and removable guidance.
+- [ ] Write six page templates with the agreed frontmatter, structured-but-elastic headings, removable guidance, and an optional final citation section using the strict numeric format.
 - [ ] Verify every expected file exists, each page template has the correct `type`, and no tool-specific wiki links or stale `kind` fields appear.
 - [ ] Commit the template set.
 
@@ -47,7 +48,7 @@
 
 - [ ] Start with the broad question: “What kind of knowledge base do you want to create, where should it live, and what will you use it for?”
 - [ ] Instruct the receiving agent to ask only necessary follow-ups, one at a time, while inferring reasonable defaults.
-- [ ] Embed the raw/wiki ownership model, universal types, frontmatter, statuses, context-driven tag initialization, links, templates, operations, and safety rules.
+- [ ] Embed the raw/wiki ownership model, universal types, frontmatter, statuses, context-driven tag initialization, links, citations, templates, operations, and safety rules.
 - [ ] Require a file-level proposal and explicit approval before creation or overwrite.
 - [ ] Require post-write verification and a concise creation report.
 - [ ] Verify the bootstrap contains the complete contract and does not rely on other repository files.

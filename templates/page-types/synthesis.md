@@ -41,3 +41,7 @@ updated: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 ## Knowledge gaps
 
 <!-- Identify information that could materially change the conclusion. -->
+
+## Citations
+
+<!-- Include this final section only when the body makes externally sourced claims. Cite claims with [1], [1, 2], or a locator such as [2, p. 14]. Number sources by first appearance and reuse numbers. Format each entry exactly as: [1] [Source title](absolute-or-relative-target) -->

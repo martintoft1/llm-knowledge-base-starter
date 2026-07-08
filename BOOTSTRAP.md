@@ -175,9 +175,34 @@ and is supported by [Onboarding friction](onboarding-friction.md).
 
 Link raw evidence relatively, for example `[interview transcript](../raw/customer-12/transcript.txt)`. Use portable Markdown links rather than tool-specific wiki-link syntax. Generic relationship lists do not belong in frontmatter by default; add structured relationship fields only when filtering or maintenance genuinely needs them.
 
+## Citations
+
+When a page makes claims sourced from external material, add numeric markers immediately after those claims and list the sources under `## Citations` as the final section:
+
+```markdown
+The market grew by 18% during 2025 [1].
+
+## Citations
+
+[1] [Market report](https://example.com/market-report)
+[2] [Internal data-quality runbook](../raw/data-quality-runbook.pdf)
+```
+
+Follow these rules:
+
+- Number sources by first appearance and reuse the same number when citing a source again.
+- Use `[1, 2]` when several sources support one claim.
+- Add precise locators when useful: `[2, p. 14]`, `[3, 01:12:30]`, or `[4, rows 20–35]`.
+- Citation targets may be absolute URLs or relative paths.
+- Prefer the closest preserved evidence: a raw file, internal document, dataset, or canonical external URL.
+- Keep `## Citations` as the final section and omit it when no externally sourced claims appear.
+- Never invent a source or missing citation details; mark unsupported claims explicitly.
+
+Frontmatter fields such as `resource` and `raw` provide page-level provenance. The citation section provides claim-level provenance. Links between wiki pages still serve a separate purpose: explaining semantic relationships.
+
 ## Page bodies
 
-Use these structures as helpful defaults, not bureaucratic forms. Include a small required core, add sections when the material needs them, and remove irrelevant optional headings before promoting a page to `review`, `current`, or `completed`. Template guidance should be removable HTML comments.
+Use these structures as helpful defaults, not bureaucratic forms. Include a small required core, add sections when the material needs them, and remove irrelevant optional headings before promoting a page to `review`, `current`, or `completed`. Template guidance should be removable HTML comments. When citations are required, `## Citations` is always the final section regardless of page type.
 
 ### Source
 
@@ -266,7 +291,7 @@ Periodically check for missing or invalid frontmatter, broken links, orphan page
 Create only what the approved proposal requires. The minimal default is:
 
 1. Empty `raw/` and `wiki/` directories.
-2. `config.md` containing the tailored purpose, scope, approved tag vocabulary with one-line meanings, sensitive-data rules, ownership rules, universal schema, page-body guidance, and write protocol from this document.
+2. `config.md` containing the tailored purpose, scope, approved tag vocabulary with one-line meanings, citation contract, sensitive-data rules, ownership rules, universal schema, page-body guidance, and write protocol from this document.
 3. `index.md` with a short usage note, `Start here`, `Topics`, and `Recent and active work` sections.
 4. `log.md` with an append-only entry format beginning `## [ISO datetime] operation | Title`.
 5. One agent instruction file using the convention recognized in the target environment, such as `AGENTS.md` or `CLAUDE.md`. Keep it thin: instruct the agent to read `config.md`, use `index.md` to orient, protect `raw/`, obtain approval before writes, verify changes, and append to `log.md`.
@@ -280,6 +305,7 @@ Verify that:
 - The approved directories and files exist and no unapproved file changed.
 - `config.md` is complete enough to operate the wiki without this bootstrap document.
 - `config.md` contains the approved initial tag vocabulary and its meanings.
+- `config.md` defines the numeric citation format and distinguishes citations from links and frontmatter provenance.
 - The agent instruction file points to `config.md` and preserves the approval boundary.
 - `raw/` and `wiki/` have no unnecessary mandatory subdirectories.
 - The index and log are initialized.

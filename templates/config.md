@@ -92,6 +92,21 @@ Use a canonical URI for `resource`, or `null` when absent. Use relative paths fr
 
 Tags provide broad categorization across the approved dimensions above. Portable relative Markdown links explain specific relationships. Evidence-based statements should link to the relevant source page or raw file.
 
+## Citations
+
+Use numeric citation markers immediately after claims sourced from external material. Number sources by first appearance and reuse the same number for repeated citations. Use `[1, 2]` when several sources support one claim and add locators when useful, such as `[2, p. 14]`, `[3, 01:12:30]`, or `[4, rows 20–35]`.
+
+Place the citation list under `## Citations` as the final section:
+
+```markdown
+## Citations
+
+[1] [Source title](https://example.com/source)
+[2] [Internal source](../raw/path/to/source.pdf)
+```
+
+Citation targets may be absolute URLs or relative paths. Prefer the closest preserved evidence. `resource` and `raw` provide page-level provenance; citations provide claim-level provenance. Omit the section when no externally sourced claims appear. Never invent missing citation details; mark unsupported claims explicitly.
+
 ## Raw intake
 
 <!-- Where will new material arrive, and how should the agent recognize that it is ready to process? -->

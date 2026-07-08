@@ -33,3 +33,7 @@ updated: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 ## Connections
 
 <!-- Explain relationships to relevant sources, subjects, syntheses, decisions, or plans using relative Markdown links. -->
+
+## Citations
+
+<!-- Include this final section only when the body makes externally sourced claims. Cite claims with [1], [1, 2], or a locator such as [2, p. 14]. Number sources by first appearance and reuse numbers. Format each entry exactly as: [1] [Source title](absolute-or-relative-target) -->

@@ -37,3 +37,7 @@ updated: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 ## Review or reversal conditions
 
 <!-- State when the decision should be revisited and what evidence could reverse it. -->
+
+## Citations
+
+<!-- Include this final section only when the body makes externally sourced claims. Cite claims with [1], [1, 2], or a locator such as [2, p. 14]. Number sources by first appearance and reuse numbers. Format each entry exactly as: [1] [Source title](absolute-or-relative-target) -->
