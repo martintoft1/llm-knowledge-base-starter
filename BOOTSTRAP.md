@@ -119,7 +119,6 @@ description: One plain-text sentence suitable for indexes and previews.
 status: draft
 tags: []
 resource: null
-raw: []
 created: "2026-07-07T14:30:00+02:00"
 updated: "2026-07-07T14:30:00+02:00"
 ---
@@ -127,9 +126,10 @@ updated: "2026-07-07T14:30:00+02:00"
 
 Rules:
 
-- `type`, `title`, `description`, `status`, `tags`, `resource`, `raw`, `created`, and `updated` are all required keys.
-- `resource` is a canonical URI for an identifiable external resource, or `null` when absent.
-- `raw` is always a YAML list of paths relative to the wiki page, or `[]` when no raw file applies.
+- `type`, `title`, `description`, `status`, `tags`, `resource`, `created`, and `updated` are all required keys.
+- `resource` identifies the primary underlying asset described by the page. It may be an absolute URL or a relative path such as `../raw/customer-orders.csv`.
+- Use `resource: null` when the page describes an abstract idea or knowledge product—such as a synthesis, business plan, strategy, or decision—rather than one specific underlying asset.
+- Use claim-level citations for additional supporting files and sources.
 - Keep every key in every knowledge page. Do not comment out or omit empty fields.
 - Timestamps use ISO 8601 with an explicit timezone offset.
 - `created` never changes. `updated` changes only for meaningful content or metadata changes, not formatting or link repair alone.
@@ -198,7 +198,7 @@ Follow these rules:
 - Keep `## Citations` as the final section and omit it when no externally sourced claims appear.
 - Never invent a source or missing citation details; mark unsupported claims explicitly.
 
-Frontmatter fields such as `resource` and `raw` provide page-level provenance. The citation section provides claim-level provenance. Links between wiki pages still serve a separate purpose: explaining semantic relationships.
+`resource` provides page-level identity for the primary underlying asset. The citation section provides claim-level provenance and may reference additional raw files. Links between wiki pages still serve a separate purpose: explaining semantic relationships.
 
 ## Page bodies
 
@@ -309,7 +309,7 @@ Verify that:
 - The agent instruction file points to `config.md` and preserves the approval boundary.
 - `raw/` and `wiki/` have no unnecessary mandatory subdirectories.
 - The index and log are initialized.
-- Example frontmatter uses only the six universal types and allowed statuses and includes all nine required keys.
+- Example frontmatter uses only the six universal types and allowed statuses and includes all eight required keys.
 - Relative paths are correct for the chosen placement.
 - No unanswered setup prompts or placeholder decisions remain in operational files.
 

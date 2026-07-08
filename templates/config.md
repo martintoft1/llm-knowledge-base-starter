@@ -72,7 +72,7 @@ Allowed types: `source`, `subject`, `note`, `synthesis`, `decision`, `plan`.
 
 Allowed statuses: `fragment`, `draft`, `review`, `current`, `completed`, `archived`.
 
-Every knowledge page keeps all nine frontmatter keys in this order:
+Every knowledge page keeps all eight frontmatter keys in this order:
 
 ```yaml
 ---
@@ -82,13 +82,12 @@ description: One plain-text sentence suitable for indexes and previews.
 status: draft
 tags: []
 resource: null
-raw: []
 created: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 updated: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 ---
 ```
 
-Use a canonical URI for `resource`, or `null` when absent. Use relative paths from the wiki page in `raw`, or `[]` when no raw file applies. Never omit these keys. Use tags for narrower classifications.
+`resource` identifies the primary underlying asset described by the page. Use an absolute URL or a relative path such as `../raw/customer-orders.csv`. Use `null` for abstract ideas and knowledge products—such as a synthesis, business plan, strategy, or decision—that do not describe one specific asset. Never omit the key. Use citations for additional supporting files and tags for narrower classifications.
 
 Tags provide broad categorization across the approved dimensions above. Portable relative Markdown links explain specific relationships. Evidence-based statements should link to the relevant source page or raw file.
 
@@ -105,7 +104,7 @@ Place the citation list under `## Citations` as the final section:
 [2] [Internal source](../raw/path/to/source.pdf)
 ```
 
-Citation targets may be absolute URLs or relative paths. Prefer the closest preserved evidence. `resource` and `raw` provide page-level provenance; citations provide claim-level provenance. Omit the section when no externally sourced claims appear. Never invent missing citation details; mark unsupported claims explicitly.
+Citation targets may be absolute URLs or relative paths. Prefer the closest preserved evidence. `resource` provides page-level identity for the primary underlying asset; citations provide claim-level provenance and can reference additional raw files. Omit the section when no externally sourced claims appear. Never invent missing citation details; mark unsupported claims explicitly.
 
 ## Raw intake
 

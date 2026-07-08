@@ -107,8 +107,6 @@ tags:
   - customer-research
   - onboarding
 resource: https://example.com/canonical-resource
-raw:
-  - ../raw/customer-12-interview/transcript.txt
 created: 2026-07-07T14:30:00+02:00
 updated: 2026-07-07T16:10:00+02:00
 ---
@@ -119,8 +117,7 @@ updated: 2026-07-07T16:10:00+02:00
 - `description` is required and contains one plain-text sentence.
 - `status` is required.
 - `tags` is required and may be an empty YAML list.
-- `resource` is required and contains a canonical URI or `null`.
-- `raw` is required and contains a list of relative paths to preserved evidence or `[]`.
+- `resource` is required and identifies the primary underlying asset using an absolute URL or relative path. It is `null` for abstract ideas and knowledge products that do not describe one specific asset.
 - `created` and `updated` are required ISO 8601 datetimes with explicit timezone offsets.
 - `created` never changes. `updated` changes only after a meaningful content or metadata change.
 
@@ -155,7 +152,7 @@ Renames and moves require approval, inbound-link updates, and link verification.
 
 Externally sourced claims use numeric markers in the body and a final `## Citations` section. Sources are numbered by first appearance and numbers are reused. Multiple supporting sources use a marker such as `[1, 2]`; precise locators may be included as `[2, p. 14]`, `[3, 01:12:30]`, or `[4, rows 20–35]`.
 
-Each entry uses `[n] [Title](target)`, where the target is an absolute URL or relative path. Prefer the closest preserved evidence. `resource` and `raw` express page-level provenance, citations express claim-level provenance, and ordinary relative links express semantic relationships. Pages without externally sourced claims omit the section. Missing citation details must never be invented.
+Each entry uses `[n] [Title](target)`, where the target is an absolute URL or relative path. Prefer the closest preserved evidence. `resource` identifies the primary underlying asset at page level, citations express claim-level provenance and additional evidence, and ordinary relative links express semantic relationships. Pages without externally sourced claims omit the section. Missing citation details must never be invented.
 
 ## Body templates
 

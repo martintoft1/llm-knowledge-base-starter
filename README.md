@@ -44,7 +44,7 @@ Tags provide broad, cross-cutting categorization. Relative Markdown links explai
 
 ## Frontmatter
 
-Every knowledge page keeps the same nine keys, even when some values are empty:
+Every knowledge page keeps the same eight keys, even when `resource` is empty:
 
 ```yaml
 ---
@@ -54,13 +54,14 @@ description: One plain-text sentence suitable for indexes and previews.
 status: draft
 tags: []
 resource: null
-raw: []
 created: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 updated: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 ---
 ```
 
-Use `resource: null` when there is no canonical URI and `raw: []` when no preserved source file applies. Tags are short lowercase kebab-case strings. The initializer proposes a small vocabulary based on the wiki's context rather than inventing tags page by page.
+`resource` identifies the primary underlying asset described by the page. It may be an absolute URL or a relative path such as `../raw/customer-orders.csv`. Use `resource: null` for abstract ideas and knowledge products—such as a synthesis, business plan, strategy, or decision—that do not describe one specific asset. Additional supporting material belongs in claim-level citations.
+
+Tags are short lowercase kebab-case strings. The initializer proposes a small vocabulary based on the wiki's context rather than inventing tags page by page.
 
 Tag suggestions may cover several dimensions:
 
@@ -103,7 +104,7 @@ The market grew by 18% during 2025 [1].
 
 Number sources by first appearance, reuse the same number when citing a source again, and use `[1, 2]` when several sources support one claim. Add a locator when useful, such as `[2, p. 14]`, `[3, 01:12:30]`, or `[4, rows 20–35]`. Citation targets may be absolute URLs or relative paths.
 
-Frontmatter fields such as `resource` and `raw` provide page-level provenance. Citations provide claim-level provenance. Omit the citations section when no externally sourced claims appear, and never invent missing citation details.
+`resource` provides page-level identity for the primary underlying asset. Citations provide claim-level provenance and can reference additional raw files. Omit the citations section when no externally sourced claims appear, and never invent missing citation details.
 
 ## Operating model
 

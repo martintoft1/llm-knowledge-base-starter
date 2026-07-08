@@ -5,12 +5,11 @@ description: One-sentence summary suitable for indexes and previews.
 status: review
 tags: []
 resource: null
-raw: []
 created: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 updated: "YYYY-MM-DDTHH:MM:SS±HH:MM"
 ---
 
-<!-- Replace example values when creating the page. Choose tags from the approved vocabulary in config.md. Keep every frontmatter key. Use null and [] for empty resource and raw values. Remove irrelevant optional body sections. -->
+<!-- Replace example values when creating the page. Choose tags from the approved vocabulary in config.md. Set resource to the primary underlying asset's absolute URL or relative path, or null when no single asset applies. Keep every frontmatter key. Remove irrelevant optional body sections. -->
 
 # {{ title }}
 
