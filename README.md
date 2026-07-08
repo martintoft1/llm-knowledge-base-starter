@@ -147,9 +147,14 @@ Inspect → Propose → Approve → Apply → Verify → Log
 
 Agents may propose and, after normal approval, add new files to `raw/`. Once a raw file exists, modifying, overwriting, renaming, moving, or deleting it requires separate, explicit human approval naming the file and operation. When possible, preserve the original and add a derived or corrected version as a new file.
 
-## Templates
+## Repository contents
 
-[`templates/`](templates/) contains inspectable examples for the generated configuration, index, log, and six page types. They are reference material; `BOOTSTRAP.md` remains usable on its own.
+The distributable consists of two documents:
+
+- `README.md`: this human-facing explanation.
+- `BOOTSTRAP.md`: the complete, authoritative initializer, including every generated-file and page-body template the receiving agent needs.
+
+No companion template or design files are required.
 
 ## Version 1
 

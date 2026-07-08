@@ -207,9 +207,9 @@ Follow these rules:
 
 The citation section provides claim-level provenance and may reference raw files. Links between wiki pages still serve a separate purpose: explaining semantic relationships.
 
-## Page bodies
+## Page-body templates
 
-Use these structures as helpful defaults, not bureaucratic forms. Include a small required core, add sections when the material needs them, and remove irrelevant optional headings before promoting a page to `review`, `current`, or `completed`. Template guidance should be removable HTML comments. When citations are required, `## Citations` is always the final section regardless of page type.
+Generate page bodies from the heading sequences below. Treat them as structured but elastic templates: keep the sections needed to preserve each page type's meaning, add sections when the material requires them, and remove irrelevant optional headings before promoting a page to `review`, `current`, or `completed`. Add removable HTML comments explaining what belongs under each heading. When citations are required, `## Citations` is always the final section regardless of page type.
 
 ### Source
 
@@ -304,6 +304,83 @@ Create only what the approved proposal requires. The minimal default is:
 5. One agent instruction file using the convention recognized in the target environment, such as `AGENTS.md` or `CLAUDE.md`. Keep it thin: instruct the agent to read `config.md`, use `index.md` to orient, allow approved additions to `raw/` while requiring separate file-specific approval to change existing raw files, obtain approval before writes, verify changes, and append to `log.md`.
 
 Do not create empty knowledge pages merely to demonstrate the schema. Do not add domain-specific folders when frontmatter, tags, and the index already express the distinction. Add local tag vocabulary and examples to `config.md` based on the user's actual context.
+
+### `config.md` template
+
+Generate `config.md` with this structure and fill every section from the approved setup conversation:
+
+```markdown
+# Wiki configuration
+
+## Purpose
+## Scope
+## Outside scope
+## Local terminology
+## Frontmatter
+### Type
+### Title and description
+### Status
+### Tags and approved vocabulary
+### Resource
+### Created and updated
+## Links
+## Citations
+## Ownership and approval
+## Raw intake
+## Sensitive information
+## Local conventions
+```
+
+Include the complete approved rules from this bootstrap rather than references back to it. Under the approved tag vocabulary, group only useful dimensions and give each tag a one-line meaning.
+
+### `index.md` template
+
+```markdown
+# Wiki index
+
+Use this file for content-oriented navigation. Each entry links to a page, gives its one-sentence description, and shows status and update date.
+
+## Start here
+
+## Topics
+
+## Recent and active work
+```
+
+Organize entries for the reader rather than mechanically by page type. An entry uses:
+
+```markdown
+- [Display title](wiki/page-name.md) — One-sentence description. (`status`, updated YYYY-MM-DD)
+```
+
+### `log.md` template
+
+Append new entries at the top and do not rewrite history except to correct an objective formatting error:
+
+```markdown
+# Wiki log
+
+## [YYYY-MM-DDTHH:MM:SS±HH:MM] operation | Short title
+
+- **Approved by:** User
+- **Files added:** None
+- **Files updated:** None
+- **Files archived:** None
+- **Summary:** What changed and why.
+- **Verification:** Metadata, links, citations, index coverage, and other checks performed.
+```
+
+### Agent-instruction template
+
+Use the filename recognized by the target agent. Adapt names to the approved wiki location while preserving this behavior:
+
+```markdown
+# Wiki instructions
+
+Read `config.md` before operating on this wiki. Use `index.md` to orient, inspect relevant pages under `wiki/`, and consult `raw/` when evidence must be verified.
+
+Before changing files, present the proposed file-level changes and wait for explicit approval. Agents may add new files under `raw/` after normal approval. Modifying, overwriting, renaming, moving, or deleting an existing raw file requires separate, file-specific human approval. After approved changes, verify metadata, relative links, citations, resource paths, and index coverage, then append the operation to `log.md`.
+```
 
 ## Verification after creation
 
