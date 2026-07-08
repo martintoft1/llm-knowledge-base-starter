@@ -10,7 +10,7 @@
 
 ## Constraints
 
-- Raw evidence is immutable and human-owned.
+- Agents may add new raw files after normal approval; changing or removing an existing raw file requires separate, file-specific human approval.
 - Wiki pages use six universal types and six controlled statuses.
 - Tags categorize broadly; relative Markdown links explain specific relationships.
 - Initialization proposes roughly 8–15 context-relevant tags across useful dimensions and records the approved vocabulary with meanings in `config.md`.

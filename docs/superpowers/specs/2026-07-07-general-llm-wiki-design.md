@@ -68,7 +68,7 @@ The location and root name are user-defined. A wiki may live on its own or insid
 
 ### Data ownership
 
-- `raw/` contains exact source material. Its internal organization is human-chosen. The agent may read and cite raw files but must never edit, rename, move, or delete them.
+- `raw/` contains source material under human control. Its internal organization is human-chosen. The agent may propose and, after normal approval, add new files. Modifying, overwriting, renaming, moving, or deleting an existing raw file requires separate, file-specific human approval. Derived or corrected material should normally be added as a new file so the original remains preserved.
 - `wiki/` contains agent-maintained Markdown. It is flat by default, with unique filenames. Optional subdirectories may be introduced later with approval, but directory placement never determines page type.
 - `config.md`, `index.md`, `log.md`, and the agent instruction file are operational files rather than knowledge pages.
 
@@ -183,7 +183,7 @@ Check missing or invalid metadata, broken links, orphans, stale descriptions, un
 
 - Preserve conflicting evidence rather than silently selecting a side.
 - Label unsupported claims rather than inventing provenance.
-- Refuse raw-file modification and offer a derived alternative.
+- Require separate, file-specific human approval before changing or removing an existing raw file, and prefer adding a derived alternative.
 - Do not write when approval is ambiguous.
 - Prefer archival or redirects over destructive wiki deletion.
 - Apply user-defined sensitive-data constraints to reading, quoting, linking, and generated content.

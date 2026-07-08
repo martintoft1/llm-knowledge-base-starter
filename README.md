@@ -1,6 +1,6 @@
 # LLM Wiki
 
-A small, portable pattern for knowledge bases that compound over time. Raw material remains untouched; an LLM maintains a linked Markdown wiki that integrates what the sources mean.
+A small, portable pattern for knowledge bases that compound over time. Raw material is preserved under human control; an LLM maintains a linked Markdown wiki that integrates what the sources mean.
 
 ## Quick start
 
@@ -116,7 +116,7 @@ Every write follows:
 Inspect → Propose → Approve → Apply → Verify → Log
 ```
 
-Raw files are immutable. The agent may read and cite them but never edit, rename, move, or delete them.
+Agents may propose and, after normal approval, add new files to `raw/`. Once a raw file exists, modifying, overwriting, renaming, moving, or deleting it requires separate, explicit human approval naming the file and operation. When possible, preserve the original and add a derived or corrected version as a new file.
 
 ## Templates
 

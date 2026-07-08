@@ -52,7 +52,7 @@ Tag rules:
 
 ## Ownership
 
-- `raw/` is human-owned and immutable. The agent may read and cite raw files but must never edit, rename, move, or delete them.
+- `raw/` is human-controlled source storage. The agent may propose and, after normal approval, add new files. Once a raw file exists, modifying, overwriting, renaming, moving, or deleting it requires separate, explicit human approval naming the file and operation. Prefer adding a derived or corrected file while preserving the original.
 - `wiki/` is agent-maintained after explicit approval. It is flat by default, and `type` frontmatter provides semantic classification.
 - Operational files are `config.md`, `index.md`, `log.md`, and the root agent instruction file.
 

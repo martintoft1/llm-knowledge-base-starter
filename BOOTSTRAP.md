@@ -71,7 +71,7 @@ As part of the proposal, suggest a small initial vocabulary—normally 8–15 ta
 
 ## Ownership and write protocol
 
-Raw evidence is human-owned and immutable. You may read and cite files under `raw/`, but you must never edit, rename, move, or delete them. If correction is needed, propose a derived note or a separately named corrected copy outside the immutable original.
+Raw evidence is human-controlled. You may propose and, after the normal approval cycle, add new files under `raw/`. Once a raw file exists, modifying, overwriting, renaming, moving, or deleting it requires separate, explicit human approval that names the file and operation. General approval to ingest or update the wiki does not authorize changing existing raw material. When possible, preserve the original and add a derived or corrected version as a new file.
 
 Wiki and operational files are agent-maintained only after approval. Every write follows:
 
@@ -281,7 +281,7 @@ Periodically check for missing or invalid frontmatter, broken links, orphan page
 
 - Preserve conflicting evidence and explain the disagreement instead of silently choosing one account.
 - Mark unsupported claims and uncertainty instead of inventing citations.
-- Refuse raw-file mutation and offer a non-destructive alternative.
+- Do not modify, overwrite, rename, move, or delete an existing raw file without separate, file-specific human approval. Offer a new derived or corrected file as the default alternative.
 - Do not write when approval is ambiguous.
 - Apply configured sensitive-data constraints to reading, quoting, linking, retention, and generated content.
 - Keep an intelligible trail when newer knowledge supersedes an approved page.
@@ -294,7 +294,7 @@ Create only what the approved proposal requires. The minimal default is:
 2. `config.md` containing the tailored purpose, scope, approved tag vocabulary with one-line meanings, citation contract, sensitive-data rules, ownership rules, universal schema, page-body guidance, and write protocol from this document.
 3. `index.md` with a short usage note, `Start here`, `Topics`, and `Recent and active work` sections.
 4. `log.md` with an append-only entry format beginning `## [ISO datetime] operation | Title`.
-5. One agent instruction file using the convention recognized in the target environment, such as `AGENTS.md` or `CLAUDE.md`. Keep it thin: instruct the agent to read `config.md`, use `index.md` to orient, protect `raw/`, obtain approval before writes, verify changes, and append to `log.md`.
+5. One agent instruction file using the convention recognized in the target environment, such as `AGENTS.md` or `CLAUDE.md`. Keep it thin: instruct the agent to read `config.md`, use `index.md` to orient, allow approved additions to `raw/` while requiring separate file-specific approval to change existing raw files, obtain approval before writes, verify changes, and append to `log.md`.
 
 Do not create empty knowledge pages merely to demonstrate the schema. Do not add domain-specific folders when frontmatter, tags, and the index already express the distinction. Add local tag vocabulary and examples to `config.md` based on the user's actual context.
 
@@ -307,6 +307,7 @@ Verify that:
 - `config.md` contains the approved initial tag vocabulary and its meanings.
 - `config.md` defines the numeric citation format and distinguishes citations from links and frontmatter provenance.
 - The agent instruction file points to `config.md` and preserves the approval boundary.
+- `config.md` and the agent instruction file allow approved raw additions while protecting existing raw files from unapproved changes or removal.
 - `raw/` and `wiki/` have no unnecessary mandatory subdirectories.
 - The index and log are initialized.
 - Example frontmatter uses only the six universal types and allowed statuses and includes all eight required keys.
