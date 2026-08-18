@@ -2,6 +2,10 @@
 
 This file narrows OKF v0.2 for this starter kit. The pinned specification remains the source of truth for OKF fields and semantics. See [`okf/v0.2/SPEC.md`](okf/v0.2/SPEC.md), especially sections 4 through 7, 10, and 11.
 
+## Bundle Files
+
+Every file inside `wiki/` must be UTF-8 Markdown with a `.md` filename. This is a local restriction even where base OKF permits support files. Non-Markdown evidence, computation code, and other support assets are not bundle members. Keep retained evidence under `raw/` or point to an external, non-secret resource.
+
 ## Required Frontmatter
 
 Every concept under `wiki/`, except reserved `index.md` and `log.md` files, must include:
@@ -40,6 +44,20 @@ Use these only as defined upstream:
 - Attested Computation fields: `runtime` is required whenever `type: Attested Computation`. `parameters`, `computation`, `executor`, and `attester` retain their exact section 10 semantics.
 
 Never invent provenance, verification, usage, access, or attestation. Preserve unknown fields when editing a concept. Unknown fields and types do not make an OKF concept invalid.
+
+### Stable Attested Computations
+
+Every Attested Computation requires `runtime`, regardless of status. Before its status may become `stable`, it also requires:
+
+- A non-empty `parameters` list whose entries contain `name`, `type`, and `required`. Under this stricter profile, a zero-input computation remains `draft`.
+- Exactly one computation form: one inline fenced block under `# Computation`, or a `computation` path, but not both.
+- `executor.resource` and a non-empty `executor.receipt` list.
+- `attester.resource` that names a deterministic, non-LLM check.
+- One or more relevant `sources` entries with stable `id` values and matching keyed footnotes.
+- At least one `verified` event from an actor independent of `generated.by`.
+- `stale_after` when the definition can expire.
+
+Other OKF families remain optional for non-stable concepts. When present, they must keep their exact upstream structure and meaning.
 
 ## Actors
 
@@ -114,9 +132,11 @@ Propose a registry change before adding, renaming, merging, narrowing, or retiri
 Validate the whole bundle against OKF section 11 and this local profile before finalizing a wiki operation. In particular:
 
 - Parse every concept's frontmatter and require the local fields above.
+- Confirm that every file in `wiki/` is UTF-8 Markdown and reject non-Markdown bundle members.
 - Validate any optional field family that appears against its upstream structure.
 - Check actor patterns and source-linked footnotes.
-- For every `type: Attested Computation`, require `runtime` and validate all other computation fields that appear against section 10, regardless of status.
+- For every `type: Attested Computation`, require `runtime` regardless of status.
+- Before an Attested Computation becomes `stable`, validate the complete local contract above, including its non-empty parameters list and single computation form.
 - Preserve unknown fields and types.
 - Report broken links without failing OKF conformance.
 
