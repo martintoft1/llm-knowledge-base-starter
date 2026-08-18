@@ -103,17 +103,14 @@ The wiki remains usable in log-only mode, but rollback is unavailable. Explain t
 
 OKF records a computation contract; it does not execute it. Treat each `Attested Computation` as its own concept.
 
-A locally `stable` Attested Computation must have:
+`runtime` is the only computation-specific field required for every Attested Computation. `parameters`, `computation`, `executor`, and `attester` are optional and retain their exact OKF section 10 meanings. Use them only when they apply:
 
-- a `runtime`;
-- a `parameters` list, empty when there are no inputs or otherwise containing `name`, `type`, and `required` for each input;
-- either one inline fenced block under `# Computation` or a `computation` path, never both;
-- an `executor.resource` and declared `executor.receipt` fields;
-- an `attester.resource` that identifies a deterministic, non-LLM check;
-- relevant provenance and independent document verification; and
-- `stale_after` when the definition can expire.
+- Add `parameters` only when the computation has typed, named inputs. Omit it when there are no inputs; never add an empty optional list.
+- When a computation is provided, use either one inline fenced block under `# Computation` or a `computation` path, never both.
+- An `executor` describes how to run the computation and which receipt fields a run returns.
+- An `attester` identifies a deterministic, non-LLM check of a receipt.
 
-Do not claim a computation is attestable unless its executor and attester resources exist. During a run, an agent may supply values only for declared parameters. It must not author or alter the sanctioned computation. The consumer binds the values, the executor returns the declared receipt, and the deterministic attester checks what ran and the displayed result.
+Do not claim executable validity without a usable computation and executor. Do not claim attestable validity without a usable attester. During an attested run, an agent may supply values only for declared parameters. It must not author or alter the sanctioned computation. The consumer binds the values, the executor returns the declared receipt, and the deterministic attester checks what ran and the displayed result.
 
 A failed attestation blocks use or display of the value and must be surfaced. When `today >= stale_after`, warn or refuse according to the risk. `verified` records a check of the stored definition; attestation checks one execution. One never replaces the other, and per-run receipts are not stored in the bundle merely as verification history.
 
@@ -127,7 +124,7 @@ Before finalizing any wiki operation, validate the complete bundle against OKF v
 4. Every optional provenance, trust, lifecycle, path, and computation field that appears has the upstream structure.
 5. Actor identifiers follow the patterns in `schema.md`.
 6. Every source-linked footnote label resolves to a matching `sources[].id`, and every cited source ID has a footnote.
-7. Every locally stable Attested Computation has the complete contract above.
+7. Every Attested Computation passes the type-specific checks in `schema.md` and OKF section 10.
 8. Unknown fields and types are preserved.
 9. Broken links are reported but do not fail OKF conformance.
 10. Local tag use agrees with the tag registry.
