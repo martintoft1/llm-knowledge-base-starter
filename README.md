@@ -1,161 +1,83 @@
 # LLM Wiki
 
-A small, portable pattern for knowledge bases that compound over time. Raw material is preserved under human control; an LLM maintains a linked Markdown wiki that integrates what the sources mean.
+LLM Wiki is a starter kit for a file-based knowledge base that humans own and AI agents help build and maintain.
 
-## Quick start
+It targets OKF v0.2 and follows Karpathy's LLM Wiki pattern: keep original evidence separate, let agents turn it into connected Markdown knowledge, and keep improving that knowledge through normal use.
 
-1. Open [`BOOTSTRAP.md`](BOOTSTRAP.md).
-2. Copy its complete contents into an LLM agent with filesystem access.
-3. Describe the knowledge base you want, where it should live, and what it is for.
-4. Review the proposed files and approve only when the setup looks right.
-
-The initializer asks only the follow-up questions it needs. It can create a standalone wiki or place one inside an existing repository.
-
-## What gets created
-
-A typical result is deliberately small:
+## Architecture
 
 ```text
-knowledge/
-├── raw/                 # Human-owned source material
-├── wiki/                # LLM-maintained Markdown
-├── config.md            # Local operating contract
-├── index.md             # Content-oriented navigation
-├── log.md               # Append-only change history
-└── AGENTS.md            # Or another agent instruction file
+<knowledge-base-root>/
+├── raw/                    # Immutable original sources in native formats
+├── wiki/                   # The OKF v0.2 knowledge bundle
+│   ├── index.md            # Bundle navigation and OKF version
+│   ├── log.md              # Mandatory update history
+│   └── *.md                # Knowledge concepts
+├── README.md               # Purpose, scope, and local settings
+├── AGENTS.md               # Agent entry point
+├── CLAUDE.md               # Optional Claude adapter
+├── references/             # Standard and local operating rules
+└── templates/              # Reusable concept and body templates
 ```
 
-Neither `raw/` nor `wiki/` requires subdirectories. Humans may organize raw files however provenance is clearest. Wiki files are flat by default; their frontmatter—not their folder—states what they are.
+Only `wiki/` is the OKF bundle. Every concept in it is UTF-8 Markdown with OKF frontmatter. `raw/` keeps PDFs, images, spreadsheets, exports, and other evidence in their useful native formats. Existing raw files are immutable to agents.
 
-## Knowledge pages
+Root files operate the system. They are not part of the bundle. New root paths require approval.
 
-Every file under `wiki/` has two parts:
+## Sources Of Authority
 
-1. YAML frontmatter containing consistent machine-readable metadata.
-2. A Markdown body containing the actual knowledge, contextual links, and—when needed—a final citations section.
+Use these sources in order:
 
-The frontmatter describes the page. The body explains the subject. Links express relationships, while citations establish claim-level provenance.
+1. [`references/okf/v0.2/SPEC.md`](references/okf/v0.2/SPEC.md) is the pinned, unmodified OKF v0.2 specification. It defines OKF terms and semantics.
+2. [`references/schema.md`](references/schema.md) defines this starter kit's stricter local profile.
+3. [`references/operations.md`](references/operations.md) defines workflows, history, validation, and authority.
+4. [`references/writing-style.md`](references/writing-style.md) defines local editorial guidance.
+5. `AGENTS.md` and optional adapters provide short entry points.
 
-## Frontmatter
+Local rules may narrow the format, but they must not redefine reserved OKF fields incompatibly.
 
-Every knowledge page keeps the same eight keys, even when `resource` is empty:
+## Local Settings
 
-The block below is a schema illustration, not copy-ready YAML. Every value inside angle brackets is a placeholder that the agent must replace from the actual page context. The listed choices are allowed values, not defaults or recommendations.
+- **Purpose:** <what this knowledge base helps with>
+- **Scope:** <material and questions that belong here>
+- **Outside scope:** <material and questions that do not belong here>
+- **Local terminology:** <domain terms or naming conventions>
+- **Sensitive data:** <what must not be stored or exposed>
+- **History mode:** <Git and log, or log only>
 
-```yaml
----
-type: <source | subject | note | synthesis | decision | plan>
-title: <human-readable display name>
-description: <one-sentence summary>
-status: <fragment | draft | review | current | completed | archived>
-tags: [<zero or more approved tags>]
-resource: <absolute URL | relative path | null>
-created: <ISO 8601 datetime with timezone>
-updated: <ISO 8601 datetime with timezone>
----
-```
+## How Knowledge Grows
 
-### `type`
+Agents ingest approved sources into useful concepts, answer questions from traceable evidence, and file all durable or potentially useful findings back into the wiki. Minor procedural or disposable answers stay in chat. New concepts are created only when the knowledge is distinct; generic Q&A files are not used.
 
-Choose the type that matches the page's purpose:
+The starter kit adds these choices around OKF and the LLM Wiki pattern:
 
-- `source`: one imported piece of evidence
-- `subject`: an enduring topic or entity
-- `note`: a provisional idea, question, or observation
-- `synthesis`: a reasoned conclusion across evidence
-- `decision`: a choice and its rationale
-- `plan`: intended action and progress
+- **Progressive structure:** Start with the least structure needed. Add types, tags, headings, and folders only when they improve retrieval or reuse.
+- **Simplicity-first writing:** Use plain language and only as much structure as the material needs.
+- **Flat organization and living tags:** Prefer links and maintained tags over early folder hierarchies.
+- **Progressive autonomy:** Let agents handle ordinary wiki work while reserving risky actions for human approval.
+- **Tailored setup:** Discover the purpose, boundaries, sources, history mode, and useful templates during initialization.
+- **Epistemic safeguards:** Separate evidence, interpretation, inference, uncertainty, and unresolved conflict. Never invent provenance.
+- **Repository governance:** Keep a controlled root, protect sensitive data, and ask about external systems only when relevant.
 
-No type is preferred by default. Local vocabulary belongs in tags rather than additional types.
+The one-concept-per-document rule, raw/wiki separation, Markdown, provenance, links, indexes, logs, and agent neutrality come from OKF or Karpathy's pattern rather than these local additions.
 
-### `title` and `description`
+## Authority And History
 
-`title` is the human-readable display name. `description` is one plain-text sentence suitable for indexes, previews, and search results.
+Under progressive autonomy, agents may create and update normal concepts, links, sources, indexes, and logs. Approval is required for destructive or broad structural work, changing the pinned standard or local rules, adding raw sources on the user's behalf, and new or increased external access. Agents never modify existing raw sources.
 
-### `status`
+`wiki/log.md` is mandatory. Git is strongly recommended because it adds diffs, attribution, and rollback, but it is not required. In log-only mode, rollback is unavailable and substantive replacement or structural changes need stricter approval.
 
-- `fragment`: captured but not sufficiently developed
-- `draft`: coherent but incomplete
-- `review`: awaiting human approval
-- `current`: approved and presently authoritative
-- `completed`: a fixed record or plan whose intended process has concluded
-- `archived`: retained but no longer active or authoritative
+## Initialize A Wiki
 
-No status is a universal default. Choose it from the page's actual lifecycle state.
+Ask an agent with filesystem access to follow `BOOTSTRAP.md`. It gathers only decisions that affect the result, proposes the exact initialization, writes after approval, and validates the complete bundle before finishing.
 
-### `tags`
+`BOOTSTRAP.md` is the initialization entry point. It is not copied into generated knowledge bases.
 
-Tags are short lowercase kebab-case strings. The initializer proposes a small vocabulary based on the wiki's context rather than inventing tags page by page.
+## Editable Settings
 
-Tag suggestions may cover several dimensions:
-
-- Business function: `operations`, `admin`, `technology`, `marketing`, `sales`, `finance`
-- Industry or domain: `circular-economy`, `climate`, `health`, `agriculture`
-- Evidence or document form: `customer-interview`, `research-paper`, `dataset`, `meeting`
-- Topic or theme: `pricing`, `onboarding`, `retention`, `supply-chain`
-- Work mode: `hypothesis`, `experiment`, `analysis`
-
-These are examples, not a universal taxonomy. Each initialized wiki records its approved vocabulary and meanings in `config.md`.
-
-### `resource`
-
-`resource` identifies the primary underlying asset described by the page. It may be an absolute URL or a relative path such as `../raw/customer-orders.csv`. Use `null` for abstract ideas and knowledge products—such as a synthesis, business plan, strategy, or decision—that do not describe one specific asset. Additional supporting material belongs in claim-level citations.
-
-### `created` and `updated`
-
-Both use ISO 8601 datetimes with explicit timezone offsets. `created` never changes. Update `updated` only after a meaningful content or metadata change, not for formatting or link repair alone.
-
-## Links
-
-Relative Markdown links connect a page to a specific source, subject, synthesis, decision, or plan and explain that relationship in context.
-
-For example:
-
-```markdown
-This plan implements [Adopt self-serve onboarding](adopt-self-serve-onboarding.md)
-and is supported by [Onboarding friction](onboarding-friction.md).
-```
-
-Links to raw evidence are also relative, for example `[interview transcript](../raw/customer-12/transcript.txt)`. The wiki uses standard Markdown links rather than tool-specific wiki-link syntax.
-
-## Citations
-
-When a page makes claims sourced from external material, place numeric markers directly after those claims and list the sources under `## Citations` at the bottom of the page:
-
-```markdown
-The market grew by 18% during 2025 [1].
-
-## Citations
-
-[1] [Market report](https://example.com/market-report)
-[2] [Internal data-quality runbook](../raw/data-quality-runbook.pdf)
-```
-
-Number sources by first appearance, reuse the same number when citing a source again, and use `[1, 2]` when several sources support one claim. Add a locator when useful, such as `[2, p. 14]`, `[3, 01:12:30]`, or `[4, rows 20–35]`. Citation targets may be absolute URLs or relative paths.
-
-Citations provide claim-level provenance and can reference raw files. Omit the citations section when no externally sourced claims appear, and never invent missing citation details.
-
-## Operating model
-
-The human owns sources, scope, and approval. The agent performs the bookkeeping: summarizing, connecting, updating, checking contradictions, and maintaining navigation.
-
-Every write follows:
-
-```text
-Inspect → Propose → Approve → Apply → Verify → Log
-```
-
-Agents may propose and, after normal approval, add new files to `raw/`. Once a raw file exists, modifying, overwriting, renaming, moving, or deleting it requires separate, explicit human approval naming the file and operation. When possible, preserve the original and add a derived or corrected version as a new file.
-
-## Repository contents
-
-The distributable consists of two documents:
-
-- `README.md`: this human-facing explanation.
-- `BOOTSTRAP.md`: the complete, authoritative initializer, including every generated-file and page-body template the receiving agent needs.
-
-No companion template or design files are required.
-
-## Version 1
-
-This version is intentionally file-only. It has no application, CLI, database, embeddings, automated indexer, domain-profile library, or background ingestion. Start with the initializer, use the resulting wiki, and evolve its local configuration from actual needs.
+- Purpose, scope, exclusions, terminology, sensitive-data rules, and history mode: this `README.md`.
+- Format profile and local types: `references/schema.md`.
+- Workflows and approval boundaries: `references/operations.md`.
+- Writing guidance: `references/writing-style.md`.
+- Reusable bodies: `templates/page-bodies/`.
+- Navigation and history: `wiki/index.md` and `wiki/log.md`, when initialized.
