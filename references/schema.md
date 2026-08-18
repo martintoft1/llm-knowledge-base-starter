@@ -37,7 +37,7 @@ Use these only as defined upstream:
 - `sources` and `usage_window`: provenance and objective source signals. See section 5.1.
 - `verified`: independent verification events. See sections 5.2 and 7. A bare mapping and a list are both valid OKF.
 - `stale_after`: the absolute date on which the content becomes stale. See section 5.5.
-- Attested Computation fields: `runtime`, `parameters`, `computation`, `executor`, and `attester`. See section 10.
+- Attested Computation fields: `runtime` is required whenever `type: Attested Computation`. `parameters`, `computation`, `executor`, and `attester` retain their exact section 10 semantics.
 
 Never invent provenance, verification, usage, access, or attestation. Preserve unknown fields when editing a concept. Unknown fields and types do not make an OKF concept invalid.
 
@@ -116,7 +116,7 @@ Validate the whole bundle against OKF section 11 and this local profile before f
 - Parse every concept's frontmatter and require the local fields above.
 - Validate any optional field family that appears against its upstream structure.
 - Check actor patterns and source-linked footnotes.
-- Apply the full local contract to stable `Attested Computation` concepts.
+- For every `type: Attested Computation`, require `runtime` and validate all other computation fields that appear against section 10, regardless of status.
 - Preserve unknown fields and types.
 - Report broken links without failing OKF conformance.
 
