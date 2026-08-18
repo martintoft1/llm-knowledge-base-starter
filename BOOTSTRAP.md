@@ -34,7 +34,7 @@ Do not design a tag taxonomy during setup. Propose seed tags only when stable re
 
 ### External Databases And Data Systems
 
-Ask about external databases, datasets, warehouses, analytics tools, or live systems only when the purpose is business, organizational, research-data, analytics, operational, explicitly data-connected, or otherwise makes them relevant.
+Ask about external databases, datasets, warehouses, analytics tools, or live systems only when the purpose is business, organizational, research-data, analytics, operational, or explicitly data-connected.
 
 Skip that question for ordinary personal notes, study, and reading unless the user mentions an external system.
 
@@ -84,12 +84,13 @@ After approval:
 2. Copy the approved operating kit to the target.
 3. Tailor the copied `README.md`, `references/operations.md`, `references/writing-style.md`, and approved tag registry in `references/schema.md`. Record reusable actor identifiers in the README's Local Settings. Resolve every local-setting placeholder. Replace template-only initialization text in the copied README with normal operating guidance so the result does not depend on `BOOTSTRAP.md`.
 4. Create `wiki/index.md` from `templates/index.md`. Its only frontmatter key must be `okf_version: "0.2"`. Remove example entries that do not point to real concepts.
-5. Create mandatory `wiki/log.md` from `templates/log.md`, with no frontmatter and a current `YYYY-MM-DD` date group. Add its single truthful initialization entry after validation succeeds.
-6. Create only initial concepts justified by the approved purpose, sources, or external systems. Do not create demonstration pages. Every file inside `wiki/` must be UTF-8 Markdown and follow the local profile.
-7. Add an approved raw source only when the proposal names its exact target. Never modify, overwrite, rename, move, or delete an existing raw file.
-8. Initialize Git only when selected and the target is not already in a repository. When using Git, preserve unrelated changes, stage only initialization files, and create a focused local commit only when host rules allow it. Do not push.
-9. Validate the whole bundle against OKF v0.2 sections 1 through 11 and `references/schema.md`.
-10. Record the completed initialization in `wiki/log.md` and report the focused commit when one exists.
+5. Create only initial concepts justified by the approved purpose, sources, or external systems. Do not create demonstration pages. Every file inside `wiki/` must be UTF-8 Markdown and follow the local profile.
+6. Add an approved raw source only when the proposal names its exact target. Never modify, overwrite, rename, move, or delete an existing raw file.
+7. Initialize Git only when selected and the target is not already in a repository. Do not stage or commit yet.
+8. Create mandatory `wiki/log.md` from `templates/log.md`, with no frontmatter. Add one truthful initialization entry under the current `YYYY-MM-DD` date after the approved files and settings are in place.
+9. Validate the final bundle, including the initialization log entry, against OKF v0.2 sections 1 through 11 and `references/schema.md`.
+10. Only after validation succeeds, preserve unrelated changes, stage only initialization files, and create a focused local commit when Git is enabled and host rules allow it. Do not push. If any bundle file changes after validation, validate the final state again before staging or committing.
+11. Report the initialization log entry and focused commit when one exists.
 
 Keep `wiki/` flat until real navigation problems justify folders. Prefer clear titles, links, and a small approved tag registry. A new concept starts with the least structure its content needs, normally `status: draft`; there is no numeric word limit.
 
@@ -130,7 +131,7 @@ Check the initialized result and its operating rules against these cases. Do not
 
 1. A personal notes, study, or reading setup completes without an external-database question when no system was mentioned.
 2. A business, organizational, analytics, operational, or research-data setup can record an approved external `Database` or `Dataset` using a non-secret resource and honest access limits, without credentials or connector setup.
-3. Git-and-log mode records a focused local commit when permitted; log-only mode remains usable and clearly states that rollback is unavailable.
+3. Git-and-log mode records a focused local commit only after the logged final bundle passes validation; log-only mode remains usable and clearly states that rollback is unavailable.
 4. Existing raw sources remain immutable, while a new raw source is added only through exact approval.
 5. A minimal new concept uses the local required frontmatter, an allowed actor format, and no invented optional metadata.
 6. Provenance, trust, lifecycle, and source credibility fields follow OKF when used. Source-linked claim footnotes match `sources[].id`.
