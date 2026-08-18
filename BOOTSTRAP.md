@@ -84,10 +84,10 @@ After approval:
 2. Copy the approved operating kit to the target.
 3. Tailor the copied `README.md`, `references/operations.md`, `references/writing-style.md`, and approved tag registry in `references/schema.md`. Record reusable actor identifiers in the README's Local Settings. Resolve every local-setting placeholder. Replace template-only initialization text in the copied README with normal operating guidance so the result does not depend on `BOOTSTRAP.md`.
 4. Create `wiki/index.md` from `templates/index.md`. Its only frontmatter key must be `okf_version: "0.2"`. Remove example entries that do not point to real concepts.
-5. Create only initial concepts justified by the approved purpose, sources, or external systems. Do not create demonstration pages. Every file inside `wiki/` must be UTF-8 Markdown and follow the local profile.
+5. Create only initial concepts justified by the approved purpose, sources, or external systems. Do not create demonstration pages. Every file inside `wiki/` must be UTF-8 Markdown and follow the local profile. Keep non-Markdown evidence and support assets outside the bundle under approved `raw/` paths, or point to external, non-secret resources.
 6. Add an approved raw source only when the proposal names its exact target. Never modify, overwrite, rename, move, or delete an existing raw file.
 7. Initialize Git only when selected and the target is not already in a repository. Do not stage or commit yet.
-8. Create mandatory `wiki/log.md` from `templates/log.md`, with no frontmatter. Add one truthful initialization entry under the current `YYYY-MM-DD` date after the approved files and settings are in place.
+8. Create mandatory `wiki/log.md` from `templates/log.md`, with no frontmatter. Remove or replace every example date, entry, and link from the template. After the approved files and settings are in place, add one truthful initialization entry under the current `YYYY-MM-DD` date.
 9. Validate the final bundle, including the initialization log entry, against OKF v0.2 sections 1 through 11 and `references/schema.md`.
 10. Only after validation succeeds, preserve unrelated changes, stage only initialization files, and create a focused local commit when Git is enabled and host rules allow it. Do not push. If any bundle file changes after validation, validate the final state again before staging or committing.
 11. Report the initialization log entry and focused commit when one exists.
@@ -111,15 +111,24 @@ Never store credentials or secret-bearing connection details. Do not claim acces
 
 Before finishing, validate the complete `wiki/` tree:
 
-1. Only `wiki/` is treated as the OKF bundle. Every non-reserved concept is a UTF-8 Markdown file with parseable YAML frontmatter. This local profile permits no other file kind inside `wiki/`.
+1. Only `wiki/` is treated as the OKF bundle. Every non-reserved concept is a UTF-8 Markdown file with parseable YAML frontmatter. This local profile permits no other file kind inside `wiki/`. Route non-Markdown evidence and support assets to approved `raw/` paths or external, non-secret resource references.
 2. Every concept has a non-empty `type` and all locally required `title`, `status`, `tags`, and `generated` fields. Stable concepts have a one-sentence `description`.
 3. Optional `resource`, `sources`, `usage_window`, `verified`, `stale_after`, and computation fields follow their exact upstream structures. Absent optional values are omitted.
 4. Agent, human, and process identifiers follow the OKF actor convention.
 5. Every claim footnote label resolves to the same `sources[].id`, and every cited source ID has a matching footnote. There is no separate citations section.
 6. Markdown links and path-valued fields follow OKF. Report broken links, but do not fail conformance because of them.
 7. `wiki/index.md` has only the permitted `okf_version: "0.2"` frontmatter and valid, relative index entries. Subdirectory indexes, if justified, have no frontmatter.
-8. `wiki/log.md` has no frontmatter, begins with `# Directory Update Log`, and groups truthful entries newest-first under `YYYY-MM-DD` headings.
-9. Every `Attested Computation` has `runtime`. Any parameters, computation, executor, receipt, and deterministic non-LLM attester follow OKF section 10. Use either an inline `# Computation` block or a `computation` path, never both. Do not claim executable or attestable validity without the required real resources.
+8. `wiki/log.md` has no frontmatter, begins with `# Directory Update Log`, and groups truthful entries newest-first under `YYYY-MM-DD` headings. No example date, entry, or link from the template remains.
+9. Every `Attested Computation` has `runtime`, regardless of status. A draft may omit other contract families, but every field that appears must follow OKF section 10. Never permit an empty `parameters` list; omit it from an incomplete draft. Before an Attested Computation becomes `stable`, require all of the following:
+   - A non-empty `parameters` list. Every entry has `name`, `type`, and `required`. A zero-input computation remains `draft`.
+   - Exactly one computation form: one inline fenced block under `# Computation`, or a `computation` path, but not both.
+   - `executor.resource` and a non-empty `executor.receipt` list.
+   - `attester.resource` naming a deterministic, non-LLM check.
+   - One or more relevant `sources` entries with stable `id` values and matching keyed footnotes.
+   - At least one `verified` event from an actor independent of `generated.by`.
+   - `stale_after` when the definition can expire.
+
+   Reject `stable` when any required contract part is missing. Do not claim executable or attestable validity without the required real resources.
 10. Unknown types and frontmatter fields are preserved and accepted.
 11. All required OKF and local checks pass. A failure blocks completion and an automatic Git commit; report what remains wrong instead of inventing data to pass.
 
@@ -138,10 +147,13 @@ Check the initialized result and its operating rules against these cases. Do not
 7. The root index declares OKF v0.2 in the reserved format, and the mandatory log uses the reserved date-grouped format.
 8. Durable or potentially useful query findings are filed into an existing or distinct concept, while disposable chat is not archived as a Q&A page.
 9. Maintenance checks links, provenance, conflicts, types, tags, and the tag registry, applying only low-risk changes autonomously.
-10. A complete Attested Computation contract has a real sanctioned computation, typed declared parameters when needed, an executor with receipt fields, and a deterministic non-LLM attester. Failed attestation blocks the value; stale computation warns or refuses according to risk.
-11. Unknown types and extension fields survive a read-and-write cycle.
-12. Broken links are reported without making an otherwise conformant bundle fail.
-13. The knowledge base can be operated from its copied README, AGENTS, specification, local rules, indexes, logs, and templates after `BOOTSTRAP.md` is absent.
+10. A stable Attested Computation has a non-empty typed parameter list, exactly one real sanctioned computation, an executor with a non-empty receipt, a deterministic non-LLM attester, keyed provenance, independent verification, and conditional `stale_after`. A runtime-only stable computation and an empty parameter list are rejected.
+11. An incomplete Attested Computation may remain `draft` when it has `runtime`; any optional contract field that appears still follows OKF section 10.
+12. Failed attestation blocks the value, and stale computation warns or refuses according to risk.
+13. No non-Markdown member remains in `wiki/`; approved evidence or support assets are under `raw/` or represented by external, non-secret resource references.
+14. Unknown types and extension fields survive a read-and-write cycle.
+15. Broken links are reported without making an otherwise conformant bundle fail.
+16. The knowledge base can be operated from its copied README, AGENTS, specification, local rules, indexes, logs, and templates after `BOOTSTRAP.md` is absent.
 
 ## Finish
 
