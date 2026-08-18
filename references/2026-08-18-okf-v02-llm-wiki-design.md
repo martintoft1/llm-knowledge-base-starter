@@ -47,7 +47,7 @@ Local documents may point to exact SPEC sections but should repeat them only whe
 ## Repository Architecture
 
 ```text
-<knowledge-base>/
+knowledge-base-root/
 ├── raw/                    # Immutable original sources in native formats
 ├── wiki/                   # OKF v0.2 bundle
 │   ├── index.md            # Reserved OKF index and version declaration
@@ -110,8 +110,8 @@ title: Example note
 status: draft
 tags: []
 generated:
-  by: llm-wiki/<agent-version>
-  at: <ISO 8601 datetime>
+  by: example-agent/1.0
+  at: 2026-08-18T12:00:00+02:00
 ---
 ```
 
@@ -144,9 +144,9 @@ Path-valued fields accept absolute URLs, bundle-absolute paths, or relative path
 
 Actors use:
 
-- `<producer>/<version>` for agents and tools.
-- `human:<id>` for people.
-- `process:<id>` for automated processes.
+- The `producer/version` pattern for agents and tools.
+- The `human:identifier` pattern for people.
+- The `process:identifier` pattern for automated processes.
 
 The bootstrap may use stable local identifiers such as `human:owner` when a more specific identifier is unnecessary.
 
