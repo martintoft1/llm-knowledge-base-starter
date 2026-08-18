@@ -1,401 +1,155 @@
-# Bootstrap an LLM wiki
+# Bootstrap An LLM Wiki
 
-You are helping the user create a persistent, file-based knowledge base maintained by an LLM. Treat this document as setup instructions, not as content to store in the resulting wiki.
+Use this file only to initialize a new knowledge base from this repository. Do not copy `BOOTSTRAP.md` into the initialized knowledge base.
 
 Begin by asking exactly this question and nothing else:
 
-> What kind of knowledge base do you want to create, where should it live, and what will you use it for?
+> What do you want this knowledge base to help you with, and what kind of material should it organize? For example: business, studies, research, personal notes, a writing project, a trip, or another specific project.
 
-After the answer, ask only follow-up questions that materially affect the result. Ask one question per message. Infer sensible defaults from the user's context, explain consequential recommendations briefly, and avoid turning setup into a questionnaire.
+Ask one follow-up question at a time. Ask only when the answer changes files, behavior, or safety. Infer harmless defaults, state important assumptions, and explain consequential recommendations briefly.
 
-Do not create or modify files during discovery. When enough is known, present one concrete proposal and wait for explicit approval.
-
-## What you are creating
-
-The wiki separates preserved evidence from evolving interpretation:
-
-```text
-<wiki-root>/
-├── raw/                 # Human-owned source material
-├── wiki/                # LLM-maintained Markdown
-├── config.md            # Complete local operating contract
-├── index.md             # Content-oriented navigation
-├── log.md               # Append-only operation history
-└── <agent-instructions> # The filename recognized by the user's agent
-```
-
-This is a default, not a fixed location. The wiki may be standalone or live inside an existing repository. Use the smallest structure that fits the user's request.
-
-- `raw/` has no required internal organization. The human may keep it flat or group files by provenance, source bundle, or project.
-- `wiki/` is flat by default. Optional subdirectories may be proposed later when scale justifies them, but directory placement never determines page type.
-- `config.md`, `index.md`, `log.md`, and the agent instruction file are operational files, not knowledge pages.
-- Do not copy this `BOOTSTRAP.md` into the initialized wiki.
-- Do not require access to this document after initialization. Put the complete tailored contract in `config.md`.
+Do not create or modify files during discovery.
 
 ## Discovery
 
-From the first answer, determine as much as possible about:
+Determine only what the setup needs:
 
-- Purpose and intended decisions or questions.
-- Target directory and whether it sits inside an existing repository.
-- Material that belongs inside or outside scope.
-- Likely raw sources.
-- Useful business functions, industries or domains, evidence forms, recurring topics, work modes, and other classification tags.
-- Sensitive-data constraints.
-- The agent instruction convention already used by the surrounding project.
+- Purpose, scope, exclusions, and local terminology.
+- Target directory and any files already there.
+- Sensitive-data rules for reading, storing, quoting, linking, logging, and committing.
+- Preferred writing style when it would materially change the wiki.
+- Stable actor identifiers needed for initial content or verification.
+- History mode: Git and log, or log-only.
+- Likely source material and whether any approved source should be retained under `raw/` now.
+- Relevant external systems and available read tools, but only under the conditional rule below.
+- Agent adapters needed in addition to `AGENTS.md`.
 
-Ask a follow-up only when its answer would change the files, safety boundaries, or operating behavior. Prefer a recommendation with a short reason over an open-ended question when a clear default exists.
+Use OKF actor formats: `producer/version` for agents and tools, `human:id` for people, and `process:id` for automated processes. Use `human:owner` when a more specific human identifier is unnecessary. Do not invent an actor, verification event, or process.
 
-If the target already exists, inspect it before proposing changes. Never overwrite or substantially revise an existing file without naming that file and receiving separate approval.
+Explain that `wiki/log.md` is mandatory in both history modes. Recommend Git because it provides diffs, attribution, and rollback. Log-only mode is valid and simpler, but its log cannot restore earlier content. If the target is already inside a Git repository, propose using it; do not create a nested repository.
 
-## Proposal gate
+Inspect an existing target before proposing changes. Preserve unrelated work. Name every existing file that would change, and never overwrite one without approval.
 
-Before writing, present:
+Do not design a tag taxonomy during setup. Propose seed tags only when stable recurring categories already have a clear retrieval benefit.
 
-```markdown
-## Proposed wiki
+### External Databases And Data Systems
 
-### Purpose and scope
-### Location and repository integration
-### Directory structure
-### Local terminology and proposed tag vocabulary
-### Sensitive-data rules
-### Files to create
-### Existing files to modify
-### Defaults and assumptions
-```
+Ask about external databases, datasets, warehouses, analytics tools, or live systems only when the purpose is business, organizational, research-data, analytics, operational, explicitly data-connected, or otherwise makes them relevant.
 
-End with a direct approval question. Approval applies only to the files and changes explicitly shown. If the user qualifies the approval, revise the proposal or apply only the accepted subset.
+Skip that question for ordinary personal notes, study, and reading unless the user mentions an external system.
 
-As part of the proposal, suggest a small initial vocabulary—normally 8–15 tags—based on the user's description. Group suggestions by useful dimensions, give a short meaning for each, and omit dimensions that add no value. The user should be able to approve, remove, rename, or add tags before they are written to `config.md`.
+When the question is relevant:
 
-## Ownership and write protocol
+- Ask for non-secret system names or canonical resource identifiers.
+- Determine which existing agent tools, if any, already have read access.
+- Record access limits and unavailable information honestly.
+- Never ask for credentials, tokens, connection strings, or secret-bearing URLs.
+- Do not install or configure connectors during initialization.
 
-Raw evidence is human-controlled. You may propose and, after the normal approval cycle, add new files under `raw/`. Once a raw file exists, modifying, overwriting, renaming, moving, or deleting it requires separate, explicit human approval that names the file and operation. General approval to ingest or update the wiki does not authorize changing existing raw material. When possible, preserve the original and add a derived or corrected version as a new file.
+## Proposal Gate
 
-Wiki and operational files are agent-maintained only after approval. Every write follows:
+Before writing, present one concrete proposal that states:
 
-```text
-Inspect → Propose → Approve → Apply → Verify → Log
-```
+- Purpose, scope, exclusions, terminology, and target directory.
+- OKF v0.2 as the pinned format and `wiki/` as the bundle.
+- History mode, sensitive-data rules, writing preference, and actor identifiers.
+- The exact directories and files to create or copy. Enumerate paths; do not hide them behind wildcards.
+- Every existing file to change and the intended change.
+- Raw-source handling, including every new raw file and confirmation that existing raw files remain unchanged.
+- Normal progressive autonomy and every approval-bound exception from `references/operations.md`.
+- Any approved `Dataset` or `Database` concept and its non-secret resource identifier.
+- Git initialization or existing-repository behavior, or the limitations of log-only mode.
+- Agent adapters, seed tags, root-path exceptions, and other important assumptions.
 
-For each operation:
+Approval covers only the listed files and changes. Revise the proposal when the user changes its scope.
 
-1. Inspect `config.md`, `index.md`, and relevant wiki or raw files.
-2. Describe the intended file-level changes, important interpretations, contradictions, and uncertainty.
-3. Wait for explicit approval.
-4. Apply only the approved changes.
-5. Verify frontmatter, relative links, raw references, citations, and index coverage.
-6. Append a concise entry to `log.md`.
+## Complete Operating Kit
 
-Renames, moves, merges, splits, archival, and deletion always require explicit approval. Update and verify inbound links in the same operation. Prefer archival or a small redirect-style page over destructive deletion.
+After approval, make the initialized knowledge base self-contained. Copy:
 
-## Knowledge pages
+- `README.md` and `AGENTS.md`.
+- The complete `references/` tree, including `references/okf/v0.2/SPEC.md` and `references/okf/v0.2/UPSTREAM.md`.
+- The complete `templates/` tree.
+- `CLAUDE.md` or another existing adapter only when approved and applicable.
 
-Every file under `wiki/` has two parts: YAML frontmatter containing consistent machine-readable metadata, and a Markdown body containing the actual knowledge, contextual links, and—when needed—a final citations section. Frontmatter describes the page; the body explains the subject.
+Copy rules instead of recreating them from memory. Preserve the pinned specification byte-for-byte. Do not create a competing OKF summary, connector, credential file, required runtime, or background service.
 
-Claims and quotes belong in the body. Attachments remain under `raw/`. Indexes, logs, tags, and statuses are not page types.
+Do not copy `BOOTSTRAP.md`.
 
-## Frontmatter
+## Initialize
 
-Every knowledge page contains the same eight keys. The block below is a schema illustration, not copy-ready YAML. Every value inside angle brackets is a placeholder that must be replaced from the actual page context. The listed choices are allowed values, not defaults or recommendations.
+After approval:
 
-```yaml
----
-type: <source | subject | note | synthesis | decision | plan>
-title: <human-readable display name>
-description: <one-sentence summary>
-status: <fragment | draft | review | current | completed | archived>
-tags: [<zero or more approved tags>]
-resource: <absolute URL | relative path | null>
-created: <ISO 8601 datetime with timezone>
-updated: <ISO 8601 datetime with timezone>
----
-```
+1. Create `raw/` and `wiki/`.
+2. Copy the approved operating kit to the target.
+3. Tailor the copied `README.md`, `references/operations.md`, `references/writing-style.md`, and approved tag registry in `references/schema.md`. Record reusable actor identifiers in the README's Local Settings. Resolve every local-setting placeholder. Replace template-only initialization text in the copied README with normal operating guidance so the result does not depend on `BOOTSTRAP.md`.
+4. Create `wiki/index.md` from `templates/index.md`. Its only frontmatter key must be `okf_version: "0.2"`. Remove example entries that do not point to real concepts.
+5. Create mandatory `wiki/log.md` from `templates/log.md`, with no frontmatter and a current `YYYY-MM-DD` date group. Add its single truthful initialization entry after validation succeeds.
+6. Create only initial concepts justified by the approved purpose, sources, or external systems. Do not create demonstration pages. Every file inside `wiki/` must be UTF-8 Markdown and follow the local profile.
+7. Add an approved raw source only when the proposal names its exact target. Never modify, overwrite, rename, move, or delete an existing raw file.
+8. Initialize Git only when selected and the target is not already in a repository. When using Git, preserve unrelated changes, stage only initialization files, and create a focused local commit only when host rules allow it. Do not push.
+9. Validate the whole bundle against OKF v0.2 sections 1 through 11 and `references/schema.md`.
+10. Record the completed initialization in `wiki/log.md` and report the focused commit when one exists.
 
-Keep every key in every knowledge page. Do not comment out or omit empty fields. Filenames are lowercase kebab-case and unique within a flat `wiki/` directory.
+Keep `wiki/` flat until real navigation problems justify folders. Prefer clear titles, links, and a small approved tag registry. A new concept starts with the least structure its content needs, normally `status: draft`; there is no numeric word limit.
 
-### `type`
+## External Resource Concepts
 
-Choose the value that matches the page's purpose. No type is preferred by default.
+When an external system is relevant and approved, create a `Database` or `Dataset` concept from the normal page template. Use a canonical, non-secret `resource` such as a public console URL, catalog URI, or stable system identifier.
 
-| Value | Use it for | Example tags |
-|---|---|---|
-| `source` | One imported piece of evidence | `book`, `research-paper`, `image`, `dataset`, `customer-interview` |
-| `subject` | An enduring topic or entity | `person`, `company`, `customer`, `concept`, `event`, `project` |
-| `note` | Provisional authored thinking | `idea`, `hypothesis`, `question`, `observation` |
-| `synthesis` | A conclusion reasoned across evidence | `literature-review`, `comparison`, `market-analysis` |
-| `decision` | A choice and its rationale | `product`, `strategy`, `research-direction` |
-| `plan` | Intended action and progress | `strategy`, `roadmap`, `experiment`, `project-plan` |
+Add only useful body sections:
 
-Adapt a new context through tags and body sections. Do not invent another universal type unless the six-value model has failed repeatedly in actual use and the user approves a schema change.
+- `# Schema` for known fields, tables, or relationships.
+- `# Examples` for safe examples.
+- `# Access` for available read tools, permissions boundaries, and how access is requested outside the wiki.
+- `# Limitations` for missing access, freshness, coverage, or uncertainty.
 
-### `title` and `description`
+Never store credentials or secret-bearing connection details. Do not claim access that was not confirmed. Recording a system does not authorize connecting to it, expanding access, or writing to it. Do not read an external system during initialization unless the approved proposal separately names that read.
 
-`title` is the human-readable display name. `description` is one plain-text sentence suitable for indexes, previews, and search results.
+## Validate OKF And The Local Profile
 
-### `status`
+Before finishing, validate the complete `wiki/` tree:
 
-Choose the value from the page's actual lifecycle state. No status is a universal default.
-
-- `fragment`: captured but not sufficiently developed.
-- `draft`: coherent but incomplete.
-- `review`: awaiting human approval.
-- `current`: approved and presently authoritative.
-- `completed`: a fixed record or plan whose intended process has concluded.
-- `archived`: retained but no longer active or authoritative.
-
-The usual progression is `fragment → draft → review → current`, but it is not mandatory. New evidence may return a current page to draft or review.
-
-### `tags`
-
-Tags provide broad, cross-cutting categorization and discovery. Use short, stable, lowercase kebab-case strings.
-
-Tags may describe several independent dimensions:
-
-- Business function, such as `operations`, `admin`, `technology`, `marketing`, `sales`, or `finance`.
-- Industry or domain, such as `circular-economy`, `climate`, `health`, or `agriculture`.
-- Evidence or document form, such as `customer-interview`, `research-paper`, `dataset`, or `meeting`.
-- Topic or theme, such as `pricing`, `onboarding`, `retention`, or `supply-chain`.
-- Work mode, such as `hypothesis`, `experiment`, or `analysis`.
-
-These examples are prompts, not a fixed taxonomy. Infer an initial set from the user's actual context. Record the approved vocabulary in `config.md`, grouped by useful dimensions, with one-line meanings.
-
-Reuse approved tags before creating new ones. Avoid synonyms and near-duplicates, do not use `type` or `status` values as redundant tags, and propose vocabulary additions before first use. Multiple tags are appropriate when a page genuinely crosses dimensions. Maintenance should flag unused tags, accidental synonyms, and tags that have become too broad.
-
-### `resource`
-
-`resource` identifies the primary underlying asset described by the page. It may be an absolute URL or a relative path such as `../raw/customer-orders.csv`. Use `null` when the page describes an abstract idea or knowledge product—such as a synthesis, business plan, strategy, or decision—rather than one specific underlying asset. Use claim-level citations for additional supporting files and sources.
-
-### `created` and `updated`
-
-Both use ISO 8601 datetimes with explicit timezone offsets. `created` never changes. Update `updated` only after a meaningful content or metadata change, not for formatting or link repair alone.
-
-## Links
-
-Relative Markdown links express specific relationships. Put them in explanatory prose so the connection remains understandable:
-
-```markdown
-This plan implements [Adopt self-serve onboarding](adopt-self-serve-onboarding.md)
-and is supported by [Onboarding friction](onboarding-friction.md).
-```
-
-Link raw evidence relatively, for example `[interview transcript](../raw/customer-12/transcript.txt)`. Use portable Markdown links rather than tool-specific wiki-link syntax. Generic relationship lists do not belong in frontmatter by default; add structured relationship fields only when filtering or maintenance genuinely needs them.
-
-## Citations
-
-When a page makes claims sourced from external material, add numeric markers immediately after those claims and list the sources under `## Citations` as the final section:
-
-```markdown
-The market grew by 18% during 2025 [1].
-
-## Citations
-
-[1] [Market report](https://example.com/market-report)
-[2] [Internal data-quality runbook](../raw/data-quality-runbook.pdf)
-```
-
-Follow these rules:
-
-- Number sources by first appearance and reuse the same number when citing a source again.
-- Use `[1, 2]` when several sources support one claim.
-- Add precise locators when useful: `[2, p. 14]`, `[3, 01:12:30]`, or `[4, rows 20–35]`.
-- Citation targets may be absolute URLs or relative paths.
-- Prefer the closest preserved evidence: a raw file, internal document, dataset, or canonical external URL.
-- Keep `## Citations` as the final section and omit it when no externally sourced claims appear.
-- Never invent a source or missing citation details; mark unsupported claims explicitly.
-
-The citation section provides claim-level provenance and may reference raw files. Links between wiki pages still serve a separate purpose: explaining semantic relationships.
-
-## Page-body templates
-
-Generate page bodies from the heading sequences below. Treat them as structured but elastic templates: keep the sections needed to preserve each page type's meaning, add sections when the material requires them, and remove irrelevant optional headings before promoting a page to `review`, `current`, or `completed`. Add removable HTML comments explaining what belongs under each heading. When citations are required, `## Citations` is always the final section regardless of page type.
-
-### Source
-
-- Summary
-- Key claims or observations
-- Evidence, including links and precise locators when available
-- Limitations
-- Connections
-
-A source page is the bridge from preserved evidence to evolving interpretation. It does not replace the original.
-
-### Subject
-
-- Overview
-- Current understanding
-- Useful attributes
-- Relationships
-- Evidence
-- Open questions
-
-### Note
-
-- Idea or observation
-- Why it matters
-- Evidence and assumptions, kept distinct
-- Open questions
-- Connections
-
-### Synthesis
-
-- Question
-- Conclusion
-- Reasoning
-- Supporting evidence
-- Conflicting evidence
-- Confidence and limitations
-- Knowledge gaps
-
-### Decision
-
-- Decision
-- Context
-- Alternatives considered
-- Rationale
-- Consequences
-- Review or reversal conditions
-
-### Plan
-
-- Outcome
-- Context
-- Approach
-- Milestones
-- Risks and dependencies
-- Success criteria
-- Progress
-- Related decisions and evidence
-
-## Operations
-
-### Ingest
-
-Read the new raw material and identify what it changes. Propose a source page, affected subjects, notes or syntheses, contradictions, and index updates. A single source may update many wiki pages. Wait for approval before writing.
-
-### Query
-
-Read `config.md` and `index.md`, inspect relevant wiki pages, and consult raw evidence when necessary. Cite relative links. Distinguish evidence, inference, uncertainty, and unresolved conflict.
-
-A valuable answer may be proposed as a note, synthesis, decision, or plan. Do not file it automatically.
-
-### Maintain
-
-Periodically check for missing or invalid frontmatter, broken links, orphan pages, stale descriptions, unsupported claims, conflicting conclusions, duplicate subjects, and pages stuck in provisional statuses. Propose a maintenance batch and wait for approval.
-
-## Safety behavior
-
-- Preserve conflicting evidence and explain the disagreement instead of silently choosing one account.
-- Mark unsupported claims and uncertainty instead of inventing citations.
-- Do not modify, overwrite, rename, move, or delete an existing raw file without separate, file-specific human approval. Offer a new derived or corrected file as the default alternative.
-- Do not write when approval is ambiguous.
-- Apply configured sensitive-data constraints to reading, quoting, linking, retention, and generated content.
-- Keep an intelligible trail when newer knowledge supersedes an approved page.
-
-## Files to generate after approval
-
-Create only what the approved proposal requires. The minimal default is:
-
-1. Empty `raw/` and `wiki/` directories.
-2. `config.md` containing the tailored purpose, scope, approved tag vocabulary with one-line meanings, citation contract, sensitive-data rules, ownership rules, universal schema, page-body guidance, and write protocol from this document.
-3. `index.md` with a short usage note, `Start here`, `Topics`, and `Recent and active work` sections.
-4. `log.md` with an append-only entry format beginning `## [ISO datetime] operation | Title`.
-5. One agent instruction file using the convention recognized in the target environment, such as `AGENTS.md` or `CLAUDE.md`. Keep it thin: instruct the agent to read `config.md`, use `index.md` to orient, allow approved additions to `raw/` while requiring separate file-specific approval to change existing raw files, obtain approval before writes, verify changes, and append to `log.md`.
-
-Do not create empty knowledge pages merely to demonstrate the schema. Do not add domain-specific folders when frontmatter, tags, and the index already express the distinction. Add local tag vocabulary and examples to `config.md` based on the user's actual context.
-
-### `config.md` template
-
-Generate `config.md` with this structure and fill every section from the approved setup conversation:
-
-```markdown
-# Wiki configuration
-
-## Purpose
-## Scope
-## Outside scope
-## Local terminology
-## Frontmatter
-### Type
-### Title and description
-### Status
-### Tags and approved vocabulary
-### Resource
-### Created and updated
-## Links
-## Citations
-## Ownership and approval
-## Raw intake
-## Sensitive information
-## Local conventions
-```
-
-Include the complete approved rules from this bootstrap rather than references back to it. Under the approved tag vocabulary, group only useful dimensions and give each tag a one-line meaning.
-
-### `index.md` template
-
-```markdown
-# Wiki index
-
-Use this file for content-oriented navigation. Each entry links to a page, gives its one-sentence description, and shows status and update date.
-
-## Start here
-
-## Topics
-
-## Recent and active work
-```
-
-Organize entries for the reader rather than mechanically by page type. An entry uses:
-
-```markdown
-- [Display title](wiki/page-name.md) — One-sentence description. (`status`, updated YYYY-MM-DD)
-```
-
-### `log.md` template
-
-Append new entries at the top and do not rewrite history except to correct an objective formatting error:
-
-```markdown
-# Wiki log
-
-## [YYYY-MM-DDTHH:MM:SS±HH:MM] operation | Short title
-
-- **Approved by:** User
-- **Files added:** None
-- **Files updated:** None
-- **Files archived:** None
-- **Summary:** What changed and why.
-- **Verification:** Metadata, links, citations, index coverage, and other checks performed.
-```
-
-### Agent-instruction template
-
-Use the filename recognized by the target agent. Adapt names to the approved wiki location while preserving this behavior:
-
-```markdown
-# Wiki instructions
-
-Read `config.md` before operating on this wiki. Use `index.md` to orient, inspect relevant pages under `wiki/`, and consult `raw/` when evidence must be verified.
-
-Before changing files, present the proposed file-level changes and wait for explicit approval. Agents may add new files under `raw/` after normal approval. Modifying, overwriting, renaming, moving, or deleting an existing raw file requires separate, file-specific human approval. After approved changes, verify metadata, relative links, citations, resource paths, and index coverage, then append the operation to `log.md`.
-```
-
-## Verification after creation
-
-Verify that:
-
-- The approved directories and files exist and no unapproved file changed.
-- `config.md` is complete enough to operate the wiki without this bootstrap document.
-- `config.md` contains the approved initial tag vocabulary and its meanings.
-- `config.md` defines the numeric citation format and distinguishes citations from links and frontmatter provenance.
-- The agent instruction file points to `config.md` and preserves the approval boundary.
-- `config.md` and the agent instruction file allow approved raw additions while protecting existing raw files from unapproved changes or removal.
-- `raw/` and `wiki/` have no unnecessary mandatory subdirectories.
-- The index and log are initialized.
-- Example frontmatter uses only the six universal types and allowed statuses and includes all eight required keys.
-- Relative paths are correct for the chosen placement.
-- No unanswered setup prompts or placeholder decisions remain in operational files.
-
-Report the created paths, the most important local conventions, and how the user should add their first source. Do not retain this bootstrap document in the initialized wiki.
+1. Only `wiki/` is treated as the OKF bundle. Every non-reserved concept is a UTF-8 Markdown file with parseable YAML frontmatter. This local profile permits no other file kind inside `wiki/`.
+2. Every concept has a non-empty `type` and all locally required `title`, `status`, `tags`, and `generated` fields. Stable concepts have a one-sentence `description`.
+3. Optional `resource`, `sources`, `usage_window`, `verified`, `stale_after`, and computation fields follow their exact upstream structures. Absent optional values are omitted.
+4. Agent, human, and process identifiers follow the OKF actor convention.
+5. Every claim footnote label resolves to the same `sources[].id`, and every cited source ID has a matching footnote. There is no separate citations section.
+6. Markdown links and path-valued fields follow OKF. Report broken links, but do not fail conformance because of them.
+7. `wiki/index.md` has only the permitted `okf_version: "0.2"` frontmatter and valid, relative index entries. Subdirectory indexes, if justified, have no frontmatter.
+8. `wiki/log.md` has no frontmatter, begins with `# Directory Update Log`, and groups truthful entries newest-first under `YYYY-MM-DD` headings.
+9. Every `Attested Computation` has `runtime`. Any parameters, computation, executor, receipt, and deterministic non-LLM attester follow OKF section 10. Use either an inline `# Computation` block or a `computation` path, never both. Do not claim executable or attestable validity without the required real resources.
+10. Unknown types and frontmatter fields are preserved and accepted.
+11. All required OKF and local checks pass. A failure blocks completion and an automatic Git commit; report what remains wrong instead of inventing data to pass.
+
+Also confirm that the copied specification still matches the checksum in `references/okf/v0.2/UPSTREAM.md`. Check index links from their index location and report missing targets under the broken-link rule. Resolve every local-setting placeholder in tailored operating files; keep documented replacement markers inside reusable templates.
+
+## Verification Scenarios
+
+Check the initialized result and its operating rules against these cases. Do not leave test concepts in the user's wiki.
+
+1. A personal notes, study, or reading setup completes without an external-database question when no system was mentioned.
+2. A business, organizational, analytics, operational, or research-data setup can record an approved external `Database` or `Dataset` using a non-secret resource and honest access limits, without credentials or connector setup.
+3. Git-and-log mode records a focused local commit when permitted; log-only mode remains usable and clearly states that rollback is unavailable.
+4. Existing raw sources remain immutable, while a new raw source is added only through exact approval.
+5. A minimal new concept uses the local required frontmatter, an allowed actor format, and no invented optional metadata.
+6. Provenance, trust, lifecycle, and source credibility fields follow OKF when used. Source-linked claim footnotes match `sources[].id`.
+7. The root index declares OKF v0.2 in the reserved format, and the mandatory log uses the reserved date-grouped format.
+8. Durable or potentially useful query findings are filed into an existing or distinct concept, while disposable chat is not archived as a Q&A page.
+9. Maintenance checks links, provenance, conflicts, types, tags, and the tag registry, applying only low-risk changes autonomously.
+10. A complete Attested Computation contract has a real sanctioned computation, typed declared parameters when needed, an executor with receipt fields, and a deterministic non-LLM attester. Failed attestation blocks the value; stale computation warns or refuses according to risk.
+11. Unknown types and extension fields survive a read-and-write cycle.
+12. Broken links are reported without making an otherwise conformant bundle fail.
+13. The knowledge base can be operated from its copied README, AGENTS, specification, local rules, indexes, logs, and templates after `BOOTSTRAP.md` is absent.
+
+## Finish
+
+Report:
+
+- Every path created or changed.
+- The purpose, boundaries, actors, history mode, and external-resource decisions.
+- Validation results, broken-link warnings, and any unresolved limitation.
+- The initialization log entry and focused commit, when present.
+- How to add the first approved source or ask the first substantive question.
+
+Do not claim completion until required validation passes.
