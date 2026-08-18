@@ -1,6 +1,6 @@
 # Directory Update Log
 
-<!-- Add new date groups and entries above older ones. Use date-only headings. -->
+<!-- During initialization, replace or remove every example date, entry, and link. Add real entries newest-first under date-only headings. -->
 
 ## 2026-08-18
 

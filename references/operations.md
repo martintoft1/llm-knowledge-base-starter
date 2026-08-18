@@ -9,6 +9,10 @@ This file defines how agents add, use, review, and record knowledge. The pinned 
 
 Apply the sensitive-data rules to source material, wiki content, logs, commits, and responses.
 
+## Bundle Files
+
+Every member of the `wiki/` bundle must be UTF-8 Markdown with a `.md` filename. This is a local restriction beyond base OKF. Keep non-Markdown evidence and support files outside the bundle: retain evidence under `raw/`, or point to an external, non-secret resource.
+
 ## Authority
 
 Agents may perform ordinary, low-risk work under `wiki/` without asking each time. This includes creating and updating concepts, sources, claim footnotes, links, metadata, indexes, and logs; fixing clear formatting or conformance errors; and making focused local commits when Git is enabled and host rules allow it.
@@ -103,12 +107,17 @@ The wiki remains usable in log-only mode, but rollback is unavailable. Explain t
 
 OKF records a computation contract; it does not execute it. Treat each `Attested Computation` as its own concept.
 
-`runtime` is the only computation-specific field required for every Attested Computation. `parameters`, `computation`, `executor`, and `attester` are optional and retain their exact OKF section 10 meanings. Use them only when they apply:
+Every Attested Computation requires `runtime`, regardless of status. Before its status may become `stable`, it also requires:
 
-- Add `parameters` only when the computation has typed, named inputs. Omit it when there are no inputs; never add an empty optional list.
-- When a computation is provided, use either one inline fenced block under `# Computation` or a `computation` path, never both.
-- An `executor` describes how to run the computation and which receipt fields a run returns.
-- An `attester` identifies a deterministic, non-LLM check of a receipt.
+- a non-empty `parameters` list whose entries contain `name`, `type`, and `required`; a zero-input computation remains `draft` rather than using an empty list;
+- exactly one computation form: one inline fenced block under `# Computation`, or a `computation` path, but not both;
+- `executor.resource` and a non-empty `executor.receipt` list;
+- `attester.resource` naming a deterministic, non-LLM check;
+- one or more relevant `sources` entries with stable `id` values and matching keyed footnotes;
+- at least one `verified` event from an actor independent of `generated.by`; and
+- `stale_after` when the definition can expire.
+
+For non-stable concepts, `parameters`, `computation`, `executor`, and `attester` remain optional. When present, they retain their exact OKF section 10 structure and meaning. Omit optional fields that do not apply; never add empty placeholders.
 
 Do not claim executable validity without a usable computation and executor. Do not claim attestable validity without a usable attester. During an attested run, an agent may supply values only for declared parameters. It must not author or alter the sanctioned computation. The consumer binds the values, the executor returns the declared receipt, and the deterministic attester checks what ran and the displayed result.
 
@@ -116,19 +125,25 @@ A failed attestation blocks use or display of the value and must be surfaced. Wh
 
 ## Conformance
 
-Before finalizing any wiki operation, validate the complete bundle against OKF v0.2 and the local profile:
+Before finalizing any wiki operation, validate the complete bundle at two levels.
 
-1. Every non-reserved `.md` file has parseable YAML frontmatter and all locally required fields.
+Base OKF v0.2 conformance requires:
+
+1. Every non-reserved `.md` file has parseable YAML frontmatter.
 2. Every concept has a non-empty `type`.
-3. Every `index.md` and `log.md` follows the reserved format. The root index and root log are present.
+3. Every reserved `index.md` and `log.md` that appears follows its OKF structure.
+
+The local profile also requires:
+
+1. Every bundle member is UTF-8 Markdown with a `.md` filename.
+2. Every concept has the locally required frontmatter in `schema.md`.
+3. The root index and root log are present and follow their reserved formats.
 4. Every optional provenance, trust, lifecycle, path, and computation field that appears has the upstream structure.
 5. Actor identifiers follow the patterns in `schema.md`.
 6. Every source-linked footnote label resolves to a matching `sources[].id`, and every cited source ID has a footnote.
-7. Every Attested Computation passes the type-specific checks in `schema.md` and OKF section 10.
-8. Unknown fields and types are preserved.
-9. Broken links are reported but do not fail OKF conformance.
-10. Local tag use agrees with the tag registry.
+7. Every Attested Computation has `runtime`. Before one becomes `stable`, it has the complete local contract above.
+8. Local tag use agrees with the tag registry.
 
-Consumers must accept missing optional OKF families, unknown fields and types, broken links, and missing non-root indexes as the specification requires. Local-profile checks may still be stricter for this repository.
+Preserve unknown fields and types. Report broken links, but do not fail base OKF conformance because of them. Consumers must accept missing optional OKF families, unknown fields and types, broken links, and missing non-root indexes as the specification requires. A bundle may meet base OKF while failing this repository's stricter local profile.
 
 If a required check fails, correct it when the fix is clear and within scope. Otherwise stop: do not mark the operation complete or create its automatic commit. Report the failed check, affected files, retained changes, and the approval or information needed. Never invent provenance, verification, access, or attestation to make validation pass.
