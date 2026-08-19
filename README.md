@@ -13,26 +13,27 @@ It targets OKF v0.2 and follows Karpathy's LLM Wiki pattern: keep original evide
 │   ├── index.md            # Bundle navigation and OKF version
 │   ├── log.md              # Mandatory update history
 │   └── *.md                # Knowledge concepts
-├── README.md               # Purpose, scope, and local settings
+├── README.md               # Overview, architecture, and navigation
 ├── AGENTS.md               # Agent entry point
 ├── CLAUDE.md               # Optional Claude adapter
-├── references/             # Standard and local operating rules
+├── references/             # Local settings, standard, and operating rules
 └── templates/              # Reusable concept and body templates
 ```
 
 Only `wiki/` is the OKF bundle. Every concept in it is UTF-8 Markdown with OKF frontmatter. `raw/` keeps PDFs, images, spreadsheets, exports, and other evidence in their useful native formats. Existing raw files are immutable to agents.
 
-Root files operate the system. They are not part of the bundle. Adding top-level files or directories outside this layout requires a scoped proposal and approval.
+Files outside `wiki/` operate or support the system. They are not part of the bundle. Adding top-level files or directories outside this layout requires a scoped proposal and approval.
 
 ## Sources Of Authority
 
 Use these sources in order:
 
 1. [`references/okf/v0.2/SPEC.md`](references/okf/v0.2/SPEC.md) is the pinned, unmodified OKF v0.2 specification. It defines OKF terms and semantics.
-2. [`references/schema.md`](references/schema.md) defines this starter kit's stricter local profile.
-3. [`references/operations.md`](references/operations.md) defines workflows, history, validation, and authority.
-4. [`references/writing-style.md`](references/writing-style.md) defines local editorial guidance.
-5. `AGENTS.md` and optional adapters provide short entry points.
+2. [`references/local-settings.md`](references/local-settings.md) defines the current purpose, scope, terminology, sensitive-data rules, history mode, and actor identifiers.
+3. [`references/schema.md`](references/schema.md) defines this starter kit's stricter local profile.
+4. [`references/operations.md`](references/operations.md) defines workflows, history, validation, and authority.
+5. [`references/writing-style.md`](references/writing-style.md) defines local editorial guidance.
+6. `AGENTS.md` and optional adapters provide short entry points.
 
 Local rules may narrow the format, but they must not redefine reserved OKF fields incompatibly.
 
@@ -40,12 +41,7 @@ The pinned [`references/okf/v0.2/README.md`](references/okf/v0.2/README.md) prov
 
 ## Local Settings
 
-- **Purpose:** <what this knowledge base helps with>
-- **Scope:** <material and questions that belong here>
-- **Outside scope:** <material and questions that do not belong here>
-- **Local terminology:** <domain terms or naming conventions>
-- **Sensitive data:** <what must not be stored or exposed>
-- **History mode:** <Git and log, or log only>
+The authoritative settings for this knowledge base live in [`references/local-settings.md`](references/local-settings.md). Keep their values there so purpose, scope, safety rules, history mode, and actor identifiers cannot drift between documents.
 
 ## How Knowledge Grows
 
@@ -77,7 +73,7 @@ Ask an agent with filesystem access to follow `BOOTSTRAP.md`. It gathers only de
 
 ## Editable Settings
 
-- Purpose, scope, exclusions, terminology, sensitive-data rules, and history mode: this `README.md`.
+- Purpose, scope, exclusions, terminology, sensitive-data rules, history mode, and actor identifiers: `references/local-settings.md`.
 - Local bundle structure, metadata, actor rules, links and paths, types, and tag governance: `references/schema.md`.
 - Workflows and approval boundaries: `references/operations.md`.
 - Writing guidance: `references/writing-style.md`.

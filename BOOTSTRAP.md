@@ -86,7 +86,7 @@ After approval:
 
 1. Create `raw/` and `wiki/`.
 2. Copy the approved operating kit to the target. Create the approved initialization archive and provenance record described above before tailoring any copied operating file.
-3. Tailor the copied `README.md`, `references/operations.md`, `references/writing-style.md`, and approved tag registry in `references/schema.md`. Record reusable actor identifiers in the README's Local Settings. Resolve every local-setting placeholder. Replace the template-only `Initialize A Wiki` section with a short initialization record that links to the archived bootstrap and provenance file. The result must not depend on the archive for routine operation.
+3. Tailor the copied `references/local-settings.md`, `README.md` overview, `references/writing-style.md`, and approved tag registry in `references/schema.md`. Record reusable actor identifiers in `references/local-settings.md`; do not duplicate its settings in the README or operations file. Resolve every local-setting placeholder. Replace the template-only `Initialize A Wiki` section with a short initialization record that links to the archived bootstrap and provenance file. The result must not depend on the archive for routine operation.
 4. Create `wiki/index.md` from `templates/index.md`. Its only frontmatter key must be `okf_version: "0.2"`. Remove example entries that do not point to real concepts.
 5. Create only initial concepts justified by the approved purpose, sources, or external systems. Do not create demonstration pages. Every file inside `wiki/` must be UTF-8 Markdown and follow the local profile. Keep non-Markdown evidence and support assets outside the bundle under approved `raw/` paths, or point to external, non-secret resources.
 6. Add an approved raw source only when the proposal names its exact target. Never modify, overwrite, rename, move, or delete an existing raw file.
@@ -115,7 +115,7 @@ Never store credentials or secret-bearing connection details. Do not claim acces
 
 Run the complete procedure in the copied `references/operations.md` section `Validation And Conformance` against the final `wiki/` state, including the truthful initialization log entry. Use the copied `references/schema.md` as the local constraint source and section 11 of the pinned specification as the base authority.
 
-Also confirm that the copied specification matches the checksum in `references/okf/v0.2/UPSTREAM.md`, the archived bootstrap matches the `Bootstrap SHA-256` value in `references/initialization/PROVENANCE.md`, index links resolve from each index's location, all local-setting placeholders are resolved in tailored operating files, and documented replacement markers remain in reusable templates. Treat broken links as warnings under the operations procedure. Any required failure blocks staging and commit; report it rather than inventing data.
+Also confirm that the copied specification matches the checksum in `references/okf/v0.2/UPSTREAM.md`, the archived bootstrap matches the `Bootstrap SHA-256` value in `references/initialization/PROVENANCE.md`, index links resolve from each index's location, every placeholder in `references/local-settings.md` is resolved, other tailored operating files contain no unresolved local placeholders, and documented replacement markers remain in reusable templates. Treat broken links as warnings under the operations procedure. Any required failure blocks staging and commit; report it rather than inventing data.
 
 ## Verification Scenarios
 
@@ -123,7 +123,7 @@ Check representative initialized wikis against the copied operating kit. Do not 
 
 1. A personal notes, study, or reading setup completes without an external-database question when no system was mentioned.
 2. A business, organizational, analytics, operational, or research-data setup can record an approved external `Database` or `Dataset` using a non-secret resource and honest access limits, without credentials or connector setup.
-3. Git-and-log mode records a focused local commit only after the logged final bundle passes validation; log-only mode remains usable and clearly states that rollback is unavailable.
+3. `references/local-settings.md` is the single source for history mode and sensitive-data rules. Git-and-log mode records a focused local commit only after the logged final bundle passes validation; log-only mode remains usable and clearly states that rollback is unavailable. A later mode change updates local settings and the log without reinitializing the wiki.
 4. Existing raw sources remain immutable, while a new raw source is added only through exact approval.
 5. Minimal and metadata-rich concepts pass their applicable schema constraints without invented optional metadata.
 6. Provenance, actors, lifecycle fields, source attribution, tags, unknown fields, and broken links produce the results defined by the schema and validation procedure.

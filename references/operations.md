@@ -1,19 +1,32 @@
 # Wiki Operations
 
-This file defines how agents add, use, review, and record knowledge. The pinned OKF specification defines the format; [`schema.md`](schema.md) defines the stricter local profile.
+This file defines how agents add, use, review, and record knowledge. [`local-settings.md`](local-settings.md) defines the current local context, and [`schema.md`](schema.md) defines the local OKF profile.
 
 ## Local Settings
 
-- **History mode:** <Git and log, or log only>
-- **Sensitive data:** <what may be read, quoted, linked, or retained>
+Read the current purpose, scope, terminology, sensitive-data rules, history mode, and actor identifiers from [`local-settings.md`](local-settings.md). Do not duplicate those values here.
 
 Apply the sensitive-data rules to source material, wiki content, logs, commits, and responses.
 
-## Bundle Files
+### History Mode Behavior
+
+The selected history mode changes how work is recorded and what safeguards are available. A history-mode change does not require reinitialization. When the user changes it, update `local-settings.md`, record the change in `wiki/log.md`, and follow the new mode from then on. When enabling Git, use the repository that already contains the wiki or initialize one as part of the approved change; never create a nested repository.
+
+#### Git And Log
+
+Git is strongly recommended because it adds diffs, attribution, and rollback. Before committing, inspect the worktree, preserve unrelated changes, stage only the current operation, and create one focused local commit when host rules allow it. Never push, rewrite history, or perform a destructive rollback without authority.
+
+#### Log Only
+
+The wiki remains usable in log-only mode, but rollback is unavailable. Make this limitation clear when the mode is selected or changed. Without Git, get approval before substantively replacing existing content and before every structural or destructive change. Continue to record all meaningful operations in `wiki/log.md`.
+
+## Operating Principles
+
+### Bundle Boundaries
 
 Every member of the `wiki/` bundle must be UTF-8 Markdown with a `.md` filename. This is a local restriction beyond base OKF. Keep non-Markdown evidence and support files outside the bundle: retain evidence under `raw/`, or point to an external, non-secret resource.
 
-## Authority
+### Authority
 
 Agents may perform ordinary, low-risk work under `wiki/` without asking each time. This includes creating and updating concepts, sources, claim footnotes, links, metadata, indexes, and logs; fixing clear formatting or conformance errors; and making focused local commits when Git is enabled and host rules allow it.
 
@@ -30,7 +43,7 @@ Approval is required before an agent:
 
 A direct user request is approval only for its stated scope. For approval-bound work, name the affected files, the intended result, and what happens to the originals before writing.
 
-## Raw Evidence
+### Raw Evidence
 
 Keep retained original evidence under `raw/` and authored knowledge under `wiki/`.
 
@@ -38,7 +51,23 @@ Existing raw files are immutable to agents. Never modify, overwrite, rename, mov
 
 Do not pretend to have read an unavailable source or external system. Record the limitation instead.
 
-## Ingest
+## Special Files
+
+### Indexes
+
+`wiki/index.md` is mandatory locally. It carries the bundle's `okf_version` declaration and groups useful entries under headings. Each entry is a Markdown link and should include the linked concept's `description` when available.
+
+Update an index after ingest, durable query filing, or maintenance changes what readers should discover. Create a subdirectory index only when it improves progressive disclosure. Subdirectory indexes have no frontmatter. Resolve every index link relative to the index file's location.
+
+### Log
+
+`wiki/log.md` is mandatory in every history mode. It has no frontmatter and begins with `# Directory Update Log`. Group concise operation bullets newest-first under date-only `YYYY-MM-DD` headings. Record meaningful ingests, filed query findings, maintenance, and concept changes. Link affected concepts when useful.
+
+The log records what happened. It is not a diff and cannot restore prior content.
+
+## Core Operations
+
+### Ingest
 
 When the user supplies or identifies a source:
 
@@ -53,7 +82,7 @@ When the user supplies or identifies a source:
 
 Prefer one-source-at-a-time ingest when practical so the user can guide emphasis. Do not fill the wiki with source summaries when the knowledge belongs in existing concepts.
 
-## Query And Accumulation
+### Query And Accumulation
 
 Read `wiki/index.md`, follow relevant concepts and sources, and consult raw evidence when needed. Distinguish evidence, interpretation, inference, uncertainty, and unresolved conflict in the answer.
 
@@ -61,7 +90,7 @@ All durable or potentially useful knowledge found while answering must be filed 
 
 Do not create generic Q&A pages or chat-transcript archives. Minor procedural, temporary, or disposable answers remain in chat.
 
-## Maintenance
+### Maintenance
 
 Maintenance reviews the whole affected area and checks for:
 
@@ -81,29 +110,9 @@ Agents may apply clear, low-risk corrections automatically and record them. Appl
 
 Keep `wiki/` flat until navigation becomes genuinely difficult. Prefer titles, links, and a small maintained tag registry before folders.
 
-## Indexes
+## Specialized Operations
 
-`wiki/index.md` is mandatory locally. It carries the bundle's `okf_version` declaration and groups useful entries under headings. Each entry is a Markdown link and should include the linked concept's `description` when available.
-
-Update an index after ingest, durable query filing, or maintenance changes what readers should discover. Create a subdirectory index only when it improves progressive disclosure. Subdirectory indexes have no frontmatter. Resolve every index link relative to the index file's location.
-
-## Log
-
-`wiki/log.md` is mandatory in every history mode. It has no frontmatter and begins with `# Directory Update Log`. Group concise operation bullets newest-first under date-only `YYYY-MM-DD` headings. Record meaningful ingests, filed query findings, maintenance, and concept changes. Link affected concepts when useful.
-
-The log records what happened. It is not a diff and cannot restore prior content.
-
-## History Modes
-
-### Git And Log
-
-Git is strongly recommended because it adds diffs, attribution, and rollback. Before committing, inspect the worktree, preserve unrelated changes, stage only the current operation, and create one focused local commit when host rules allow it. Never push, rewrite history, or perform a destructive rollback without authority.
-
-### Log Only
-
-The wiki remains usable in log-only mode, but rollback is unavailable. Explain this limitation during initialization. Without Git, get approval before substantively replacing existing content and before every structural or destructive change. Continue to record all meaningful operations in `wiki/log.md`.
-
-## Attested Computation
+### Attested Computation
 
 OKF records a computation contract; it does not execute it. Treat each `Attested Computation` as its own concept.
 
