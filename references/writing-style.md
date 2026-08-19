@@ -28,7 +28,7 @@ New notes use no body template. Defined pages may start from the matching file u
 |---|---|
 | `Note` | None; follow the material |
 | `Reference` | None; follow the material |
-| `Source` | Summary |
+| `Source Record` | Summary |
 | `Analysis` | Conclusion, Reasoning |
 | `Decision` | Decision, Rationale |
 | `Goal` | Outcome, Success Measures, Progress |

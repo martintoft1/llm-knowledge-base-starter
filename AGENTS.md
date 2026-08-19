@@ -7,11 +7,12 @@ Keep the knowledge base simple, traceable, and conformant with OKF v0.2. Add str
 Read these in order:
 
 1. `README.md` for purpose, scope, terminology, and local settings.
-2. `references/okf/v0.2/SPEC.md` before creating, changing, or validating content in `wiki/`.
-3. `references/schema.md` for the local OKF profile, types, tags, and metadata rules.
-4. `references/operations.md` for workflows, history, validation, and authority.
-5. `references/writing-style.md` before creating or substantially rewriting bodies.
-6. `wiki/index.md` and relevant local indexes when they exist.
+2. `references/schema.md` for routine metadata decisions, local types, tags, and validation.
+3. `references/operations.md` for workflows, history, validation, and authority.
+4. `references/writing-style.md` before creating or substantially rewriting bodies.
+5. `wiki/index.md` and relevant local indexes when they exist.
+
+The pinned `references/okf/v0.2/SPEC.md` remains authoritative, but routine work should not require reading it in full. Read the relevant SPEC sections when the local profile does not cover a field or edge case, when resolving ambiguity, during a formal base-OKF conformance audit, or before changing the schema or OKF version.
 
 ## Boundaries
 
