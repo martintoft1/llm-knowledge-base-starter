@@ -52,12 +52,12 @@ The starter kit adds these choices around OKF and the LLM Wiki pattern:
 - **Progressive structure:** Start with the least structure needed. Add types, tags, headings, and folders only when they improve retrieval or reuse.
 - **Simplicity-first writing:** Use plain language and only as much structure as the material needs.
 - **Flat organization and living tags:** Prefer links and maintained tags over early folder hierarchies.
-- **Progressive autonomy:** Let agents handle ordinary wiki work while reserving risky actions for human approval.
+- **Progressive autonomy:** Let agents handle ordinary wiki work while reserving risky actions for human approval. Consider giving agents more autonomy after they prove that they can work well on their own.
 - **Tailored setup:** Discover the purpose, boundaries, sources, history mode, and useful templates during initialization.
 - **Epistemic safeguards:** Separate evidence, interpretation, inference, uncertainty, and unresolved conflict. Never invent provenance.
 - **Repository governance:** Keep a controlled root, protect sensitive data, and ask about external systems only when relevant.
 
-The one-concept-per-document rule, raw/wiki separation, Markdown, provenance, links, indexes, logs, and agent neutrality come from OKF or Karpathy's pattern rather than these local additions.
+The one-concept-per-document rule, raw/wiki separation, Markdown, provenance, links, indexes, logs, and agent neutrality come from OKF or Karpathy's pattern; they're not a part of these local additions.
 
 ## Authority And History
 

@@ -7,7 +7,7 @@ Keep the knowledge base simple, traceable, and conformant with OKF v0.2. Add str
 Read these in order:
 
 1. `README.md` for the overview, architecture, and source map.
-2. `references/local-settings.md` for purpose, scope, terminology, writing style, approved tags, sensitive-data rules, history mode, and actor identifiers.
+2. `references/local-settings.md` for local settings and specifications surrounding purpose, scope, terminology, writing style, approved tags, sensitive-data rules, history mode, and actor identifiers.
 3. `references/schema.md` for the wiki schema: bundle structure, frontmatter, actors, links and paths, types, body headings, and tag rules.
 4. `references/operations.md` for operating principles, core and specialized operations, approval boundaries, history-mode behavior, and validation.
 5. `references/writing-style.md` for reusable body-writing rules before creating or substantially rewriting bodies.
@@ -27,4 +27,4 @@ The pinned `references/okf/v0.2/SPEC.md` remains authoritative, but routine work
 - Never invent sources, verification, access, or attestation. Mark uncertainty and conflict clearly.
 - Do not add top-level files or directories outside the approved repository layout without a scoped proposal and approval.
 - Keep `wiki/log.md` current. Follow Git rules when Git is enabled.
-- Treat `references/initialization/BOOTSTRAP.md` as an archive, not active operating instructions. Routine operation must not depend on the archived bootstrap.
+- After initialization of the knowledge base, treat `references/initialization/BOOTSTRAP.md` as an archive, not active operating instructions. Routine operation must not depend on the archived bootstrap.

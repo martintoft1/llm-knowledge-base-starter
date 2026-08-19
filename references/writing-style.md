@@ -25,4 +25,4 @@ Use tags and links before creating folders. A shared topic alone is not a reason
 
 ## Type-Specific Structure
 
-Use the optional headings in [`schema.md`](schema.md#types-and-field-rules) and the matching files under `templates/page-bodies/` when they help. New notes normally need no body template.
+Use the optional YAML-fields and headings in [`schema.md`](schema.md#types-and-field-rules) and the matching files under `templates/page-bodies/` when they help. New notes normally need no body template.
