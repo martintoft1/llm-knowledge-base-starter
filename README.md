@@ -36,6 +36,8 @@ Use these sources in order:
 
 Local rules may narrow the format, but they must not redefine reserved OKF fields incompatibly.
 
+The pinned [`references/okf/v0.2/README.md`](references/okf/v0.2/README.md) provides upstream rationale and examples. It is explanatory, not normative; its reference-agent setup is not required here.
+
 ## Local Settings
 
 - **Purpose:** <what this knowledge base helps with>
