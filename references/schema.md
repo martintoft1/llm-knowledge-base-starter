@@ -1,8 +1,8 @@
-# Local OKF Profile
+# Wiki Schema
 
-This file defines this starter kit's complete local OKF profile: bundle structure, required and optional metadata, actor identifiers, links and paths, local types and field profiles, and tag governance. It is the routine source of truth for reusable local structure and metadata rules. Settings that vary between knowledge bases live in [`local-settings.md`](local-settings.md).
+This file defines how wiki files are structured: bundle rules, required and optional metadata, actor identifiers, links and paths, types, body headings, and tag rules. It is the routine source of truth for the starter kit's reusable schema. Settings that vary between knowledge bases live in [`local-settings.md`](local-settings.md).
 
-The pinned [`okf/v0.2/SPEC.md`](okf/v0.2/SPEC.md) remains authoritative. Consult it when this profile does not cover a field or edge case, when resolving ambiguity, during a formal base-OKF audit, or when changing the schema or OKF version. Do not use this profile to override the specification.
+The pinned [`okf/v0.2/SPEC.md`](okf/v0.2/SPEC.md) remains authoritative. Consult it when this schema does not cover a field or edge case, when resolving ambiguity, during a formal base-OKF audit, or when changing the schema or OKF version. Do not use this schema to override the specification.
 
 ## Required Local Settings
 
@@ -13,11 +13,11 @@ Read only the settings needed for the schema task:
 
 ## Bundle Files
 
-Every file inside `wiki/` must be UTF-8 Markdown with a `.md` filename. This is a local restriction even where base OKF permits other support files. Non-Markdown evidence, computation code, and other support assets are not bundle members. Keep retained evidence under `raw/` or point to an external, non-secret resource.
+Every file inside `wiki/` must be UTF-8 Markdown with a `.md` filename. This wiki-schema rule is stricter than base OKF, which permits other support files. Non-Markdown evidence, computation code, and other support assets are not bundle members. Keep retained evidence under `raw/` or point to an external, non-secret resource.
 
 ## Frontmatter
 
-### Required Local Fields
+### Required Wiki Fields
 
 Every concept under `wiki/`, except reserved `index.md` and `log.md` files, must include:
 
@@ -37,7 +37,7 @@ Use [`templates/wiki-page.md`](../templates/wiki-page.md) as the shared starting
 
 - `type` is a non-empty type name.
 - `title` is a human-readable display name.
-- `status` is `draft`, `stable`, or `deprecated`. A draft may be incomplete; stable content is ready for consumption and meets its local profile; deprecated content is retained for links and history but is no longer current.
+- `status` is `draft`, `stable`, or `deprecated`. A draft may be incomplete; stable content is ready for consumption and meets the wiki schema; deprecated content is retained for links and history but is no longer current.
 - `tags` is a YAML list, which may be empty.
 - `generated` contains a non-empty `by` actor and an ISO 8601 `at` datetime. Change `generated.at` only after a meaningful content or metadata change.
 
@@ -113,7 +113,7 @@ A concept is stale when `today >= stale_after`. Omit the field when no meaningfu
 
 Every Attested Computation requires `runtime`, regardless of status. Before its status may become `stable`, it also requires:
 
-- A non-empty `parameters` list whose entries contain `name`, `type`, and `required`. Under this stricter profile, a zero-input computation remains `draft`.
+- A non-empty `parameters` list whose entries contain `name`, `type`, and `required`. Under this stricter schema, a zero-input computation remains `draft`.
 - Exactly one computation form: one inline fenced block under `# Computation`, or a `computation` path, but not both.
 - `executor.resource` and a non-empty `executor.receipt` list.
 - `attester.resource` that names a deterministic, non-LLM check.
@@ -151,11 +151,11 @@ Report broken links, but do not treat them as an OKF conformance failure. Preser
 
 See OKF sections 5.1, 6.1, and 6.2 for normative path and relationship semantics.
 
-## Local Types And Field Profiles
+## Types And Field Rules
 
-Use the smallest type that describes the concept itself. Begin with the shared page template, then add only the fields required or justified by its profile:
+Use the smallest type that describes the concept itself. Begin with the shared page template, then add only the fields required or justified by its type rules:
 
-| Type | Use | Additional field profile | Suggested body headings |
+| Type | Use | Additional field rules | Suggested body headings |
 |---|---|---|---|
 | `Note` | Provisional or general knowledge that does not need a narrower type | No additional fields | None; follow the material |
 | `Reference` | Durable explanation, instruction, topic, entity, or procedure | Use `resource` when bound to one canonical asset; use `sources` when derived from evidence | None; follow the material |

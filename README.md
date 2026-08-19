@@ -30,8 +30,8 @@ Use these sources in order:
 
 1. [`references/okf/v0.2/SPEC.md`](references/okf/v0.2/SPEC.md) is the pinned, unmodified OKF v0.2 specification. It defines OKF terms and semantics.
 2. [`references/local-settings.md`](references/local-settings.md) defines the current purpose, scope, terminology, writing style, tag registry, sensitive-data rules, history mode, and actor identifiers.
-3. [`references/schema.md`](references/schema.md) defines this starter kit's stricter local profile.
-4. [`references/operations.md`](references/operations.md) defines workflows, history, validation, and authority.
+3. [`references/schema.md`](references/schema.md) defines the wiki schema used by this starter kit.
+4. [`references/operations.md`](references/operations.md) defines operating principles, procedures, approval boundaries, history-mode behavior, and validation.
 5. [`references/writing-style.md`](references/writing-style.md) defines reusable editorial and body-writing rules.
 6. `AGENTS.md` and optional adapters provide short entry points.
 
@@ -74,7 +74,7 @@ Ask an agent with filesystem access to follow `BOOTSTRAP.md`. It gathers only de
 ## Editable Settings
 
 - Purpose, scope, exclusions, terminology, writing style, approved tags, sensitive-data rules, history mode, and actor identifiers: `references/local-settings.md`.
-- Local bundle structure, metadata, actor rules, links and paths, types, and tag governance: `references/schema.md`.
+- Wiki bundle structure, metadata, actor rules, links and paths, types, and tag governance: `references/schema.md`.
 - Workflows and approval boundaries: `references/operations.md`.
 - Reusable writing rules: `references/writing-style.md`.
 - Reusable bodies: `templates/page-bodies/`.

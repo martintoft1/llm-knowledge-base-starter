@@ -88,7 +88,7 @@ After approval:
 2. Copy the approved operating kit to the target. Create the approved initialization archive and provenance record described above before tailoring any copied operating file.
 3. Tailor the copied `references/local-settings.md` and `README.md` overview. Record the approved writing style, tag registry, and reusable actor identifiers in `references/local-settings.md`; do not duplicate its settings in the README or other reference files. Resolve every local-setting placeholder. Replace the template-only `Initialize A Wiki` section with a short initialization record that links to the archived bootstrap and provenance file. The result must not depend on the archive for routine operation.
 4. Create `wiki/index.md` from `templates/index.md`. Its only frontmatter key must be `okf_version: "0.2"`. Remove example entries that do not point to real concepts.
-5. Create only initial concepts justified by the approved purpose, sources, or external systems. Do not create demonstration pages. Every file inside `wiki/` must be UTF-8 Markdown and follow the local profile. Keep non-Markdown evidence and support assets outside the bundle under approved `raw/` paths, or point to external, non-secret resources.
+5. Create only initial concepts justified by the approved purpose, sources, or external systems. Do not create demonstration pages. Every file inside `wiki/` must be UTF-8 Markdown and follow the wiki schema. Keep non-Markdown evidence and support assets outside the bundle under approved `raw/` paths, or point to external, non-secret resources.
 6. Add an approved raw source only when the proposal names its exact target. Never modify, overwrite, rename, move, or delete an existing raw file.
 7. Initialize Git only when selected and the target is not already in a repository. Do not stage or commit yet.
 8. Create mandatory `wiki/log.md` from `templates/log.md`, with no frontmatter. Remove or replace every example date, entry, and link from the template. After the approved files and settings are in place, add one truthful initialization entry under the current `YYYY-MM-DD` date.
@@ -113,7 +113,7 @@ Never store credentials or secret-bearing connection details. Do not claim acces
 
 ## Validate Before Completion
 
-Run the complete procedure in the copied `references/operations.md` section `Validation And Conformance` against the final `wiki/` state, including the truthful initialization log entry. Use the copied `references/schema.md` as the local constraint source and section 11 of the pinned specification as the base authority.
+Run the complete procedure in the copied `references/operations.md` section `Validation And Conformance` against the final `wiki/` state, including the truthful initialization log entry. Use the copied `references/schema.md` as the wiki-schema source and section 11 of the pinned specification as the base authority.
 
 Also confirm that the copied specification matches the checksum in `references/okf/v0.2/UPSTREAM.md`, the archived bootstrap matches the `Bootstrap SHA-256` value in `references/initialization/PROVENANCE.md`, index links resolve from each index's location, every placeholder in `references/local-settings.md` is resolved, other tailored operating files contain no unresolved local placeholders, and documented replacement markers remain in reusable templates. Treat broken links as warnings under the operations procedure. Any required failure blocks staging and commit; report it rather than inventing data.
 

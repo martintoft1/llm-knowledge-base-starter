@@ -1,6 +1,6 @@
 # Wiki Operations
 
-This file defines how agents add, use, review, and record knowledge. [`local-settings.md`](local-settings.md) defines the current local context, and [`schema.md`](schema.md) defines the local OKF profile.
+This file defines how agents add, use, review, and record knowledge. [`local-settings.md`](local-settings.md) defines the current settings, and [`schema.md`](schema.md) defines the wiki schema.
 
 ## Required Local Settings
 
@@ -81,7 +81,7 @@ When the user supplies or identifies a source:
 3. Add concept-level provenance in `sources`. When a body attributes a specific claim, give that source a stable `sources[].id` and use the same key for its Markdown footnote. Do not create a separate citations section.
 4. Update related concepts, summaries, and cross-links when the source changes, supports, or contradicts them.
 5. Update the affected index files and `wiki/log.md`.
-6. Validate the complete bundle against OKF v0.2 and the local profile.
+6. Validate the complete bundle against OKF v0.2 and the wiki schema.
 7. If Git is enabled and host rules allow it, create one focused local commit.
 8. Report the concepts changed, important uncertainty or conflict, and the log entry or commit.
 
@@ -105,7 +105,7 @@ Maintenance reviews the whole affected area and checks for:
 - missing or malformed provenance;
 - duplicate, overlapping, or poorly bounded concepts;
 - important missing concepts;
-- invalid OKF or local-profile metadata;
+- metadata that violates OKF or the wiki schema;
 - stale Attested Computations and failed attestations;
 - type drift;
 - tags that should be added, removed, merged, narrowed, or retired; and
@@ -132,9 +132,9 @@ A failed attestation blocks use or display of the value and must be surfaced. Wh
 Before finalizing any wiki operation, validate the complete bundle in this order:
 
 1. **Base OKF.** Apply section 11 of the pinned OKF v0.2 specification. Every non-reserved `.md` file must have parseable YAML frontmatter and a non-empty `type`. Every reserved `index.md` and `log.md` that appears must follow its OKF structure.
-2. **Local profile.** Apply every requirement in [`schema.md`](schema.md), including the bundle file kind, required frontmatter, optional and conditional field families, local type profiles, actor identifiers, source-linked footnotes, Attested Computation contract, and tag governance. Compare concept tags with the approved [Tag Registry](local-settings.md#tag-registry).
+2. **Wiki schema.** Apply every requirement in [`schema.md`](schema.md), including the bundle file kind, required frontmatter, optional and conditional field families, type rules, actor identifiers, source-linked footnotes, Attested Computation contract, and tag governance. Compare concept tags with the approved [Tag Registry](local-settings.md#tag-registry).
 3. **Required reserved files.** Require the root `wiki/index.md` and `wiki/log.md`, and validate them against the formats described above.
 4. **Compatibility.** Preserve unknown fields and types. Report broken links without failing base OKF conformance. Accept missing optional OKF families and missing non-root indexes.
-5. **Result.** Report base OKF failures, local-profile failures, and warnings separately. A bundle may meet base OKF while failing this repository's stricter local profile.
+5. **Result.** Report base OKF failures, wiki-schema failures, and warnings separately. A bundle may meet base OKF while failing this repository's stricter wiki schema.
 
-If a required base or local check fails, correct it when the fix is clear and within scope. Otherwise stop: do not mark the operation complete or create its automatic commit. Report the failed check, affected files, retained changes, and the approval or information needed. Never invent provenance, verification, access, or attestation to make validation pass.
+If a required base-OKF or wiki-schema check fails, correct it when the fix is clear and within scope. Otherwise stop: do not mark the operation complete or create its automatic commit. Report the failed check, affected files, retained changes, and the approval or information needed. Never invent provenance, verification, access, or attestation to make validation pass.
