@@ -13,6 +13,8 @@ Read these in order:
 5. `references/writing-style.md` for reusable body-writing rules before creating or substantially rewriting bodies.
 6. `wiki/index.md` and relevant local indexes when they exist.
 
+After this initial orientation, use each reference file's direct section links to revisit only the local settings needed for the current task.
+
 The pinned `references/okf/v0.2/SPEC.md` remains authoritative, but routine work should not require reading it in full. Read the relevant SPEC sections when the local profile does not cover a field or edge case, when resolving ambiguity, during a formal base-OKF conformance audit, or before changing the schema or OKF version.
 
 ## Boundaries

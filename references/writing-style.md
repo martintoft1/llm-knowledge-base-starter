@@ -2,7 +2,14 @@
 
 Keep the knowledge base intentionally flat and simple. Write the smallest useful page, then add structure only when it makes the content easier to retrieve or reuse.
 
-Read the current default writing style from [`local-settings.md`](local-settings.md). This file defines the reusable rules for writing concept bodies.
+This file defines the reusable rules for writing concept bodies.
+
+## Required Local Settings
+
+Before writing or substantially rewriting a body, read:
+
+- [Identity And Scope](local-settings.md#identity-and-scope) for purpose, boundaries, and terminology.
+- [Writing Style](local-settings.md#writing-style) for the selected local style.
 
 ## Body Rules
 

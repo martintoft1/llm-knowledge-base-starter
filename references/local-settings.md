@@ -1,6 +1,6 @@
 # Local Settings
 
-This file is the single source of truth for settings that vary between knowledge bases. Keep reusable format, workflow, and writing rules in their respective reference files.
+This file is the single source of truth for settings that vary between knowledge bases. Keep reusable format, workflow, and writing rules in their respective reference files. Keep the section names stable because those files link directly to the settings they need.
 
 ## Identity And Scope
 

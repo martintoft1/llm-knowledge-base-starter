@@ -4,6 +4,13 @@ This file defines this starter kit's complete local OKF profile: bundle structur
 
 The pinned [`okf/v0.2/SPEC.md`](okf/v0.2/SPEC.md) remains authoritative. Consult it when this profile does not cover a field or edge case, when resolving ambiguity, during a formal base-OKF audit, or when changing the schema or OKF version. Do not use this profile to override the specification.
 
+## Required Local Settings
+
+Read only the settings needed for the schema task:
+
+- [Actor Identifiers](local-settings.md#actor-identifiers) before creating or validating actor fields.
+- [Tag Registry](local-settings.md#tag-registry) before creating or validating tags.
+
 ## Bundle Files
 
 Every file inside `wiki/` must be UTF-8 Markdown with a `.md` filename. This is a local restriction even where base OKF permits other support files. Non-Markdown evidence, computation code, and other support assets are not bundle members. Keep retained evidence under `raw/` or point to an external, non-secret resource.
@@ -169,7 +176,7 @@ The suggested headings and matching files under `templates/page-bodies/` are opt
 
 ## Tags
 
-The approved tag registry and each tag's meaning live in [`local-settings.md`](local-settings.md). Use only tags recorded there. If the registry is empty, use `tags: []`.
+The approved [Tag Registry](local-settings.md#tag-registry) and each tag's meaning live in `local-settings.md`. Use only tags recorded there. If the registry is empty, use `tags: []`.
 
 Keep the registry small and driven by real retrieval needs. Prefer links and clear titles before adding a tag.
 
