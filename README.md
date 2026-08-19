@@ -78,7 +78,7 @@ Ask an agent with filesystem access to follow `BOOTSTRAP.md`. It gathers only de
 ## Editable Settings
 
 - Purpose, scope, exclusions, terminology, sensitive-data rules, and history mode: this `README.md`.
-- Format profile and local types: `references/schema.md`.
+- Local bundle structure, metadata, actor rules, links and paths, types, and tag governance: `references/schema.md`.
 - Workflows and approval boundaries: `references/operations.md`.
 - Writing guidance: `references/writing-style.md`.
 - Reusable bodies: `templates/page-bodies/`.

@@ -1,8 +1,8 @@
 # Local OKF Profile
 
-This file is the operational metadata guide for routine wiki work. It narrows OKF v0.2 for this starter kit and summarizes the decisions agents need most often.
+This file defines this starter kit's complete local OKF profile: bundle structure, required and optional metadata, actor identifiers, links and paths, local types and field profiles, and tag governance. It is the routine source of truth for local structure and metadata.
 
-The pinned [`okf/v0.2/SPEC.md`](okf/v0.2/SPEC.md) remains authoritative. Consult it when this profile does not cover a field or edge case, when resolving ambiguity, during a formal base-OKF audit, or when changing the schema or OKF version. Do not use this summary to override the specification.
+The pinned [`okf/v0.2/SPEC.md`](okf/v0.2/SPEC.md) remains authoritative. Consult it when this profile does not cover a field or edge case, when resolving ambiguity, during a formal base-OKF audit, or when changing the schema or OKF version. Do not use this profile to override the specification.
 
 ## Bundle Files
 

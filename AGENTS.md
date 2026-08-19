@@ -7,7 +7,7 @@ Keep the knowledge base simple, traceable, and conformant with OKF v0.2. Add str
 Read these in order:
 
 1. `README.md` for purpose, scope, terminology, and local settings.
-2. `references/schema.md` for routine metadata decisions, local types, tags, and field rules.
+2. `references/schema.md` for the complete local profile: bundle structure, metadata, actors, links and paths, local types and field profiles, and tags.
 3. `references/operations.md` for workflows, validation, history, and authority.
 4. `references/writing-style.md` before creating or substantially rewriting bodies.
 5. `wiki/index.md` and relevant local indexes when they exist.
