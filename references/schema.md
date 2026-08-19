@@ -1,6 +1,6 @@
 # Local OKF Profile
 
-This file defines this starter kit's complete local OKF profile: bundle structure, required and optional metadata, actor identifiers, links and paths, local types and field profiles, and tag governance. It is the routine source of truth for local structure and metadata.
+This file defines this starter kit's complete local OKF profile: bundle structure, required and optional metadata, actor identifiers, links and paths, local types and field profiles, and tag governance. It is the routine source of truth for reusable local structure and metadata rules. Settings that vary between knowledge bases live in [`local-settings.md`](local-settings.md).
 
 The pinned [`okf/v0.2/SPEC.md`](okf/v0.2/SPEC.md) remains authoritative. Consult it when this profile does not cover a field or edge case, when resolving ambiguity, during a formal base-OKF audit, or when changing the schema or OKF version. Do not use this profile to override the specification.
 
@@ -148,31 +148,29 @@ See OKF sections 5.1, 6.1, and 6.2 for normative path and relationship semantics
 
 Use the smallest type that describes the concept itself. Begin with the shared page template, then add only the fields required or justified by its profile:
 
-| Type | Use | Additional field profile |
-|---|---|---|
-| `Note` | Provisional or general knowledge that does not need a narrower type | No additional fields |
-| `Reference` | Durable explanation, instruction, topic, entity, or procedure | Use `resource` when bound to one canonical asset; use `sources` when derived from evidence |
-| `Source Record` | A concept describing one source or evidence bundle | `resource` is required from creation |
-| `Analysis` | Comparison, investigation, synthesis, or reasoned conclusion | Use `sources` when conclusions depend on evidence |
-| `Decision` | A settled choice and its reasoning | Use `sources` when evidence materially informed the choice |
-| `Goal` | A desired outcome or declared priority | Use `stale_after` only for a real review or expiry date |
-| `Plan` | An approach and actions intended to reach an outcome | Use `stale_after` only for a real review or expiry date |
-| `Dataset` | A bounded dataset, its schema, meaning, and limits | `resource` is required before `stable` |
-| `Database` | A database or live data system, its access boundary, schema, and limits | `resource` is required before `stable` |
-| `Attested Computation` | A sanctioned computation contract | Follow the conditional contract above |
+| Type | Use | Additional field profile | Suggested body headings |
+|---|---|---|---|
+| `Note` | Provisional or general knowledge that does not need a narrower type | No additional fields | None; follow the material |
+| `Reference` | Durable explanation, instruction, topic, entity, or procedure | Use `resource` when bound to one canonical asset; use `sources` when derived from evidence | None; follow the material |
+| `Source Record` | A concept describing one source or evidence bundle | `resource` is required from creation | Summary |
+| `Analysis` | Comparison, investigation, synthesis, or reasoned conclusion | Use `sources` when conclusions depend on evidence | Conclusion, Reasoning |
+| `Decision` | A settled choice and its reasoning | Use `sources` when evidence materially informed the choice | Decision, Rationale |
+| `Goal` | A desired outcome or declared priority | Use `stale_after` only for a real review or expiry date | Outcome, Success Measures, Progress |
+| `Plan` | An approach and actions intended to reach an outcome | Use `stale_after` only for a real review or expiry date | Approach, Actions, Progress |
+| `Dataset` | A bounded dataset, its schema, meaning, and limits | `resource` is required before `stable` | Schema, Data, Examples |
+| `Database` | A database or live data system, its access boundary, schema, and limits | `resource` is required before `stable` | Schema, Examples, Access, Limitations |
+| `Attested Computation` | A sanctioned computation contract | Follow the conditional contract above | Computation |
 
 Use `Source Record` rather than `Source` so the concept type is not confused with the `sources` provenance field. Existing or imported `Source` concepts remain valid unknown types and must be preserved.
 
 Create new concepts with one of these types. Consumers and editors must still accept and preserve any unknown type found in a bundle.
 
-The files under `templates/page-bodies/` provide optional body structure only. Do not duplicate shared frontmatter across them; compose the base page template with this table so schema changes remain centralized and optional placeholders do not encourage invented metadata.
+The suggested headings and matching files under `templates/page-bodies/` are optional body structure. Add, rename, or remove headings to fit the concept. Do not duplicate shared frontmatter across body templates; compose the base page template with this table so schema changes remain centralized and optional placeholders do not encourage invented metadata.
 
 ## Tags
 
-### Registry
+The approved tag registry and each tag's meaning live in [`local-settings.md`](local-settings.md). Use only tags recorded there. If the registry is empty, use `tags: []`.
 
-No tags are approved yet.
-
-Use only tags recorded in this registry. Keep the registry small and driven by real retrieval needs. Prefer links and clear titles before adding a tag.
+Keep the registry small and driven by real retrieval needs. Prefer links and clear titles before adding a tag.
 
 Propose a registry change before adding, renaming, merging, narrowing, or retiring a tag. The proposal should name the affected concepts and explain the retrieval benefit. Avoid synonyms, near-duplicates, and tags that merely repeat a type or status.

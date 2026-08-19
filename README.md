@@ -29,10 +29,10 @@ Files outside `wiki/` operate or support the system. They are not part of the bu
 Use these sources in order:
 
 1. [`references/okf/v0.2/SPEC.md`](references/okf/v0.2/SPEC.md) is the pinned, unmodified OKF v0.2 specification. It defines OKF terms and semantics.
-2. [`references/local-settings.md`](references/local-settings.md) defines the current purpose, scope, terminology, sensitive-data rules, history mode, and actor identifiers.
+2. [`references/local-settings.md`](references/local-settings.md) defines the current purpose, scope, terminology, writing style, tag registry, sensitive-data rules, history mode, and actor identifiers.
 3. [`references/schema.md`](references/schema.md) defines this starter kit's stricter local profile.
 4. [`references/operations.md`](references/operations.md) defines workflows, history, validation, and authority.
-5. [`references/writing-style.md`](references/writing-style.md) defines local editorial guidance.
+5. [`references/writing-style.md`](references/writing-style.md) defines reusable editorial and body-writing rules.
 6. `AGENTS.md` and optional adapters provide short entry points.
 
 Local rules may narrow the format, but they must not redefine reserved OKF fields incompatibly.
@@ -41,7 +41,7 @@ The pinned [`references/okf/v0.2/README.md`](references/okf/v0.2/README.md) prov
 
 ## Local Settings
 
-The authoritative settings for this knowledge base live in [`references/local-settings.md`](references/local-settings.md). Keep their values there so purpose, scope, safety rules, history mode, and actor identifiers cannot drift between documents.
+The authoritative settings for this knowledge base live in [`references/local-settings.md`](references/local-settings.md). Keep their values there so purpose, scope, terminology, writing style, tags, safety rules, history mode, and actor identifiers cannot drift between documents.
 
 ## How Knowledge Grows
 
@@ -73,9 +73,9 @@ Ask an agent with filesystem access to follow `BOOTSTRAP.md`. It gathers only de
 
 ## Editable Settings
 
-- Purpose, scope, exclusions, terminology, sensitive-data rules, history mode, and actor identifiers: `references/local-settings.md`.
+- Purpose, scope, exclusions, terminology, writing style, approved tags, sensitive-data rules, history mode, and actor identifiers: `references/local-settings.md`.
 - Local bundle structure, metadata, actor rules, links and paths, types, and tag governance: `references/schema.md`.
 - Workflows and approval boundaries: `references/operations.md`.
-- Writing guidance: `references/writing-style.md`.
+- Reusable writing rules: `references/writing-style.md`.
 - Reusable bodies: `templates/page-bodies/`.
 - Navigation and history: `wiki/index.md` and `wiki/log.md`, when initialized.

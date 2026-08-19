@@ -7,10 +7,10 @@ Keep the knowledge base simple, traceable, and conformant with OKF v0.2. Add str
 Read these in order:
 
 1. `README.md` for the overview, architecture, and source map.
-2. `references/local-settings.md` for purpose, scope, terminology, sensitive-data rules, history mode, and actor identifiers.
-3. `references/schema.md` for the complete local profile: bundle structure, metadata, actors, links and paths, local types and field profiles, and tags.
+2. `references/local-settings.md` for purpose, scope, terminology, writing style, approved tags, sensitive-data rules, history mode, and actor identifiers.
+3. `references/schema.md` for the complete local profile: bundle structure, metadata, actors, links and paths, local types and field profiles, and tag governance.
 4. `references/operations.md` for workflows, validation, history, and authority.
-5. `references/writing-style.md` before creating or substantially rewriting bodies.
+5. `references/writing-style.md` for reusable body-writing rules before creating or substantially rewriting bodies.
 6. `wiki/index.md` and relevant local indexes when they exist.
 
 The pinned `references/okf/v0.2/SPEC.md` remains authoritative, but routine work should not require reading it in full. Read the relevant SPEC sections when the local profile does not cover a field or edge case, when resolving ambiguity, during a formal base-OKF conformance audit, or before changing the schema or OKF version.

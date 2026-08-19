@@ -4,7 +4,7 @@ This file defines how agents add, use, review, and record knowledge. [`local-set
 
 ## Local Settings
 
-Read the current purpose, scope, terminology, sensitive-data rules, history mode, and actor identifiers from [`local-settings.md`](local-settings.md). Do not duplicate those values here.
+Read the current purpose, scope, terminology, writing style, tag registry, sensitive-data rules, history mode, and actor identifiers from [`local-settings.md`](local-settings.md). Do not duplicate those values here.
 
 Apply the sensitive-data rules to source material, wiki content, logs, commits, and responses.
 
@@ -104,7 +104,7 @@ Maintenance reviews the whole affected area and checks for:
 - stale Attested Computations and failed attestations;
 - type drift;
 - tags that should be added, removed, merged, narrowed, or retired; and
-- disagreement between concept tags and the tag registry in `schema.md`.
+- disagreement between concept tags and the approved registry in `local-settings.md`.
 
 Agents may apply clear, low-risk corrections automatically and record them. Applying an already approved tag to a concept, or removing one that plainly does not apply, is ordinary maintenance. Changing the tag registry requires the proposal described in `schema.md`, with the affected concepts and retrieval benefit. Broad structural, destructive, sensitive, or ambiguous changes require approval.
 
@@ -127,7 +127,7 @@ A failed attestation blocks use or display of the value and must be surfaced. Wh
 Before finalizing any wiki operation, validate the complete bundle in this order:
 
 1. **Base OKF.** Apply section 11 of the pinned OKF v0.2 specification. Every non-reserved `.md` file must have parseable YAML frontmatter and a non-empty `type`. Every reserved `index.md` and `log.md` that appears must follow its OKF structure.
-2. **Local profile.** Apply every requirement in [`schema.md`](schema.md), including the bundle file kind, required frontmatter, optional and conditional field families, local type profiles, actor identifiers, source-linked footnotes, Attested Computation contract, and tag registry.
+2. **Local profile.** Apply every requirement in [`schema.md`](schema.md), including the bundle file kind, required frontmatter, optional and conditional field families, local type profiles, actor identifiers, source-linked footnotes, Attested Computation contract, and tag governance. Compare concept tags with the approved registry in [`local-settings.md`](local-settings.md).
 3. **Required reserved files.** Require the root `wiki/index.md` and `wiki/log.md`, and validate them against the formats described above.
 4. **Compatibility.** Preserve unknown fields and types. Report broken links without failing base OKF conformance. Accept missing optional OKF families and missing non-root indexes.
 5. **Result.** Report base OKF failures, local-profile failures, and warnings separately. A bundle may meet base OKF while failing this repository's stricter local profile.
