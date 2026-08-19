@@ -70,12 +70,3 @@ Under progressive autonomy, agents may create and update normal concepts, links,
 Ask an agent with filesystem access to follow `BOOTSTRAP.md`. It gathers only decisions that affect the result, proposes the exact initialization, writes after approval, and validates the complete bundle before finishing.
 
 `BOOTSTRAP.md` is the initialization entry point. Each initialized knowledge base preserves the exact bootstrap it used at `references/initialization/BOOTSTRAP.md`. `references/initialization/PROVENANCE.md` records its source version or commit, checksum, and initialization date. These files support later comparison and migration planning; they are archived references, not active operating instructions.
-
-## Editable Settings
-
-- Purpose, scope, exclusions, terminology, writing style, approved tags, sensitive-data rules, history mode, and actor identifiers: `references/local-settings.md`.
-- Wiki bundle structure, metadata, actor rules, links and paths, types, and tag governance: `references/schema.md`.
-- Workflows and approval boundaries: `references/operations.md`.
-- Reusable writing rules: `references/writing-style.md`.
-- Reusable bodies: `templates/page-bodies/`.
-- Navigation and history: `wiki/index.md` and `wiki/log.md`, when initialized.
