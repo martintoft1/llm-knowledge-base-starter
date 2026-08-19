@@ -107,53 +107,29 @@ Add only useful body sections:
 
 Never store credentials or secret-bearing connection details. Do not claim access that was not confirmed. Recording a system does not authorize connecting to it, expanding access, or writing to it. Do not read an external system during initialization unless the approved proposal separately names that read.
 
-## Validate OKF And The Local Profile
+## Validate Before Completion
 
-Before finishing, validate the complete `wiki/` tree:
+Run the complete procedure in the copied `references/operations.md` section `Validation And Conformance` against the final `wiki/` state, including the truthful initialization log entry. Use the copied `references/schema.md` as the local constraint source and section 11 of the pinned specification as the base authority.
 
-1. Only `wiki/` is treated as the OKF bundle. Every non-reserved concept is a UTF-8 Markdown file with parseable YAML frontmatter. This local profile permits no other file kind inside `wiki/`. Route non-Markdown evidence and support assets to approved `raw/` paths or external, non-secret resource references.
-2. Every concept has a non-empty `type` and all locally required `title`, `status`, `tags`, and `generated` fields. Stable concepts have a one-sentence `description`.
-3. Optional `resource`, `sources`, `usage_window`, `verified`, `stale_after`, and computation fields follow their exact upstream structures. Absent optional values are omitted.
-4. Agent, human, and process identifiers follow the OKF actor convention.
-5. Every claim footnote label resolves to the same `sources[].id`, and every cited source ID has a matching footnote. There is no separate citations section.
-6. Markdown links and path-valued fields follow OKF. Report broken links, but do not fail conformance because of them.
-7. `wiki/index.md` has only the permitted `okf_version: "0.2"` frontmatter and valid, relative index entries. Subdirectory indexes, if justified, have no frontmatter.
-8. `wiki/log.md` has no frontmatter, begins with `# Directory Update Log`, and groups truthful entries newest-first under `YYYY-MM-DD` headings. No example date, entry, or link from the template remains.
-9. Every `Attested Computation` has `runtime`, regardless of status. A draft may omit other contract families, but every field that appears must follow OKF section 10. Never permit an empty `parameters` list; omit it from an incomplete draft. Before an Attested Computation becomes `stable`, require all of the following:
-   - A non-empty `parameters` list. Every entry has `name`, `type`, and `required`. A zero-input computation remains `draft`.
-   - Exactly one computation form: one inline fenced block under `# Computation`, or a `computation` path, but not both.
-   - `executor.resource` and a non-empty `executor.receipt` list.
-   - `attester.resource` naming a deterministic, non-LLM check.
-   - One or more relevant `sources` entries with stable `id` values and matching keyed footnotes.
-   - At least one `verified` event from an actor independent of `generated.by`.
-   - `stale_after` when the definition can expire.
-
-   Reject `stable` when any required contract part is missing. Do not claim executable or attestable validity without the required real resources.
-10. Unknown types and frontmatter fields are preserved and accepted.
-11. All required OKF and local checks pass. A failure blocks completion and an automatic Git commit; report what remains wrong instead of inventing data to pass.
-
-Also confirm that the copied specification still matches the checksum in `references/okf/v0.2/UPSTREAM.md`. Check index links from their index location and report missing targets under the broken-link rule. Resolve every local-setting placeholder in tailored operating files; keep documented replacement markers inside reusable templates.
+Also confirm that the copied specification matches the checksum in `references/okf/v0.2/UPSTREAM.md`, index links resolve from each index's location, all local-setting placeholders are resolved in tailored operating files, and documented replacement markers remain in reusable templates. Treat broken links as warnings under the operations procedure. Any required failure blocks staging and commit; report it rather than inventing data.
 
 ## Verification Scenarios
 
-Check the initialized result and its operating rules against these cases. Do not leave test concepts in the user's wiki.
+Check representative initialized wikis against the copied operating kit. Do not restate field rules here; expected outcomes come from `references/schema.md` and `references/operations.md`. Do not leave test concepts in the user's wiki.
 
 1. A personal notes, study, or reading setup completes without an external-database question when no system was mentioned.
 2. A business, organizational, analytics, operational, or research-data setup can record an approved external `Database` or `Dataset` using a non-secret resource and honest access limits, without credentials or connector setup.
 3. Git-and-log mode records a focused local commit only after the logged final bundle passes validation; log-only mode remains usable and clearly states that rollback is unavailable.
 4. Existing raw sources remain immutable, while a new raw source is added only through exact approval.
-5. A minimal new concept uses the local required frontmatter, an allowed actor format, and no invented optional metadata.
-6. Provenance, trust, lifecycle, and source credibility fields follow OKF when used. Source-linked claim footnotes match `sources[].id`.
+5. Minimal and metadata-rich concepts pass their applicable schema constraints without invented optional metadata.
+6. Provenance, actors, lifecycle fields, source attribution, tags, unknown fields, and broken links produce the results defined by the schema and validation procedure.
 7. The root index declares OKF v0.2 in the reserved format, and the mandatory log uses the reserved date-grouped format.
 8. Durable or potentially useful query findings are filed into an existing or distinct concept, while disposable chat is not archived as a Q&A page.
 9. Maintenance checks links, provenance, conflicts, types, tags, and the tag registry, applying only low-risk changes autonomously.
-10. A stable Attested Computation has a non-empty typed parameter list, exactly one real sanctioned computation, an executor with a non-empty receipt, a deterministic non-LLM attester, keyed provenance, independent verification, and conditional `stale_after`. A runtime-only stable computation and an empty parameter list are rejected.
-11. An incomplete Attested Computation may remain `draft` when it has `runtime`; any optional contract field that appears still follows OKF section 10.
-12. Failed attestation blocks the value, and stale computation warns or refuses according to risk.
-13. No non-Markdown member remains in `wiki/`; approved evidence or support assets are under `raw/` or represented by external, non-secret resource references.
-14. Unknown types and extension fields survive a read-and-write cycle.
-15. Broken links are reported without making an otherwise conformant bundle fail.
-16. The knowledge base can be operated from its copied README, AGENTS, specification, local rules, indexes, logs, and templates after `BOOTSTRAP.md` is absent.
+10. Complete stable and incomplete draft Attested Computations produce the results defined by the schema.
+11. Failed attestation blocks the value, and stale computation warns or refuses according to risk.
+12. No non-Markdown member remains in `wiki/`; approved evidence or support assets are under `raw/` or represented by external, non-secret resource references.
+13. The knowledge base can be operated from its copied README, AGENTS, specification, local rules, indexes, logs, and templates after `BOOTSTRAP.md` is absent.
 
 ## Finish
 

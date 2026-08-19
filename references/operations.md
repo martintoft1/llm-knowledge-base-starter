@@ -107,43 +107,20 @@ The wiki remains usable in log-only mode, but rollback is unavailable. Explain t
 
 OKF records a computation contract; it does not execute it. Treat each `Attested Computation` as its own concept.
 
-Every Attested Computation requires `runtime`, regardless of status. Before its status may become `stable`, it also requires:
-
-- a non-empty `parameters` list whose entries contain `name`, `type`, and `required`; a zero-input computation remains `draft` rather than using an empty list;
-- exactly one computation form: one inline fenced block under `# Computation`, or a `computation` path, but not both;
-- `executor.resource` and a non-empty `executor.receipt` list;
-- `attester.resource` naming a deterministic, non-LLM check;
-- one or more relevant `sources` entries with stable `id` values and matching keyed footnotes;
-- at least one `verified` event from an actor independent of `generated.by`; and
-- `stale_after` when the definition can expire.
-
-For non-stable concepts, `parameters`, `computation`, `executor`, and `attester` remain optional. When present, they retain their exact OKF section 10 structure and meaning. Omit optional fields that do not apply; never add empty placeholders.
+The contract requirements for draft and stable concepts live in [`schema.md`](schema.md). Apply them through the validation procedure below; do not redefine them here.
 
 Do not claim executable validity without a usable computation and executor. Do not claim attestable validity without a usable attester. During an attested run, an agent may supply values only for declared parameters. It must not author or alter the sanctioned computation. The consumer binds the values, the executor returns the declared receipt, and the deterministic attester checks what ran and the displayed result.
 
 A failed attestation blocks use or display of the value and must be surfaced. When `today >= stale_after`, warn or refuse according to the risk. `verified` records a check of the stored definition; attestation checks one execution. One never replaces the other, and per-run receipts are not stored in the bundle merely as verification history.
 
-## Conformance
+## Validation And Conformance
 
-Before finalizing any wiki operation, validate the complete bundle at two levels.
+Before finalizing any wiki operation, validate the complete bundle in this order:
 
-Base OKF v0.2 conformance requires:
+1. **Base OKF.** Apply section 11 of the pinned OKF v0.2 specification. Every non-reserved `.md` file must have parseable YAML frontmatter and a non-empty `type`. Every reserved `index.md` and `log.md` that appears must follow its OKF structure.
+2. **Local profile.** Apply every requirement in [`schema.md`](schema.md), including the bundle file kind, required frontmatter, optional and conditional field families, local type profiles, actor identifiers, source-linked footnotes, Attested Computation contract, and tag registry.
+3. **Required reserved files.** Require the root `wiki/index.md` and `wiki/log.md`, and validate them against the formats described above.
+4. **Compatibility.** Preserve unknown fields and types. Report broken links without failing base OKF conformance. Accept missing optional OKF families and missing non-root indexes.
+5. **Result.** Report base OKF failures, local-profile failures, and warnings separately. A bundle may meet base OKF while failing this repository's stricter local profile.
 
-1. Every non-reserved `.md` file has parseable YAML frontmatter.
-2. Every concept has a non-empty `type`.
-3. Every reserved `index.md` and `log.md` that appears follows its OKF structure.
-
-The local profile also requires:
-
-1. Every bundle member is UTF-8 Markdown with a `.md` filename.
-2. Every concept has the locally required frontmatter in `schema.md`.
-3. The root index and root log are present and follow their reserved formats.
-4. Every optional provenance, trust, lifecycle, path, and computation field that appears has the upstream structure.
-5. Actor identifiers follow the patterns in `schema.md`.
-6. Every source-linked footnote label resolves to a matching `sources[].id`, and every cited source ID has a footnote.
-7. Every Attested Computation has `runtime`. Before one becomes `stable`, it has the complete local contract above.
-8. Local tag use agrees with the tag registry.
-
-Preserve unknown fields and types. Report broken links, but do not fail base OKF conformance because of them. Consumers must accept missing optional OKF families, unknown fields and types, broken links, and missing non-root indexes as the specification requires. A bundle may meet base OKF while failing this repository's stricter local profile.
-
-If a required check fails, correct it when the fix is clear and within scope. Otherwise stop: do not mark the operation complete or create its automatic commit. Report the failed check, affected files, retained changes, and the approval or information needed. Never invent provenance, verification, access, or attestation to make validation pass.
+If a required base or local check fails, correct it when the fix is clear and within scope. Otherwise stop: do not mark the operation complete or create its automatic commit. Report the failed check, affected files, retained changes, and the approval or information needed. Never invent provenance, verification, access, or attestation to make validation pass.

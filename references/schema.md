@@ -176,19 +176,3 @@ No tags are approved yet.
 Use only tags recorded in this registry. Keep the registry small and driven by real retrieval needs. Prefer links and clear titles before adding a tag.
 
 Propose a registry change before adding, renaming, merging, narrowing, or retiring a tag. The proposal should name the affected concepts and explain the retrieval benefit. Avoid synonyms, near-duplicates, and tags that merely repeat a type or status.
-
-## Validation
-
-Validate the whole bundle against OKF section 11 and this local profile before finalizing a wiki operation. In particular:
-
-- Parse every concept's frontmatter and require the local fields above.
-- Confirm that every file in `wiki/` is UTF-8 Markdown and reject non-Markdown bundle members.
-- Validate any optional field family that appears against its upstream structure.
-- Enforce the additional field profile for the selected local type.
-- Check actor patterns and source-linked footnotes.
-- For every `type: Attested Computation`, require `runtime` regardless of status.
-- Before an Attested Computation becomes `stable`, validate the complete local contract above, including its non-empty parameters list and single computation form.
-- Preserve unknown fields and types.
-- Report broken links without failing OKF conformance.
-
-A failed required check blocks completion. Local-profile failures may block this repository's workflow even when the concept meets base OKF conformance.
