@@ -1,6 +1,6 @@
-# LLM Wiki
+# LLM Knowledge Base Starter
 
-LLM Wiki is a starter kit for a file-based knowledge base that humans own and AI agents help build and maintain.
+LLM Knowledge Base Starter is a starter kit for a file-based knowledge base that humans own and AI agents help build and maintain.
 
 It targets OKF v0.2 and follows Karpathy's LLM Wiki pattern: keep original evidence separate, let agents turn it into connected Markdown knowledge, and keep improving that knowledge through normal use.
 
