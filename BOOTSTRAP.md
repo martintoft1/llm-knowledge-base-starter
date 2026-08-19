@@ -1,6 +1,6 @@
 # Bootstrap An LLM Wiki
 
-Use this file only to initialize a new knowledge base from this repository. Do not copy `BOOTSTRAP.md` into the initialized knowledge base.
+Use this file only to initialize a new knowledge base from this repository. Preserve the exact file as an initialization record, but do not use the archived copy as active operating instructions.
 
 Begin by asking exactly this question and nothing else:
 
@@ -59,7 +59,8 @@ Before writing, present one concrete proposal that states:
 - Normal progressive autonomy and every approval-bound exception from `references/operations.md`.
 - Any approved `Dataset` or `Database` concept and its non-secret resource identifier.
 - Git initialization or existing-repository behavior, or the limitations of log-only mode.
-- Agent adapters, seed tags, root-path exceptions, and other important assumptions.
+- Agent adapters, seed tags, top-level path exceptions, and other important assumptions.
+- The archived bootstrap and its provenance record.
 
 Approval covers only the listed files and changes. Revise the proposal when the user changes its scope.
 
@@ -72,17 +73,20 @@ After approval, make the initialized knowledge base self-contained. Copy:
 - The complete `templates/` tree.
 - `CLAUDE.md` or another existing adapter only when approved and applicable.
 
-Copy rules instead of recreating them from memory. Preserve the pinned specification byte-for-byte. Do not create a competing OKF summary, connector, credential file, required runtime, or background service.
+Also create an initialization archive:
 
-Do not copy `BOOTSTRAP.md`.
+- Copy this `BOOTSTRAP.md` byte-for-byte to `references/initialization/BOOTSTRAP.md`.
+- Create `references/initialization/PROVENANCE.md`. Begin with `# Initialization Provenance`, then record `Initialized`, `Starter source`, `Starter version or Git commit`, and `Bootstrap SHA-256` as a short Markdown list. Use `unavailable` rather than inventing source or version information.
+
+Copy rules instead of recreating them from memory. Preserve the pinned specification and archived bootstrap byte-for-byte. Do not create a competing OKF summary, connector, credential file, required runtime, or background service. Routine operation must not depend on the archived bootstrap.
 
 ## Initialize
 
 After approval:
 
 1. Create `raw/` and `wiki/`.
-2. Copy the approved operating kit to the target.
-3. Tailor the copied `README.md`, `references/operations.md`, `references/writing-style.md`, and approved tag registry in `references/schema.md`. Record reusable actor identifiers in the README's Local Settings. Resolve every local-setting placeholder. Replace template-only initialization text in the copied README with normal operating guidance so the result does not depend on `BOOTSTRAP.md`.
+2. Copy the approved operating kit to the target. Create the approved initialization archive and provenance record described above before tailoring any copied operating file.
+3. Tailor the copied `README.md`, `references/operations.md`, `references/writing-style.md`, and approved tag registry in `references/schema.md`. Record reusable actor identifiers in the README's Local Settings. Resolve every local-setting placeholder. Replace the template-only `Initialize A Wiki` section with a short initialization record that links to the archived bootstrap and provenance file. The result must not depend on the archive for routine operation.
 4. Create `wiki/index.md` from `templates/index.md`. Its only frontmatter key must be `okf_version: "0.2"`. Remove example entries that do not point to real concepts.
 5. Create only initial concepts justified by the approved purpose, sources, or external systems. Do not create demonstration pages. Every file inside `wiki/` must be UTF-8 Markdown and follow the local profile. Keep non-Markdown evidence and support assets outside the bundle under approved `raw/` paths, or point to external, non-secret resources.
 6. Add an approved raw source only when the proposal names its exact target. Never modify, overwrite, rename, move, or delete an existing raw file.
@@ -111,7 +115,7 @@ Never store credentials or secret-bearing connection details. Do not claim acces
 
 Run the complete procedure in the copied `references/operations.md` section `Validation And Conformance` against the final `wiki/` state, including the truthful initialization log entry. Use the copied `references/schema.md` as the local constraint source and section 11 of the pinned specification as the base authority.
 
-Also confirm that the copied specification matches the checksum in `references/okf/v0.2/UPSTREAM.md`, index links resolve from each index's location, all local-setting placeholders are resolved in tailored operating files, and documented replacement markers remain in reusable templates. Treat broken links as warnings under the operations procedure. Any required failure blocks staging and commit; report it rather than inventing data.
+Also confirm that the copied specification matches the checksum in `references/okf/v0.2/UPSTREAM.md`, the archived bootstrap matches the `Bootstrap SHA-256` value in `references/initialization/PROVENANCE.md`, index links resolve from each index's location, all local-setting placeholders are resolved in tailored operating files, and documented replacement markers remain in reusable templates. Treat broken links as warnings under the operations procedure. Any required failure blocks staging and commit; report it rather than inventing data.
 
 ## Verification Scenarios
 
@@ -129,7 +133,7 @@ Check representative initialized wikis against the copied operating kit. Do not 
 10. Complete stable and incomplete draft Attested Computations produce the results defined by the schema.
 11. Failed attestation blocks the value, and stale computation warns or refuses according to risk.
 12. No non-Markdown member remains in `wiki/`; approved evidence or support assets are under `raw/` or represented by external, non-secret resource references.
-13. The knowledge base can be operated from its copied README, AGENTS, specification, local rules, indexes, logs, and templates after `BOOTSTRAP.md` is absent.
+13. The knowledge base can be operated from its copied README, AGENTS, specification, local rules, indexes, logs, and templates without reading or relying on the archived bootstrap.
 
 ## Finish
 
@@ -138,6 +142,7 @@ Report:
 - Every path created or changed.
 - The purpose, boundaries, actors, history mode, and external-resource decisions.
 - Validation results, broken-link warnings, and any unresolved limitation.
+- The initialization archive path, provenance, and verified bootstrap checksum.
 - The initialization log entry and focused commit, when present.
 - How to add the first approved source or ask the first substantive question.
 

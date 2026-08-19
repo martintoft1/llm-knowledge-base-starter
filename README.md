@@ -22,7 +22,7 @@ It targets OKF v0.2 and follows Karpathy's LLM Wiki pattern: keep original evide
 
 Only `wiki/` is the OKF bundle. Every concept in it is UTF-8 Markdown with OKF frontmatter. `raw/` keeps PDFs, images, spreadsheets, exports, and other evidence in their useful native formats. Existing raw files are immutable to agents.
 
-Root files operate the system. They are not part of the bundle. New root paths require approval.
+Root files operate the system. They are not part of the bundle. Adding top-level files or directories outside this layout requires a scoped proposal and approval.
 
 ## Sources Of Authority
 
@@ -73,7 +73,7 @@ Under progressive autonomy, agents may create and update normal concepts, links,
 
 Ask an agent with filesystem access to follow `BOOTSTRAP.md`. It gathers only decisions that affect the result, proposes the exact initialization, writes after approval, and validates the complete bundle before finishing.
 
-`BOOTSTRAP.md` is the initialization entry point. It is not copied into generated knowledge bases.
+`BOOTSTRAP.md` is the initialization entry point. Each initialized knowledge base preserves the exact bootstrap it used at `references/initialization/BOOTSTRAP.md`. `references/initialization/PROVENANCE.md` records its source version or commit, checksum, and initialization date. These files support later comparison and migration planning; they are archived references, not active operating instructions.
 
 ## Editable Settings
 

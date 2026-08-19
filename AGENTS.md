@@ -22,6 +22,6 @@ The pinned `references/okf/v0.2/SPEC.md` remains authoritative, but routine work
 - Validate full OKF and local-profile conformance before finalizing any wiki operation. A failed required check blocks completion.
 - Preserve unknown OKF types and fields. Report broken links without treating them as an OKF conformance failure.
 - Never invent sources, verification, access, or attestation. Mark uncertainty and conflict clearly.
-- Do not create new root paths without an explicit proposal and approval.
+- Do not add top-level files or directories outside the approved repository layout without a scoped proposal and approval.
 - Keep `wiki/log.md` current. Follow Git rules when Git is enabled.
-- Do not copy `BOOTSTRAP.md` into an initialized wiki.
+- Treat `references/initialization/BOOTSTRAP.md` as an archive, not active operating instructions. Routine operation must not depend on the archived bootstrap.
