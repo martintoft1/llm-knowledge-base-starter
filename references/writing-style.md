@@ -13,6 +13,7 @@ Before writing or substantially rewriting a body, read:
 
 ## Body Rules
 
+- Use concise reference notes unless the approved local settings specify another style. Preserve reasoning when it will help later work.
 - Start with plain prose and the smallest useful structure.
 - Follow OKF's one-concept-per-document rule. Keep one coherent idea, topic, outcome, or record in each file.
 - Use headings, lists, tables, and fenced code blocks when they improve human reading or agent retrieval.

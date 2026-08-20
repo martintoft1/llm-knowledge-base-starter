@@ -2,7 +2,11 @@
 
 LLM Knowledge Base Starter is a starter kit for a file-based knowledge base that humans own and AI agents help build and maintain.
 
-It targets OKF v0.2 and follows Karpathy's LLM Wiki pattern: keep original evidence separate, let agents turn it into connected Markdown knowledge, and keep improving that knowledge through normal use.
+It targets Google's OKF v0.2 and follows Karpathy's LLM Wiki pattern: keep original evidence separate, let agents turn it into connected Markdown knowledge, and keep improving that knowledge through normal use.
+
+## About
+
+LLM Knowledge Base Starter was created and is maintained by [Martin Toft](https://github.com/martintoft1).
 
 ## Architecture
 
@@ -14,9 +18,15 @@ It targets OKF v0.2 and follows Karpathy's LLM Wiki pattern: keep original evide
 │   ├── log.md              # Mandatory update history
 │   └── *.md                # Knowledge concepts
 ├── README.md               # Overview, architecture, and navigation
+├── VERSION                 # Current operating-kit version
+├── CHANGELOG.md            # Starter release history
+├── LICENSE                 # Apache License 2.0 terms
+├── NOTICE                  # Copyright and upstream attribution
 ├── AGENTS.md               # Agent entry point
 ├── CLAUDE.md               # Optional Claude adapter
 ├── references/             # Local settings, standard, and operating rules
+│   └── initialization/
+│       └── BOOTSTRAP.md    # Initializer in starter; archive after use
 └── templates/              # Reusable concept and body templates
 ```
 
@@ -65,8 +75,22 @@ Under progressive autonomy, agents may create and update normal concepts, links,
 
 `wiki/log.md` is mandatory. Git is strongly recommended because it adds diffs, attribution, and rollback, but it is not required. In log-only mode, rollback is unavailable and substantive replacement or structural changes need stricter approval.
 
+## Versioning
+
+The starter uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html). [`VERSION`](VERSION) records the current operating-kit version, and [`CHANGELOG.md`](CHANGELOG.md) records notable changes. Public releases use an annotated Git tag named `v<version>` and a matching GitHub Release. The version identifies the operating kit, not the knowledge content that a user later adds.
+
+Before 1.0, patch releases contain corrections that do not materially change initialized wikis. Minor releases add capabilities or materially change the bootstrap, schema, templates, or operating rules. Version 1.0 will indicate that the starter's public contract is stable.
+
+Each initialized knowledge base records its starter version or source commit in `references/initialization/PROVENANCE.md`.
+
 ## Initialize A Wiki
 
-Ask an agent with filesystem access to follow `BOOTSTRAP.md`. It gathers only decisions that affect the result, proposes the exact initialization, writes after approval, and validates the complete bundle before finishing.
+Ask an agent with filesystem access to follow [`references/initialization/BOOTSTRAP.md`](references/initialization/BOOTSTRAP.md). It uses an ordered question flow, skips answers already established, opens sensitive-data and external-system branches only when relevant, proposes the exact initialization, writes after approval, and validates the complete bundle before finishing.
 
-`BOOTSTRAP.md` is the initialization entry point. Each initialized knowledge base preserves the exact bootstrap it used at `references/initialization/BOOTSTRAP.md`. `references/initialization/PROVENANCE.md` records its source version or commit, checksum, and initialization date. These files support later comparison and migration planning; they are archived references, not active operating instructions.
+In this starter repository, `references/initialization/BOOTSTRAP.md` is the initialization entry point. The complete `references/` tree carries it to the same path in each initialized knowledge base, where it becomes an archive. `references/initialization/PROVENANCE.md` records its source version or commit, checksum, and initialization date. These files support later comparison and migration planning; routine operation does not depend on the archived bootstrap.
+
+## License
+
+The original starter-kit files are licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).
+
+Third-party material and content later added under `raw/` or `wiki/` remain subject to their applicable rights and licenses. The pinned OKF materials retain the provenance recorded in [`references/okf/v0.2/UPSTREAM.md`](references/okf/v0.2/UPSTREAM.md).

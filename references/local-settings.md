@@ -11,23 +11,29 @@ This file is the single source of truth for settings that vary between knowledge
 
 ## Writing Style
 
-- **Default writing style:** <concise reference notes, explanatory notes, learning-oriented notes, or a local variant>
-
-If no style is approved, use concise reference notes. Preserve reasoning when it will help later work.
+- **Default writing style:** concise reference notes
+- **Additional preferences:** <approved additions or `none`>
 
 ## Tag Registry
 
 No tags are approved yet.
 
-List each approved tag with a short meaning. Follow the tag rules and approval process in [`schema.md`](schema.md).
+- `<tag>`: <meaning and when to use it>
 
 ## Safety And History
 
-- **Sensitive data:** <what may be read, stored, quoted, linked, logged, or committed>
+- **May read:** <sensitive or restricted material agents may read>
+- **May store:** <sensitive or restricted material the knowledge base may retain>
+- **May quote:** <material that may be reproduced in wiki content or responses>
+- **May link:** <material or systems that may be referenced without copying>
+- **May include in logs:** <details that may appear in `wiki/log.md` or other logs>
+- **May commit:** <material that may enter Git history>
+- **Restricted-source location:** <non-secret location or `not applicable`>
+- **Permitted derived content:** <identifiers, metadata, summaries, or conclusions that may be stored>
 - **History mode:** <Git and log, or log only>
 
 ## Actor Identifiers
 
-Actor identifiers record the stable people, agents, tools, and processes used in local provenance and verification. Follow the actor formats in [`schema.md`](schema.md). List only identifiers that are known and useful.
+No actor identifiers are approved yet.
 
 - `<actor identifier>`: <who or what it represents>

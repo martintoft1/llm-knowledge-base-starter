@@ -27,4 +27,4 @@ The pinned `references/okf/v0.2/SPEC.md` remains authoritative, but routine work
 - Never invent sources, verification, access, or attestation. Mark uncertainty and conflict clearly.
 - Do not add top-level files or directories outside the approved repository layout without a scoped proposal and approval.
 - Keep `wiki/log.md` current. Follow Git rules when Git is enabled.
-- After initialization of the knowledge base, treat `references/initialization/BOOTSTRAP.md` as an archive, not active operating instructions. Routine operation must not depend on the archived bootstrap.
+- Use `references/initialization/BOOTSTRAP.md` only when initializing a knowledge base from this starter. After initialization, treat the same file as an archive, not active operating instructions. Routine operation must not depend on it.

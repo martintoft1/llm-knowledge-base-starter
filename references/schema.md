@@ -128,8 +128,10 @@ For non-stable concepts, `parameters`, `computation`, `executor`, and `attester`
 Identity fields such as `generated.by`, `verified[].by`, and `sources[].author` use these forms:
 
 - Agents and tools: `<producer>/<version>`, such as `reference-agent/1.0`.
-- People: `human:<id>`, such as `human:owner`.
+- People: `human:<id>`, such as `human:owner` or `human:<first name>`.
 - Automated processes: `process:<id>`, such as `process:nightly-refresh`.
+
+Actor identifiers are non-secret provenance labels, not links, credentials, or keys for external systems. Use a unique stable identifier for each relevant actor. Legal names are optional, and people who only read the knowledge base do not need identifiers.
 
 Use `human:` for human-authored or human-confirmed content because OKF trust tiers depend on that prefix. Do not represent a person or process with the agent pattern.
 
@@ -177,6 +179,20 @@ The suggested headings and matching files under `templates/page-bodies/` are opt
 ## Tags
 
 The approved [Tag Registry](local-settings.md#tag-registry) and each tag's meaning live in `local-settings.md`. Use only tags recorded there. If the registry is empty, use `tags: []`.
+
+Record each approved registry entry as one Markdown bullet:
+
+```markdown
+- `<tag>`: <meaning and when to use it>
+```
+
+For example:
+
+```markdown
+- `customer-research`: Use for customer interviews, surveys, and related findings.
+```
+
+Use the registry tag's exact spelling in concept frontmatter. Prefer short lowercase kebab-case names for new tags unless the domain requires another stable form. The description should explain both what the tag means and when to use it.
 
 Keep the registry small and driven by real retrieval needs. Prefer links and clear titles before adding a tag.
 

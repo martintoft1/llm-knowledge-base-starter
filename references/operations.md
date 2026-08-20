@@ -117,6 +117,16 @@ Keep `wiki/` flat until navigation becomes genuinely difficult. Prefer titles, l
 
 ## Specialized Operations
 
+### External Access And Connector Setup
+
+Use an approved `Database` or `Dataset` concept to keep external access discoverable. Its `# Access` section records the current access state, existing approved tools, intended method when known, allowed scope, sensitive-data restrictions, approval still needed, and next action. Its `# Limitations` section explains what cannot currently be retrieved or verified. When access is pending, say so in the concept's index description and record that fact in `wiki/log.md`.
+
+Complete ordinary wiki work without requiring a connector when useful work remains possible. If setup is postponed, keep the external-resource concept current. Create a linked `Plan` concept only after the user chooses to proceed and the setup has multiple useful actions to track.
+
+Connecting a new external system or increasing access requires a separate proposal and approval. The proposal names the system, integration, requested read or write scope, files or settings that will change, and how authentication will occur without storing secrets in the knowledge base. Use an approved provider authentication flow; never ask the user to place credentials, tokens, connection strings, or secret-bearing URLs in wiki files, logs, commits, or chat.
+
+After approved setup, verify the actual access rather than assuming it succeeded. Update the external-resource concept, its index description, and `wiki/log.md`; preserve any remaining limitation. Validate the complete bundle and commit only when the configured history mode and host rules allow it.
+
 ### Attested Computation
 
 OKF records a computation contract; it does not execute it. Treat each `Attested Computation` as its own concept.
