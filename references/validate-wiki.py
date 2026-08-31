@@ -7,7 +7,7 @@ import argparse
 import re
 import subprocess
 import sys
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from pathlib import Path
 from urllib.parse import unquote
 
@@ -102,6 +102,23 @@ def valid_datetime(value: object) -> bool:
         return False
 
 
+def parsed_date(value: object) -> date | None:
+    if not valid_date(value):
+        return None
+    if isinstance(value, date):
+        return value
+    return date.fromisoformat(value)
+
+
+def parsed_datetime(value: object) -> datetime | None:
+    if not valid_datetime(value):
+        return None
+    parsed = value if isinstance(value, datetime) else datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
 def read_text(path: Path) -> str | None:
     try:
         return path.read_text(encoding="utf-8").replace("\r\n", "\n")
@@ -135,6 +152,24 @@ def local_target(source_file: Path, value: str) -> Path | None:
     if value.startswith("/"):
         return WIKI / value.lstrip("/")
     return (source_file.parent / value).resolve()
+
+
+def is_inside(path: Path, directory: Path) -> bool:
+    try:
+        path.resolve().relative_to(directory.resolve())
+        return True
+    except ValueError:
+        return False
+
+
+def is_internal_concept(path: Path) -> bool:
+    resolved = path.resolve()
+    return (
+        is_inside(resolved, WIKI)
+        and resolved.is_file()
+        and resolved.suffix == ".md"
+        and resolved.name not in {"index.md", "log.md"}
+    )
 
 
 def markdown_targets(text: str) -> list[str]:
@@ -171,7 +206,7 @@ def check_links(path: Path, body: str) -> None:
     for value in markdown_targets(body):
         target = local_target(path, value)
         if target is not None and not target.exists():
-            WARNINGS.append(f"{relative(path)}: broken link {value}")
+            SCHEMA_FAILURES.append(f"{relative(path)}: broken link {value}")
 
 
 def check_usage_window(path: Path, value: object, field: str) -> bool:
@@ -225,6 +260,20 @@ def check_sources(path: Path, data: dict, body: str) -> list[dict]:
             SCHEMA_FAILURES.append(f"{relative(path)}: {label} must be a mapping")
             continue
         check_path(path, source.get("resource"), f"{label}.resource", allow_scope=True)
+        if "representation" in source:
+            representation = source["representation"]
+            if not nonempty_string(representation):
+                SCHEMA_FAILURES.append(f"{relative(path)}: {label}.representation must be a non-empty local path")
+            else:
+                target = local_target(path, representation)
+                derived = ROOT / "raw" / "_derived"
+                if target is None or not is_inside(target, derived):
+                    SCHEMA_FAILURES.append(f"{relative(path)}: {label}.representation must be inside raw/_derived")
+                else:
+                    if target.suffix.lower() not in {".md", ".txt"}:
+                        SCHEMA_FAILURES.append(f"{relative(path)}: {label}.representation must be Markdown or text")
+                    if not target.is_file():
+                        SCHEMA_FAILURES.append(f"{relative(path)}: unresolved {label}.representation {representation}")
         source_id = source.get("id")
         if source_id is not None:
             if not nonempty_string(source_id):
@@ -251,6 +300,23 @@ def check_sources(path: Path, data: dict, body: str) -> list[dict]:
                 SCHEMA_FAILURES.append(f"{relative(path)}: {label}.usage_count requires a usage window")
 
     return [source for source in sources if isinstance(source, dict)]
+
+
+def check_snapshot(path: Path, data: dict, sources: list[dict]) -> None:
+    if "snapshot" not in data:
+        return
+    if data["snapshot"] is not True:
+        SCHEMA_FAILURES.append(f"{relative(path)}: snapshot must be true when present")
+        return
+    if data.get("type") != "Analysis":
+        SCHEMA_FAILURES.append(f"{relative(path)}: snapshot requires type Analysis")
+    if not sources or not all(
+        nonempty_string(source.get("resource"))
+        and (target := local_target(path, source["resource"])) is not None
+        and is_internal_concept(target)
+        for source in sources
+    ):
+        SCHEMA_FAILURES.append(f"{relative(path)}: snapshot sources must resolve to internal concepts")
 
 
 def computation_section(body: str) -> str:
@@ -363,13 +429,27 @@ def check_concept(path: Path, text: str, tags: set[str]) -> None:
 
     if "resource" in data:
         check_path(path, data["resource"], "resource")
-    if "stale_after" in data and not valid_date(data["stale_after"]):
-        SCHEMA_FAILURES.append(f"{relative(path)}: stale_after must be YYYY-MM-DD")
+    if "stale_after" in data:
+        stale_after = parsed_date(data["stale_after"])
+        if stale_after is None:
+            SCHEMA_FAILURES.append(f"{relative(path)}: stale_after must be YYYY-MM-DD")
+        elif date.today() >= stale_after:
+            WARNINGS.append(f"{relative(path)}: stale since {stale_after.isoformat()}")
     if "usage_window" in data:
         check_usage_window(path, data["usage_window"], "usage_window")
 
     sources = check_sources(path, data, body)
     verified = check_verified(path, data["verified"]) if "verified" in data else []
+    check_snapshot(path, data, sources)
+
+    generated_at = parsed_datetime(generated.get("at")) if isinstance(generated, dict) else None
+    verification_times = [
+        checked_at
+        for event in verified
+        if (checked_at := parsed_datetime(event.get("at"))) is not None
+    ]
+    if generated_at is not None and verification_times and max(verification_times) < generated_at:
+        WARNINGS.append(f"{relative(path)}: verification predates latest meaningful content change")
 
     concept_type = data.get("type")
     if concept_type in RESOURCE_REQUIRED and not nonempty_string(data.get("resource")):
@@ -400,6 +480,22 @@ def check_index(path: Path, text: str) -> None:
         SCHEMA_FAILURES.append('wiki/index.md: okf_version must be "0.2"')
     if not re.search(r"^#{1,6}\s+\S", body, re.MULTILINE):
         BASE_FAILURES.append(f"{relative(path)}: index requires at least one section heading")
+    if root_index:
+        concepts = {
+            candidate.resolve()
+            for candidate in WIKI.rglob("*.md")
+            if candidate.name not in {"index.md", "log.md"}
+        }
+        counts = dict.fromkeys(concepts, 0)
+        for value in markdown_targets(body):
+            target = local_target(path, value)
+            if target is not None and target.resolve() in counts:
+                counts[target.resolve()] += 1
+        for concept, count in sorted(counts.items(), key=lambda item: relative(item[0])):
+            if count == 0:
+                SCHEMA_FAILURES.append(f"{relative(path)}: missing concept entry {relative(concept)}")
+            elif count > 1:
+                SCHEMA_FAILURES.append(f"{relative(path)}: duplicate concept entry {relative(concept)}")
     check_links(path, body)
 
 
@@ -506,7 +602,11 @@ def root_relative(value: str) -> str | None:
 
 
 def relevant_change(path: str) -> bool:
-    return path == "references/local-settings.md" or path == "wiki" or path.startswith("wiki/")
+    return (
+        path == "references/local-settings.md"
+        or path in {"raw", "wiki"}
+        or path.startswith(("raw/", "wiki/"))
+    )
 
 
 def changed_inputs(requested: list[str], changes: list[tuple[str, tuple[str, ...]]]) -> set[str]:
@@ -558,8 +658,10 @@ def frontmatter_paths(data: dict) -> list[str]:
     sources = data.get("sources")
     if isinstance(sources, list):
         for source in sources:
-            if isinstance(source, dict) and nonempty_string(source.get("resource")):
-                values.append(source["resource"])
+            if isinstance(source, dict):
+                for field in ("resource", "representation"):
+                    if nonempty_string(source.get(field)):
+                        values.append(source[field])
     for field in ("executor", "attester"):
         value = data.get(field)
         if isinstance(value, dict) and nonempty_string(value.get("resource")):
@@ -618,24 +720,27 @@ def incremental_selection(
     changes = git_changes()
     direct = changed_inputs(requested, changes)
     current_markdown = {path for path in all_files if path.suffix == ".md"}
-    direct_wiki_paths = {
+    direct_targets = {
         (ROOT / path).resolve()
         for path in direct
-        if path.startswith("wiki/")
     }
     tags = affected_tags(direct)
     dependents: set[Path] = set()
 
     for path in current_markdown:
-        if path.resolve() in direct_wiki_paths:
+        if path.resolve() in direct_targets:
             continue
         text = selection_text(path)
         if text is None:
             continue
-        if refers_to_changed_target(path, text, direct_wiki_paths) or uses_affected_tag(text, tags):
+        if refers_to_changed_target(path, text, direct_targets) or uses_affected_tag(text, tags):
             dependents.add(path)
 
-    direct_current = {path for path in direct_wiki_paths if path.is_file() and path.suffix == ".md"}
+    direct_current = {
+        path
+        for path in direct_targets
+        if is_inside(path, WIKI) and path.is_file() and path.suffix == ".md"
+    }
     reserved = {path for path in (WIKI / "index.md", WIKI / "log.md") if path.is_file()}
     selected = direct_current | dependents | reserved
     return direct, dependents, selected

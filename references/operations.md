@@ -188,7 +188,7 @@ Pass deleted paths even though they no longer exist. For a rename, pass both the
 The changed mode uses Git to correlate old and new paths when Git recognizes a rename. It searches the current wiki and validates:
 
 - directly changed wiki files;
-- files whose Markdown links or frontmatter paths refer to a changed, deleted, or renamed wiki file;
+- wiki files whose Markdown links or frontmatter paths refer to a changed, deleted, or renamed wiki or raw file;
 - every concept using a tag whose registry entry was added, removed, renamed, or changed; and
 - the required root index and log.
 
