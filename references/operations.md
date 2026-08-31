@@ -2,14 +2,9 @@
 
 This file defines how agents add, use, review, and record knowledge. [`local-settings.md`](local-settings.md) defines the current settings, and [`schema.md`](schema.md) defines the wiki schema.
 
-## Required Local Settings
+## Global Prerequisite: Safety
 
-Read only the settings needed for the operation:
-
-- [Safety](local-settings.md#safety) before every operation. Apply its storage and sharing rules to source material, wiki content, logs, commits, and responses.
-- [Tag Registry](local-settings.md#tag-registry) before adding, removing, reviewing, or validating tags.
-
-Do not duplicate those settings here.
+Before every operation, read [Safety](local-settings.md#safety) and keep it in effect throughout the work. Apply its storage and sharing rules to source material, search queries, wiki content, logs, commits, responses, and external systems.
 
 ## Operating Principles
 
@@ -37,11 +32,11 @@ A direct user request is approval only for its stated scope. For approval-bound 
 
 ### Information Use And Sharing
 
-Agents with approved access may read and use material stored in the knowledge base. Never persist anything covered by `May not store` in the wiki, raw evidence, logs, or Git history. Ask before sharing anything covered by `May not share externally` with a person or system outside the knowledge base's approved access boundary. Approval applies only to the named audience, system, material, and purpose.
+Apply [Safety](local-settings.md#safety) whenever information is read, stored, or shared. Agents with approved access may read and use material stored in the knowledge base. Never persist anything covered by `May not store` in the wiki, raw evidence, logs, or Git history. Ask before sharing anything covered by `May not share externally` with a person or system outside the knowledge base's approved access boundary. Approval applies only to the named audience, system, material, and purpose.
 
 ### Raw Evidence
 
-Keep retained original evidence under `raw/` and authored knowledge under `wiki/`.
+Apply [Safety](local-settings.md#safety) before retaining evidence. Keep retained original evidence under `raw/` and authored knowledge under `wiki/`.
 
 Existing raw files are immutable to agents. Never modify, overwrite, rename, move, or delete one. A correction or derived artifact becomes a new source. Adding a new raw source on the user's behalf requires approval, even when the source was already identified. A human may manage raw material directly outside this workflow. `raw/.gitkeep` is only a tracked placeholder, not evidence; ignore it and leave it unchanged.
 
@@ -68,7 +63,7 @@ Use Ingest when the user explicitly asks to add supplied or identified material 
 
 #### Intake
 
-Access the source and check its relevance, provenance, sensitivity, uncertainty, and storage restrictions. Ask for approval before retaining a new raw file. Preserve an approved source in its useful native format and create a durable representation only when justified.
+Apply [Safety](local-settings.md#safety) while accessing and assessing the source. Check its relevance, provenance, sensitivity, uncertainty, and storage restrictions. Ask for approval before retaining a new raw file. Preserve an approved source in its useful native format and create a durable representation only when justified.
 
 #### Triage
 
@@ -76,7 +71,7 @@ Read `wiki/index.md`, then search the complete wiki using the source's key terms
 
 #### Compile
 
-Create or update the atomic concepts that the source materially informs. Add provenance in `sources`; use stable source IDs and matching footnotes for attributed claims. Do not create a source summary when the knowledge belongs in existing concepts. Preserve useful conflict instead of silently choosing one account.
+Create or update the atomic concepts that the source materially informs. Before adding or changing tags, read the [Tag Registry](local-settings.md#tag-registry) and use only approved tags. Add provenance in `sources`; use stable source IDs and matching footnotes for attributed claims. Do not create a source summary when the knowledge belongs in existing concepts. Preserve useful conflict instead of silently choosing one account.
 
 #### Check
 
@@ -95,6 +90,8 @@ Follow [Shared Completion](#shared-completion). If the retained source was not u
 ### Research
 
 Use Research only when the user asks the agent to find sources for the knowledge base. Ordinary knowledge questions use Query and do not start autonomous source gathering.
+
+Apply [Safety](local-settings.md#safety) to search queries, candidate sources, retained files, and research reports.
 
 1. Define the question, scope, and useful search angles.
 2. Search with official names, aliases, abbreviations, and synonyms. Deliberately look for criticism, failures, and opposing evidence.
@@ -135,6 +132,8 @@ Create a snapshot only when the user explicitly asks to preserve a point-in-time
 
 Maintenance may review a selected area or the complete wiki. It has three parts.
 
+Before reviewing or changing tags, read the [Tag Registry](local-settings.md#tag-registry).
+
 #### Validate
 
 Run the required mechanical checks for OKF and wiki-schema conformance, complete index coverage, metadata, paths, links, freshness, trust signals, provenance, snapshots, types, tags, and Attested Computations.
@@ -149,7 +148,7 @@ Apply deterministic, low-risk corrections automatically. Report ambiguous or sem
 
 Repair a broken link automatically only when one intended moved target is unambiguous. Remove dead index and navigational links. Never silently remove evidence, computation, provenance, or another load-bearing link; report it when the correct repair is unclear.
 
-Applying an approved tag to a concept, or removing one that plainly does not apply, is ordinary maintenance. Changing the tag registry requires the proposal described in `schema.md`, with the affected concepts and retrieval benefit.
+Applying an approved tag to a concept, or removing one that plainly does not apply, is ordinary maintenance. Changing the [Tag Registry](local-settings.md#tag-registry) requires the proposal described in `schema.md`, with the affected concepts and retrieval benefit.
 
 Keep `wiki/` flat until navigation becomes genuinely difficult. Prefer titles, links, and a small maintained tag registry before folders. After repairs, repeat the affected checks and follow [Shared Completion](#shared-completion).
 

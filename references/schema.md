@@ -4,12 +4,6 @@ This file defines how wiki files are structured: bundle rules, atomic concepts, 
 
 The pinned [`okf/v0.2/SPEC.md`](okf/v0.2/SPEC.md) remains authoritative. Consult it when this schema does not cover a field or edge case, when resolving ambiguity, during a formal base-OKF audit, or when changing the schema or OKF version. Do not use this schema to override the specification.
 
-## Required Local Settings
-
-Read only the settings needed for the schema task:
-
-- [Tag Registry](local-settings.md#tag-registry) before creating or validating tags.
-
 ## Bundle Files
 
 Every file inside `wiki/` must be UTF-8 Markdown with a `.md` filename. This wiki-schema rule is stricter than base OKF, which permits other support files. Non-Markdown evidence, computation code, and other support assets are not bundle members. Keep retained evidence under `raw/` or point to an external resource.
