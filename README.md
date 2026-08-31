@@ -13,6 +13,7 @@ LLM Knowledge Base Starter was created and is maintained by [Martin Toft](https:
 ```text
 <knowledge-base-root>/
 ├── raw/                    # Immutable original sources in native formats
+│   └── .gitkeep            # Tracked placeholder; not evidence
 ├── wiki/                   # The OKF v0.2 knowledge bundle
 │   ├── index.md            # Bundle navigation and OKF version
 │   ├── log.md              # Mandatory update history
@@ -25,12 +26,10 @@ LLM Knowledge Base Starter was created and is maintained by [Martin Toft](https:
 ├── AGENTS.md               # Agent entry point
 ├── CLAUDE.md               # Optional Claude adapter
 ├── references/             # Local settings, standard, and operating rules
-│   └── initialization/
-│       └── BOOTSTRAP.md    # Initializer in starter; archive after use
 └── templates/              # Reusable concept and body templates
 ```
 
-Only `wiki/` is the OKF bundle. Every concept in it is UTF-8 Markdown with OKF frontmatter. `raw/` keeps PDFs, images, spreadsheets, exports, and other evidence in their useful native formats. Existing raw files are immutable to agents.
+Only `wiki/` is the OKF bundle. Every concept in it is UTF-8 Markdown with OKF frontmatter. `raw/` keeps PDFs, images, spreadsheets, exports, and other evidence in their useful native formats. Existing raw files are immutable to agents. Its tracked `.gitkeep` file only preserves the empty directory and is not evidence.
 
 Files outside `wiki/` operate or support the system. They are not part of the bundle. Adding top-level files or directories outside this layout requires a scoped proposal and approval.
 
@@ -39,7 +38,7 @@ Files outside `wiki/` operate or support the system. They are not part of the bu
 Use these sources in order:
 
 1. [`references/okf/v0.2/SPEC.md`](references/okf/v0.2/SPEC.md) is the pinned, unmodified OKF v0.2 specification. It defines OKF terms and semantics.
-2. [`references/local-settings.md`](references/local-settings.md) defines the current purpose, scope, terminology, writing style, tag registry, sensitive-data rules, history mode, and actor identifiers.
+2. [`references/local-settings.md`](references/local-settings.md) defines the writing style, tag registry, and storage and sharing restrictions.
 3. [`references/schema.md`](references/schema.md) defines the wiki schema used by this starter kit.
 4. [`references/operations.md`](references/operations.md) defines operating principles, procedures, approval boundaries, history-mode behavior, and validation.
 5. [`references/writing-style.md`](references/writing-style.md) defines reusable editorial and body-writing rules.
@@ -51,27 +50,28 @@ The pinned [`references/okf/v0.2/README.md`](references/okf/v0.2/README.md) prov
 
 ## Local Settings
 
-The authoritative settings for this knowledge base live in [`references/local-settings.md`](references/local-settings.md). Keep their values there so purpose, scope, terminology, writing style, tags, safety rules, history mode, and actor identifiers cannot drift between documents.
+The authoritative settings for this knowledge base live in [`references/local-settings.md`](references/local-settings.md). Its defaults work immediately. Change them only when the knowledge base needs different writing, tags, or storage or sharing restrictions.
 
 ## How Knowledge Grows
 
-Agents ingest approved sources into useful concepts, answer questions from traceable evidence, and file all durable or potentially useful findings back into the wiki. Minor procedural or disposable answers stay in chat. New concepts are created only when the knowledge is distinct; generic Q&A files are not used.
+Agents ingest approved sources into useful concepts and answer questions from traceable evidence. After an ordinary question, an agent may suggest durable knowledge that is likely worth keeping, but it stores that knowledge only after the user accepts. An explicit ingest or update request authorizes ordinary wiki changes. Minor procedural or disposable answers stay in chat.
 
 The starter kit adds these choices around OKF and the LLM Wiki pattern:
 
 - **Progressive structure:** Start with the least structure needed. Add types, tags, headings, and folders only when they improve retrieval or reuse.
 - **Simplicity-first writing:** Use plain language and only as much structure as the material needs.
+- **Atomic concepts:** Keep independently maintainable knowledge in canonical concept files and connect related concepts with explained links.
 - **Flat organization and living tags:** Prefer links and maintained tags over early folder hierarchies.
 - **Progressive autonomy:** Let agents handle ordinary wiki work while reserving risky actions for human approval. Consider giving agents more autonomy after they prove that they can work well on their own.
-- **Tailored setup:** Discover the purpose, boundaries, sources, history mode, and useful templates during initialization.
+- **Ready to use:** Start with sensible defaults and define purpose, scope, terminology, or other context in ordinary knowledge files only when useful.
 - **Epistemic safeguards:** Separate evidence, interpretation, inference, uncertainty, and unresolved conflict. Never invent provenance.
-- **Repository governance:** Keep a controlled root, protect sensitive data, and ask about external systems only when relevant.
+- **Repository governance:** Keep a controlled root, follow the local storage and sharing settings, and ask about external systems only when relevant.
 
-The one-concept-per-document rule, raw/wiki separation, Markdown, provenance, links, indexes, logs, and agent neutrality come from OKF or Karpathy's pattern; they're not a part of these local additions.
+The base one-concept-per-document rule, raw/wiki separation, Markdown, provenance, links, indexes, logs, and agent neutrality come from OKF or Karpathy's pattern. This starter makes the concept boundary more explicit through its atomic-concept rules.
 
 ## Authority And History
 
-Under progressive autonomy, agents may create and update normal concepts, links, sources, indexes, and logs. Approval is required for destructive or broad structural work, changing the pinned standard or local rules, adding raw sources on the user's behalf, and new or increased external access. Agents never modify existing raw sources.
+Under progressive autonomy, agents may create and update normal concepts, links, sources, indexes, and logs when the user directly requests the work or accepts a suggested addition. Approval is required for destructive or broad structural work, changing the pinned standard or local rules, adding raw sources on the user's behalf, and new or increased external access. Agents never modify existing raw sources.
 
 `wiki/log.md` is mandatory. Git is strongly recommended because it adds diffs, attribution, and rollback, but it is not required. In log-only mode, rollback is unavailable and substantive replacement or structural changes need stricter approval.
 
@@ -79,15 +79,33 @@ Under progressive autonomy, agents may create and update normal concepts, links,
 
 The starter uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html). [`VERSION`](VERSION) records the current operating-kit version, and [`CHANGELOG.md`](CHANGELOG.md) records notable changes. Public releases use an annotated Git tag named `v<version>` and a matching GitHub Release. The version identifies the operating kit, not the knowledge content that a user later adds.
 
-Before 1.0, patch releases contain corrections that do not materially change initialized wikis. Minor releases add capabilities or materially change the bootstrap, schema, templates, or operating rules. Version 1.0 will indicate that the starter's public contract is stable.
+Before 1.0, patch releases contain corrections that do not materially change existing knowledge bases. Minor releases add capabilities or materially change the schema, templates, or operating rules. Version 1.0 will indicate that the starter's public contract is stable.
 
-Each initialized knowledge base records its starter version or source commit in `references/initialization/PROVENANCE.md`.
+## First Use
 
-## Initialize A Wiki
+The repository works immediately. It already includes an empty valid `wiki/` bundle and a tracked `raw/` directory. Before adding knowledge, review [`references/local-settings.md`](references/local-settings.md) and change only what you need.
 
-Ask an agent with filesystem access to follow [`references/initialization/BOOTSTRAP.md`](references/initialization/BOOTSTRAP.md). It uses an ordered question flow, skips answers already established, opens sensitive-data and external-system branches only when relevant, proposes the exact initialization, writes after approval, and validates the complete bundle before finishing.
+You can ask an agent with filesystem access:
 
-In this starter repository, `references/initialization/BOOTSTRAP.md` is the initialization entry point. The complete `references/` tree carries it to the same path in each initialized knowledge base, where it becomes an archive. `references/initialization/PROVENANCE.md` records its source version or commit, checksum, and initialization date. These files support later comparison and migration planning; routine operation does not depend on the archived bootstrap.
+```text
+Review references/local-settings.md with me, keep its defaults unless I ask for a change, then help me start using the knowledge base.
+```
+
+## Common Prompts
+
+Use these examples as written or adapt them to the task:
+
+| Task | Prompt |
+|---|---|
+| Add knowledge | `Ingest the following into the wiki: <text or files>` |
+| Ask a question | `Using the knowledge base, answer: <question>` |
+| Summarize | `Summarize the following content: <text or files>` |
+| Review content | `Review the following content: <text or files>` |
+| Correct knowledge | `Update the wiki with this correction: <change>` |
+| Review the wiki | `Review the wiki for maintenance issues and propose any changes.` |
+| Connect a source | `Help me connect <system or source> to the knowledge base.` |
+
+Summarizing or reviewing does not change the wiki unless the user accepts a suggested addition. Ingesting or updating explicitly authorizes ordinary wiki changes. Other approval boundaries still apply.
 
 ## License
 

@@ -1,6 +1,6 @@
 # Wiki Schema
 
-This file defines how wiki files are structured: bundle rules, required and optional metadata, actor identifiers, links and paths, types, body headings, and tag rules. It is the routine source of truth for the starter kit's reusable schema. Settings that vary between knowledge bases live in [`local-settings.md`](local-settings.md).
+This file defines how wiki files are structured: bundle rules, atomic concepts, required and optional metadata, actor identifiers, links and paths, types, body headings, and tag rules. It is the routine source of truth for the starter kit's reusable schema. Settings that vary between knowledge bases live in [`local-settings.md`](local-settings.md).
 
 The pinned [`okf/v0.2/SPEC.md`](okf/v0.2/SPEC.md) remains authoritative. Consult it when this schema does not cover a field or edge case, when resolving ambiguity, during a formal base-OKF audit, or when changing the schema or OKF version. Do not use this schema to override the specification.
 
@@ -8,12 +8,23 @@ The pinned [`okf/v0.2/SPEC.md`](okf/v0.2/SPEC.md) remains authoritative. Consult
 
 Read only the settings needed for the schema task:
 
-- [Actor Identifiers](local-settings.md#actor-identifiers) before creating or validating actor fields.
 - [Tag Registry](local-settings.md#tag-registry) before creating or validating tags.
 
 ## Bundle Files
 
-Every file inside `wiki/` must be UTF-8 Markdown with a `.md` filename. This wiki-schema rule is stricter than base OKF, which permits other support files. Non-Markdown evidence, computation code, and other support assets are not bundle members. Keep retained evidence under `raw/` or point to an external, non-secret resource.
+Every file inside `wiki/` must be UTF-8 Markdown with a `.md` filename. This wiki-schema rule is stricter than base OKF, which permits other support files. Non-Markdown evidence, computation code, and other support assets are not bundle members. Keep retained evidence under `raw/` or point to an external resource.
+
+## Atomic Concepts And Links
+
+Each concept file must cover one atomic concept: the smallest useful unit that can stand alone and be sourced, linked, and maintained independently.
+
+- Split content when its parts can stand alone or change independently. Keep necessary context, evidence, reasoning, and examples with the concept. Length alone is not a reason to split.
+- Give each concept one canonical file. Connect related concepts with Markdown links and explain the relationship in the surrounding text. Do not duplicate substantial content; a linking file may include the minimum summary needed to make the relationship understandable.
+- Overviews, syntheses, analyses, decisions, and plans may connect several concepts, but each file must express one clear collection, comparison, conclusion, decision, or plan. Link to canonical concept files rather than reproducing them.
+
+Use the fewest links needed for retrieval and reuse. Add a link only when it avoids repeating substantial content, connects an overview or index to its details, identifies a dependency needed to understand or use the concept, or provides required provenance or resource access. Do not link merely because concepts share a topic, repeat the same link unnecessarily, or add reciprocal links solely for symmetry. If the relationship cannot be explained clearly in the surrounding prose, omit the link.
+
+Provenance should normally remain in `sources` and keyed footnotes rather than creating extra body links.
 
 ## Frontmatter
 
@@ -47,7 +58,7 @@ Use [`templates/wiki-page.md`](../templates/wiki-page.md) as the shared starting
 
 Optional fields carry real meaning when present. Omit them when they do not apply; never add empty mappings, empty lists, `null`, or invented values merely to complete a template.
 
-#### Resource Binding
+#### Resource
 
 `resource` identifies the canonical asset the concept describes. Use it when the subject is a particular source, file, dataset, database, API, dashboard, or other addressable asset. Omit it for abstract ideas and general instructions.
 
@@ -131,11 +142,13 @@ Identity fields such as `generated.by`, `verified[].by`, and `sources[].author` 
 - People: `human:<id>`, such as `human:owner` or `human:<first name>`.
 - Automated processes: `process:<id>`, such as `process:nightly-refresh`.
 
-Actor identifiers are non-secret provenance labels, not links, credentials, or keys for external systems. Use a unique stable identifier for each relevant actor. Legal names are optional, and people who only read the knowledge base do not need identifiers.
+Actor identifiers are provenance labels. Use a unique stable identifier for each relevant actor. People who only read the knowledge base do not need identifiers.
 
-Use `human:` for human-authored or human-confirmed content because OKF trust tiers depend on that prefix. Do not represent a person or process with the agent pattern.
+When agents and tools create or meaningfully update a concept, they use their own truthful `<producer>/<version>` identifier in `generated.by`. Never ask a user to choose an agent identifier, and never invent a producer or version.
 
-See OKF section 7 for the normative actor convention. Never invent provenance, verification, usage, access, or attestation. Preserve unknown fields when editing a concept; unknown fields and types do not make an OKF concept invalid.
+Use `human:` for human-authored or human-confirmed content. Do not represent a person or process with the agent pattern.
+
+See OKF section 7 for normative details.
 
 ## Links And Paths
 

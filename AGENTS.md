@@ -7,8 +7,8 @@ Keep the knowledge base simple, traceable, and conformant with OKF v0.2. Add str
 Read these in order:
 
 1. `README.md` for the overview, architecture, and source map.
-2. `references/local-settings.md` for local settings and specifications surrounding purpose, scope, terminology, writing style, approved tags, sensitive-data rules, history mode, and actor identifiers.
-3. `references/schema.md` for the wiki schema: bundle structure, frontmatter, actors, links and paths, types, body headings, and tag rules.
+2. `references/local-settings.md` for writing style, approved tags, and storage and sharing restrictions.
+3. `references/schema.md` for the wiki schema: bundle structure, atomic concepts, frontmatter, actors, links and paths, types, body headings, and tag rules.
 4. `references/operations.md` for operating principles, core and specialized operations, approval boundaries, history-mode behavior, and validation.
 5. `references/writing-style.md` for reusable body-writing rules before creating or substantially rewriting bodies.
 6. `wiki/index.md` and relevant local indexes when they exist.
@@ -20,11 +20,12 @@ The pinned `references/okf/v0.2/SPEC.md` remains authoritative, but routine work
 ## Boundaries
 
 - Only `wiki/` is the OKF bundle. Keep original evidence under `raw/` and operating files in the approved root and `references/` paths.
-- Existing raw files are immutable to agents. Adding a raw source on the user's behalf requires approval.
+- Existing raw files are immutable to agents. Adding a raw source on the user's behalf requires approval. `raw/.gitkeep` is only a tracked placeholder; ignore it and leave it unchanged.
+- During ordinary questions, answer first and propose likely useful knowledge before changing the wiki. A direct ingest or update request, or an accepted proposal, authorizes ordinary wiki changes.
+- Keep one atomic concept in each concept file. Link related concepts instead of duplicating substantial content.
 - Use progressive autonomy for ordinary wiki work. Follow `references/operations.md` for actions that require approval.
 - Validate base OKF and wiki-schema conformance before finalizing any wiki operation. A failed required check blocks completion.
 - Preserve unknown OKF types and fields. Report broken links without treating them as an OKF conformance failure.
 - Never invent sources, verification, access, or attestation. Mark uncertainty and conflict clearly.
 - Do not add top-level files or directories outside the approved repository layout without a scoped proposal and approval.
 - Keep `wiki/log.md` current. Follow Git rules when Git is enabled.
-- Use `references/initialization/BOOTSTRAP.md` only when initializing a knowledge base from this starter. After initialization, treat the same file as an archive, not active operating instructions. Routine operation must not depend on it.

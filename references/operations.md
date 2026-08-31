@@ -6,40 +6,27 @@ This file defines how agents add, use, review, and record knowledge. [`local-set
 
 Read only the settings needed for the operation:
 
-- [Identity And Scope](local-settings.md#identity-and-scope) before ingest, query, or maintenance work.
-- [Safety And History](local-settings.md#safety-and-history) before every operation. Apply its sensitive-data rules to source material, wiki content, logs, commits, and responses.
-- [Actor Identifiers](local-settings.md#actor-identifiers) before recording or validating provenance, generation, or verification.
+- [Safety](local-settings.md#safety) before every operation. Apply its storage and sharing rules to source material, wiki content, logs, commits, and responses.
 - [Tag Registry](local-settings.md#tag-registry) before adding, removing, reviewing, or validating tags.
 
 Do not duplicate those settings here.
-
-### History Mode Behavior
-
-The history mode in [Safety And History](local-settings.md#safety-and-history) changes how work is recorded and what safeguards are available. A history-mode change does not require reinitialization. When the user changes it, update `local-settings.md`, record the change in `wiki/log.md`, and follow the new mode from then on. When enabling Git, use the repository that already contains the wiki or initialize one as part of the approved change; never create a nested repository.
-
-#### Git And Log
-
-Git is strongly recommended because it adds diffs, attribution, and rollback. Before committing, inspect the worktree, preserve unrelated changes, stage only the current operation, and create one focused local commit when host rules allow it. Never push, rewrite history, or perform a destructive rollback without authority.
-
-#### Log Only
-
-The wiki remains usable in log-only mode, but rollback is unavailable. Make this limitation clear when the mode is selected or changed. Without Git, get approval before substantively replacing existing content and before every structural or destructive change. Continue to record all meaningful operations in `wiki/log.md`.
 
 ## Operating Principles
 
 ### Bundle Boundaries
 
-Every member of the `wiki/` bundle must be UTF-8 Markdown with a `.md` filename. This is a local restriction beyond base OKF. Keep non-Markdown evidence and support files outside the bundle: retain evidence under `raw/`, or point to an external, non-secret resource.
+Every member of the `wiki/` bundle must be UTF-8 Markdown with a `.md` filename. This is a local restriction beyond base OKF. Keep non-Markdown evidence and support files outside the bundle: retain evidence under `raw/`, or point to an external resource allowed by [Safety](local-settings.md#safety).
 
 ### Authority
 
-Agents may perform ordinary, low-risk work under `wiki/` without asking each time. This includes creating and updating concepts, sources, claim footnotes, links, metadata, indexes, and logs; fixing clear formatting or conformance errors; and making focused local commits when Git is enabled and host rules allow it.
+Agents may perform ordinary, low-risk work under `wiki/` without separate approval when the user directly requests the work or accepts a suggested addition. This includes creating and updating concepts, sources, claim footnotes, links, metadata, indexes, and logs; fixing clear formatting or conformance errors; and making focused local commits when Git is enabled and host rules allow it.
 
 Approval is required before an agent:
 
 - adds a raw source on the user's behalf;
 - deletes a concept;
 - performs broad merges, splits, moves, renames, or reorganizations;
+- changes local settings;
 - changes the pinned OKF version, schema, operating rules, templates, or autonomy settings;
 - connects a new external system or increases existing access;
 - writes to an external system;
@@ -48,11 +35,15 @@ Approval is required before an agent:
 
 A direct user request is approval only for its stated scope. For approval-bound work, name the affected files, the intended result, and what happens to the originals before writing.
 
+### Information Use And Sharing
+
+Agents with approved access may read and use material stored in the knowledge base. Never persist anything covered by `May not store` in the wiki, raw evidence, logs, or Git history. Ask before sharing anything covered by `May not share externally` with a person or system outside the knowledge base's approved access boundary. Approval applies only to the named audience, system, material, and purpose.
+
 ### Raw Evidence
 
 Keep retained original evidence under `raw/` and authored knowledge under `wiki/`.
 
-Existing raw files are immutable to agents. Never modify, overwrite, rename, move, or delete one. A correction or derived artifact becomes a new source. Adding a new raw source on the user's behalf requires approval, even when the source was already identified. A human may manage raw material directly outside this workflow.
+Existing raw files are immutable to agents. Never modify, overwrite, rename, move, or delete one. A correction or derived artifact becomes a new source. Adding a new raw source on the user's behalf requires approval, even when the source was already identified. A human may manage raw material directly outside this workflow. `raw/.gitkeep` is only a tracked placeholder, not evidence; ignore it and leave it unchanged.
 
 Do not pretend to have read an unavailable source or external system. Record the limitation instead.
 
@@ -68,20 +59,18 @@ Update an index after ingest, durable query filing, or maintenance changes what 
 
 `wiki/log.md` is mandatory in every history mode. It has no frontmatter and begins with `# Directory Update Log`. Group concise operation bullets newest-first under date-only `YYYY-MM-DD` headings. Record meaningful ingests, filed query findings, maintenance, and concept changes. Link affected concepts when useful.
 
-The log records what happened. It is not a diff and cannot restore prior content.
-
 ## Core Operations
 
 ### Ingest
 
-When the user supplies or identifies a source:
+When the user explicitly asks to ingest material:
 
 1. Check its relevance, provenance, conflicts, uncertainty, and sensitivity. Ask for approval if retaining it requires a new raw file.
-2. Create or update the concepts that the source materially informs. Preserve conflicting evidence instead of silently choosing one account.
+2. Create or update the atomic concepts that the source materially informs. Preserve conflicting evidence instead of silently choosing one account.
 3. Add concept-level provenance in `sources`. When a body attributes a specific claim, give that source a stable `sources[].id` and use the same key for its Markdown footnote. Do not create a separate citations section.
 4. Update related concepts, summaries, and cross-links when the source changes, supports, or contradicts them.
 5. Update the affected index files and `wiki/log.md`.
-6. Validate the complete bundle against OKF v0.2 and the wiki schema.
+6. Validate the affected files through the procedure below.
 7. If Git is enabled and host rules allow it, create one focused local commit.
 8. Report the concepts changed, important uncertainty or conflict, and the log entry or commit.
 
@@ -91,7 +80,11 @@ Prefer one-source-at-a-time ingest when practical so the user can guide emphasis
 
 Read `wiki/index.md`, follow relevant concepts and sources, and consult raw evidence when needed. Distinguish evidence, interpretation, inference, uncertainty, and unresolved conflict in the answer.
 
-All durable or potentially useful knowledge found while answering must be filed into the wiki. Update an existing concept when the knowledge belongs there. Create a new concept only when it is a distinct unit, then update related concepts if the finding changes, supports, or contradicts them. Update the relevant index and log, validate the bundle, and commit when Git is enabled and allowed.
+Answer the user before considering a wiki update. Then decide whether information supplied by the user or surfaced by the answer is likely worth storing. It should be durable, relevant to the current work or existing wiki, likely to be reused, and not already captured.
+
+When information is likely worth storing, briefly propose the knowledge itself. Do not require the user to review filenames, metadata, or full file contents. The user may accept, decline, or suggest changes. If the user suggests changes, present a revised proposal. Do not change the wiki until the proposal is accepted.
+
+After acceptance, decide how to store the knowledge: update or create the appropriate atomic concepts, add justified sources, metadata, and links, then update the relevant index and log, validate the affected files through the procedure below, and commit when Git is enabled and allowed. An explicit ingest or wiki-update request already authorizes ordinary storage and skips this proposal. Broad structural, destructive, sensitive, or otherwise approval-bound work still requires its normal approval.
 
 Do not create generic Q&A pages or chat-transcript archives. Minor procedural, temporary, or disposable answers remain in chat.
 
@@ -101,9 +94,12 @@ Maintenance reviews the whole affected area and checks for:
 
 - contradictions, uncertainty, and unsupported claims;
 - stale or deprecated knowledge;
-- broken or missing links and orphan concepts;
+- broken links;
+- overloaded concepts;
+- duplicate concepts or duplicated content;
+- missing links needed for navigation, reuse, or dependencies, and redundant links that add clutter;
+- orphaned concepts;
 - missing or malformed provenance;
-- duplicate, overlapping, or poorly bounded concepts;
 - important missing concepts;
 - metadata that violates OKF or the wiki schema;
 - stale Attested Computations and failed attestations;
@@ -115,17 +111,19 @@ Agents may apply clear, low-risk corrections automatically and record them. Appl
 
 Keep `wiki/` flat until navigation becomes genuinely difficult. Prefer titles, links, and a small maintained tag registry before folders.
 
+After maintenance changes, update affected links, indexes, and `wiki/log.md`, validate through the procedure below, and commit when Git is enabled and allowed.
+
 ## Specialized Operations
 
 ### External Access And Connector Setup
 
-Use an approved `Database` or `Dataset` concept to keep external access discoverable. Its `# Access` section records the current access state, existing approved tools, intended method when known, allowed scope, sensitive-data restrictions, approval still needed, and next action. Its `# Limitations` section explains what cannot currently be retrieved or verified. When access is pending, say so in the concept's index description and record that fact in `wiki/log.md`.
+Use an approved `Database` or `Dataset` concept to keep external access discoverable. Its `# Access` section records the current access state, existing approved tools, intended method when known, allowed scope, storage and sharing restrictions, approval still needed, and next action. Its `# Limitations` section explains what cannot currently be retrieved or verified. When access is pending, say so in the concept's index description and record that fact in `wiki/log.md`.
 
 Complete ordinary wiki work without requiring a connector when useful work remains possible. If setup is postponed, keep the external-resource concept current. Create a linked `Plan` concept only after the user chooses to proceed and the setup has multiple useful actions to track.
 
-Connecting a new external system or increasing access requires a separate proposal and approval. The proposal names the system, integration, requested read or write scope, files or settings that will change, and how authentication will occur without storing secrets in the knowledge base. Use an approved provider authentication flow; never ask the user to place credentials, tokens, connection strings, or secret-bearing URLs in wiki files, logs, commits, or chat.
+Connecting a new external system or increasing access requires a separate proposal and approval. The proposal names the system, integration, requested read or write scope, files or settings that will change, and how authentication will occur. Use an approved provider authentication flow and apply [Safety](local-settings.md#safety) to anything stored or shared during setup.
 
-After approved setup, verify the actual access rather than assuming it succeeded. Update the external-resource concept, its index description, and `wiki/log.md`; preserve any remaining limitation. Validate the complete bundle and commit only when the configured history mode and host rules allow it.
+After approved setup, verify the actual access rather than assuming it succeeded. Update the external-resource concept, its index description, and `wiki/log.md`; preserve any remaining limitation. Validate through the procedure below and commit only when Git is enabled and host rules allow it.
 
 ### Attested Computation
 
@@ -139,12 +137,27 @@ A failed attestation blocks use or display of the value and must be surfaced. Wh
 
 ## Validation And Conformance
 
-Before finalizing any wiki operation, validate the complete bundle in this order:
+Before finalizing an ordinary wiki operation, run the validator from the knowledge-base root with every file directly created, changed, deleted, or renamed by that operation:
 
-1. **Base OKF.** Apply section 11 of the pinned OKF v0.2 specification. Every non-reserved `.md` file must have parseable YAML frontmatter and a non-empty `type`. Every reserved `index.md` and `log.md` that appears must follow its OKF structure.
-2. **Wiki schema.** Apply every requirement in [`schema.md`](schema.md), including the bundle file kind, required frontmatter, optional and conditional field families, type rules, actor identifiers, source-linked footnotes, Attested Computation contract, and tag governance. Compare concept tags with the approved [Tag Registry](local-settings.md#tag-registry).
-3. **Required reserved files.** Require the root `wiki/index.md` and `wiki/log.md`, and validate them against the formats described above.
-4. **Compatibility.** Preserve unknown fields and types. Report broken links without failing base OKF conformance. Accept missing optional OKF families and missing non-root indexes.
-5. **Result.** Report base OKF failures, wiki-schema failures, and warnings separately. A bundle may meet base OKF while failing this repository's stricter wiki schema.
+```bash
+python3 references/validate-wiki.py --changed <path> [<path> ...]
+```
 
-If a required base-OKF or wiki-schema check fails, correct it when the fix is clear and within scope. Otherwise stop: do not mark the operation complete or create its automatic commit. Report the failed check, affected files, retained changes, and the approval or information needed. Never invent provenance, verification, access, or attestation to make validation pass.
+Pass deleted paths even though they no longer exist. For a rename, pass both the old and new paths; Git may not recognize a heavily edited rename. Pass `references/local-settings.md` when the Tag Registry changes. To validate all current Git changes together, omit the paths and run `python3 references/validate-wiki.py --changed`.
+
+The changed mode uses Git to correlate old and new paths when Git recognizes a rename. It searches the current wiki and validates:
+
+- directly changed wiki files;
+- files whose Markdown links or frontmatter paths refer to a changed, deleted, or renamed wiki file;
+- every concept using a tag whose registry entry was added, removed, renamed, or changed; and
+- the required root index and log.
+
+The search reads wiki files to find dependencies, but full YAML and schema validation runs only on the affected set. The output lists direct and dependent paths so the agent can check the selected scope. Bundle file kinds and required root files are always checked.
+
+Run a complete validation with `python3 references/validate-wiki.py --all` after changing the schema, validator, templates, or pinned OKF version; during broad maintenance or reorganization; or whenever the affected set is uncertain. Running the script without a mode also performs a complete validation. Changed mode falls back to complete validation when Git history is unavailable.
+
+Python 3 and PyYAML are required. If PyYAML is unavailable, the script prints the installation command and exits. Both modes report Base OKF failures, wiki-schema failures, and warnings separately, and preserve unknown fields and types.
+
+Correct every Base OKF or wiki-schema failure when the fix is clear and within scope. Otherwise stop: do not mark the operation complete or create its automatic commit. Report the failed check, affected files, retained changes, and the approval or information needed. Review warnings and resolve those that are not intentional.
+
+Then review the direct and dependent files manually. Confirm that concept boundaries are atomic, claims match their sources, uncertainty and conflicts are clear, links express the intended relationships, and any attester is deterministic and non-LLM. The script cannot determine whether a prose change alters another concept's meaning, so follow relevant links when semantic impact may extend beyond the selected structural dependencies. Never invent provenance, verification, access, or attestation to make validation pass.

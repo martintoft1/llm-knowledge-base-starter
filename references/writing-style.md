@@ -8,17 +8,14 @@ This file defines the reusable rules for writing concept bodies.
 
 Before writing or substantially rewriting a body, read:
 
-- [Identity And Scope](local-settings.md#identity-and-scope) for purpose, boundaries, and terminology.
 - [Writing Style](local-settings.md#writing-style) for the selected local style.
 
 ## Body Rules
 
 - Use concise reference notes unless the approved local settings specify another style. Preserve reasoning when it will help later work.
 - Start with plain prose and the smallest useful structure.
-- Follow OKF's one-concept-per-document rule. Keep one coherent idea, topic, outcome, or record in each file.
+- Follow [Atomic Concepts And Links](schema.md#atomic-concepts-and-links).
 - Use headings, lists, tables, and fenced code blocks when they improve human reading or agent retrieval.
-- Split by meaning, not length. First shorten without losing meaning, then split independent concepts or link to focused supporting pages.
-- Merge concepts only when their information repeatedly belongs together.
 - Distinguish evidence, interpretation, inference, uncertainty, and unresolved conflict when relevant. Do not force these into headings.
 - Attribute specific claims with footnotes keyed to `sources[].id`. Do not add a separate citations section.
 
