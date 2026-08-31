@@ -14,6 +14,24 @@ Read only the settings needed for the schema task:
 
 Every file inside `wiki/` must be UTF-8 Markdown with a `.md` filename. This wiki-schema rule is stricter than base OKF, which permits other support files. Non-Markdown evidence, computation code, and other support assets are not bundle members. Keep retained evidence under `raw/` or point to an external resource.
 
+## Reserved Files
+
+### Index
+
+`wiki/index.md` is mandatory and carries the bundle's `okf_version` declaration. It must list every concept exactly once, excluding reserved `index.md` and `log.md` files. Group entries under useful headings and include each concept's `description` when available. Mark deprecated concepts clearly.
+
+Subdirectory indexes are optional additions for progressive disclosure; they do not replace the complete root index. Every index link must resolve relative to the index file.
+
+### Log
+
+`wiki/log.md` is mandatory. It has no frontmatter, begins with `# Directory Update Log`, and groups concise operation bullets newest-first under date-only `YYYY-MM-DD` headings. Begin each bullet with a bold operation name such as `**Ingest**`, `**Snapshot**`, or `**Maintenance**`.
+
+An ingest entry names the retained source and the concepts created, updated, supported, or placed in conflict. When a retained source is intentionally unused, use the exact phrase `Retained but unused`, followed by the project-root-relative raw path and a short reason:
+
+```markdown
+* **Ingest**: Retained but unused `raw/report.pdf` — it repeats knowledge already covered by existing sources.
+```
+
 ## Atomic Concepts And Links
 
 Each concept file must cover one atomic concept: the smallest useful unit that can stand alone and be sourced, linked, and maintained independently.
@@ -76,6 +94,7 @@ Use `sources` when a concept derives material knowledge from internal or externa
 sources:
   - id: policy
     resource: ../raw/customer-policy.pdf
+    representation: ../raw/_derived/customer-policy.md
     title: Customer policy
     author: human:owner
     last_modified: 2026-08-01
@@ -83,6 +102,7 @@ sources:
 
 A source may also carry:
 
+- `representation`: a local Markdown or text rendering used to inspect a retained source that is difficult to read directly. It must resolve inside `raw/_derived/`. The canonical evidence remains `resource`; omit `representation` when no durable rendering is needed.
 - `title`: a human-readable source name.
 - `author`: the source producer, using the actor convention below.
 - `last_modified`: when the source itself last changed, as `YYYY-MM-DD`.
@@ -110,6 +130,8 @@ verified: { by: "human:owner", at: "2026-08-19T08:00:00Z" }
 
 Use a list for multiple independent checks. Each event contains `by` and `at`. Omit `verified` when no check occurred; absence means unverified, not invalid. Never infer or invent verification. See OKF sections 5.2, 5.3, and 7 for normative details and derived trust tiers.
 
+`verified` and `generated.at` remain independent. When the latest verification predates `generated.at`, the verification remains part of the concept's trust history, but consumers should warn that it predates the latest meaningful content change. Do not change the OKF trust tier or discard the event merely because the concept changed later.
+
 #### Freshness: `stale_after`
 
 `stale_after` is the absolute date on which the concept becomes stale. Use it only when there is a defensible expiry, review, or validity date.
@@ -119,6 +141,12 @@ stale_after: 2026-12-31
 ```
 
 A concept is stale when `today >= stale_after`. Omit the field when no meaningful date is known; do not guess one. See OKF section 5.5 for normative details.
+
+Verification and freshness answer different questions. `verified` records a check that the concept matches its evidence. `stale_after` records when the knowledge becomes stale. Unchanged immutable evidence does not make a time-sensitive claim permanently current, and timeless knowledge does not need an arbitrary expiry.
+
+#### Snapshot
+
+An `Analysis` may set `snapshot: true` when it records an explicitly requested point-in-time synthesis. Omit the field for ordinary analyses and all other concept types. A snapshot requires one or more `sources` whose `resource` values resolve to internal concepts; `generated.at` records when the synthesis was made.
 
 #### Attested Computation
 
@@ -162,7 +190,7 @@ Links and path-valued fields such as `resource`, `sources[].resource`, `computat
 
 Unlike other path-valued fields, `sources[].resource` may also describe a population or scope that cannot be followed as a path, such as all queries in a named project.
 
-Report broken links, but do not treat them as an OKF conformance failure. Preserve links that intentionally point to knowledge not yet written.
+Internal Markdown links must resolve when they are added or maintained. This is a local wiki-schema rule beyond base OKF, whose consumers still tolerate broken links. Record future concept ideas in a `Plan` or maintenance report instead of creating dead links.
 
 See OKF sections 5.1, 6.1, and 6.2 for normative path and relationship semantics.
 
@@ -175,7 +203,7 @@ Use the smallest type that describes the concept itself. Begin with the shared p
 | `Note` | Provisional or general knowledge that does not need a narrower type | No additional fields | None; follow the material |
 | `Reference` | Durable explanation, instruction, topic, entity, or procedure | Use `resource` when bound to one canonical asset; use `sources` when derived from evidence | None; follow the material |
 | `Source Record` | A concept describing one source or evidence bundle | `resource` is required from creation | Summary |
-| `Analysis` | Comparison, investigation, synthesis, or reasoned conclusion | Use `sources` when conclusions depend on evidence | Conclusion, Reasoning |
+| `Analysis` | Comparison, investigation, synthesis, or reasoned conclusion | Use `sources` when conclusions depend on evidence; use `snapshot: true` only for an explicit point-in-time synthesis | Conclusion, Reasoning |
 | `Decision` | A settled choice and its reasoning | Use `sources` when evidence materially informed the choice | Decision, Rationale |
 | `Goal` | A desired outcome or declared priority | Use `stale_after` only for a real review or expiry date | Outcome, Success Measures, Progress |
 | `Plan` | An approach and actions intended to reach an outcome | Use `stale_after` only for a real review or expiry date | Approach, Actions, Progress |

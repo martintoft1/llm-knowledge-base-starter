@@ -45,73 +45,113 @@ Keep retained original evidence under `raw/` and authored knowledge under `wiki/
 
 Existing raw files are immutable to agents. Never modify, overwrite, rename, move, or delete one. A correction or derived artifact becomes a new source. Adding a new raw source on the user's behalf requires approval, even when the source was already identified. A human may manage raw material directly outside this workflow. `raw/.gitkeep` is only a tracked placeholder, not evidence; ignore it and leave it unchanged.
 
+Preserve each source in its useful native format. When repeated reading or evidence checking needs searchable text, an approved durable rendering may be added under `raw/_derived/` and recorded in `sources[].representation` as defined by [`schema.md`](schema.md#provenance-sources-and-usage_window). The rendering is an immutable aid, not a replacement for the original. Temporary extractions do not need to be retained.
+
 Do not pretend to have read an unavailable source or external system. Record the limitation instead.
 
-## Special Files
+## Shared Completion
 
-### Indexes
+After an operation changes the wiki:
 
-`wiki/index.md` is mandatory locally. It carries the bundle's `okf_version` declaration and groups useful entries under headings. Each entry is a Markdown link and should include the linked concept's `description` when available.
-
-Update an index after ingest, durable query filing, or maintenance changes what readers should discover. Create a subdirectory index only when it improves progressive disclosure. Subdirectory indexes have no frontmatter. Resolve every index link relative to the index file's location.
-
-### Log
-
-`wiki/log.md` is mandatory in every history mode. It has no frontmatter and begins with `# Directory Update Log`. Group concise operation bullets newest-first under date-only `YYYY-MM-DD` headings. Record meaningful ingests, filed query findings, maintenance, and concept changes. Link affected concepts when useful.
+1. Update the complete root index and add one concise log entry using the rules in [`schema.md`](schema.md#reserved-files).
+2. Validate every directly changed path and the dependencies selected by the validator.
+3. Review the affected concepts manually. Confirm that boundaries remain atomic, claims match their sources, inference and uncertainty are clear, links express the intended relationships, and cascade effects were handled.
+4. Resolve unintended warnings. Stop and report any required check that cannot be corrected within scope.
+5. If Git is enabled and host rules allow it, create one focused local commit.
+6. Report the concepts changed, important uncertainty or conflict, and the log entry or commit.
 
 ## Core Operations
 
 ### Ingest
 
-When the user explicitly asks to ingest material:
+Use Ingest when the user explicitly asks to add supplied or identified material to the wiki. Prefer one source at a time when practical.
 
-1. Check its relevance, provenance, conflicts, uncertainty, and sensitivity. Ask for approval if retaining it requires a new raw file.
-2. Create or update the atomic concepts that the source materially informs. Preserve conflicting evidence instead of silently choosing one account.
-3. Add concept-level provenance in `sources`. When a body attributes a specific claim, give that source a stable `sources[].id` and use the same key for its Markdown footnote. Do not create a separate citations section.
-4. Update related concepts, summaries, and cross-links when the source changes, supports, or contradicts them.
-5. Update the affected index files and `wiki/log.md`.
-6. Validate the affected files through the procedure below.
-7. If Git is enabled and host rules allow it, create one focused local commit.
-8. Report the concepts changed, important uncertainty or conflict, and the log entry or commit.
+#### Intake
 
-Prefer one-source-at-a-time ingest when practical so the user can guide emphasis. Do not fill the wiki with source summaries when the knowledge belongs in existing concepts.
+Access the source and check its relevance, provenance, sensitivity, uncertainty, and storage restrictions. Ask for approval before retaining a new raw file. Preserve an approved source in its useful native format and create a durable representation only when justified.
+
+#### Triage
+
+Read `wiki/index.md`, then search the complete wiki using the source's key terms, names, aliases, synonyms, identifiers, and material claims. Decide whether the source should create a concept, update a concept, add supporting evidence, record a conflict, or be retained but unused. The first four results may be combined; retained but unused is exclusive.
+
+#### Compile
+
+Create or update the atomic concepts that the source materially informs. Add provenance in `sources`; use stable source IDs and matching footnotes for attributed claims. Do not create a source summary when the knowledge belongs in existing concepts. Preserve useful conflict instead of silently choosing one account.
+
+#### Check
+
+Check exact quotations, dates, numbers, and identifiers against accessible evidence. Review every material claim and distinguish direct support, synthesis, inference, dispute, unsupported content, and unavailable evidence. Correct or remove unsupported content.
+
+Record `verified` only after a real check against `resource` or `sources`. Assess freshness separately and add `stale_after` only when a defensible review or expiry date exists.
+
+#### Cascade
+
+Search the complete wiki for affected concepts, aliases, claims, sources, summaries, links, and index descriptions. Update every live concept whose meaning changed. Do not rewrite snapshots; note when their source concepts changed so Maintenance can review them.
+
+#### Finish
+
+Follow [Shared Completion](#shared-completion). If the retained source was not used, record it with the exact `Retained but unused` log form and explain why.
+
+### Research
+
+Use Research only when the user asks the agent to find sources for the knowledge base. Ordinary knowledge questions use Query and do not start autonomous source gathering.
+
+1. Define the question, scope, and useful search angles.
+2. Search with official names, aliases, abbreviations, and synonyms. Deliberately look for criticism, failures, and opposing evidence.
+3. Assess candidates for relevance, authority, independence, recency, and duplication.
+4. Propose the sources worth retaining and obtain batch approval when adding raw files requires it.
+5. Pass each selected source through the full Ingest flow. Discovery may run in parallel, but compilation remains sequential because concepts, indexes, logs, and cascade updates share state.
+6. Report coverage, gaps, and unresolved conflict. Create a sourced `Analysis` only when a durable cross-source synthesis is useful and authorized.
+
+Do not log rejected candidates that were never retained.
 
 ### Query And Accumulation
 
-Read `wiki/index.md`, follow relevant concepts and sources, and consult raw evidence when needed. Distinguish evidence, interpretation, inference, uncertainty, and unresolved conflict in the answer.
+Read the complete `wiki/index.md`, then search the wiki using the question's key terms, aliases, and synonyms. Do not conclude that the wiki lacks relevant knowledge until both the index and full-text search are empty; say when that search found nothing.
+
+Follow relevant concepts and sources, and consult raw evidence when needed. Prefer wiki knowledge, link the concepts used in the answer, and label any outside knowledge clearly. Surface stale, disputed, inaccessible, or weakly supported knowledge instead of hiding the limitation. Distinguish evidence, interpretation, inference, uncertainty, and unresolved conflict.
 
 Answer the user before considering a wiki update. Then decide whether information supplied by the user or surfaced by the answer is likely worth storing. It should be durable, relevant to the current work or existing wiki, likely to be reused, and not already captured.
 
 When information is likely worth storing, briefly propose the knowledge itself. Do not require the user to review filenames, metadata, or full file contents. The user may accept, decline, or suggest changes. If the user suggests changes, present a revised proposal. Do not change the wiki until the proposal is accepted.
 
-After acceptance, decide how to store the knowledge: update or create the appropriate atomic concepts, add justified sources, metadata, and links, then update the relevant index and log, validate the affected files through the procedure below, and commit when Git is enabled and allowed. An explicit ingest or wiki-update request already authorizes ordinary storage and skips this proposal. Broad structural, destructive, sensitive, or otherwise approval-bound work still requires its normal approval.
+After acceptance, update or create the appropriate atomic concepts and add justified sources, metadata, and links. An explicit ingest or wiki-update request already authorizes ordinary storage and skips this proposal. Broad structural, destructive, sensitive, or otherwise approval-bound work still requires its normal approval.
 
 Do not create generic Q&A pages or chat-transcript archives. Minor procedural, temporary, or disposable answers remain in chat.
 
+After an accepted addition, follow [Shared Completion](#shared-completion).
+
+### Snapshot
+
+Create a snapshot only when the user explicitly asks to preserve a point-in-time synthesis.
+
+1. Create a focused `Analysis` with `snapshot: true`.
+2. Use the canonical internal concepts it derives from in `sources`, with keyed footnotes for material claims.
+3. State that the result is a point-in-time synthesis and avoid copying its source concepts extensively.
+4. Do not cascade-update the snapshot when its sources change; Maintenance should surface the change.
+5. Follow [Shared Completion](#shared-completion).
+
 ### Maintenance
 
-Maintenance reviews the whole affected area and checks for:
+Maintenance may review a selected area or the complete wiki. It has three parts.
 
-- contradictions, uncertainty, and unsupported claims;
-- stale or deprecated knowledge;
-- broken links;
-- overloaded concepts;
-- duplicate concepts or duplicated content;
-- missing links needed for navigation, reuse, or dependencies, and redundant links that add clutter;
-- orphaned concepts;
-- missing or malformed provenance;
-- important missing concepts;
-- metadata that violates OKF or the wiki schema;
-- stale Attested Computations and failed attestations;
-- type drift;
-- tags that should be added, removed, merged, narrowed, or retired; and
-- disagreement between concept tags and the approved [Tag Registry](local-settings.md#tag-registry).
+#### Validate
 
-Agents may apply clear, low-risk corrections automatically and record them. Applying an already approved tag to a concept, or removing one that plainly does not apply, is ordinary maintenance. Changing the tag registry requires the proposal described in `schema.md`, with the affected concepts and retrieval benefit. Broad structural, destructive, sensitive, or ambiguous changes require approval.
+Run the required mechanical checks for OKF and wiki-schema conformance, complete index coverage, metadata, paths, links, freshness, trust signals, provenance, snapshots, types, tags, and Attested Computations.
 
-Keep `wiki/` flat until navigation becomes genuinely difficult. Prefer titles, links, and a small maintained tag registry before folders.
+#### Audit
 
-After maintenance changes, update affected links, indexes, and `wiki/log.md`, validate through the procedure below, and commit when Git is enabled and allowed.
+Review contradictions, unsupported or overstated claims, unjustified inference, stale or deprecated knowledge, missing conflict annotations, overloaded or duplicate concepts, weak or redundant links, orphaned concepts, missing provenance, important missing concepts, changed snapshot sources, extraction limitations, type drift, and tag drift.
+
+#### Repair
+
+Apply deterministic, low-risk corrections automatically. Report ambiguous or semantic problems with a recommendation. Ask before structural, destructive, broad, sensitive, or otherwise approval-bound changes.
+
+Repair a broken link automatically only when one intended moved target is unambiguous. Remove dead index and navigational links. Never silently remove evidence, computation, provenance, or another load-bearing link; report it when the correct repair is unclear.
+
+Applying an approved tag to a concept, or removing one that plainly does not apply, is ordinary maintenance. Changing the tag registry requires the proposal described in `schema.md`, with the affected concepts and retrieval benefit.
+
+Keep `wiki/` flat until navigation becomes genuinely difficult. Prefer titles, links, and a small maintained tag registry before folders. After repairs, repeat the affected checks and follow [Shared Completion](#shared-completion).
 
 ## Specialized Operations
 
@@ -123,7 +163,7 @@ Complete ordinary wiki work without requiring a connector when useful work remai
 
 Connecting a new external system or increasing access requires a separate proposal and approval. The proposal names the system, integration, requested read or write scope, files or settings that will change, and how authentication will occur. Use an approved provider authentication flow and apply [Safety](local-settings.md#safety) to anything stored or shared during setup.
 
-After approved setup, verify the actual access rather than assuming it succeeded. Update the external-resource concept, its index description, and `wiki/log.md`; preserve any remaining limitation. Validate through the procedure below and commit only when Git is enabled and host rules allow it.
+After approved setup, verify the actual access rather than assuming it succeeded. Update the external-resource concept and preserve any remaining limitation, then follow [Shared Completion](#shared-completion).
 
 ### Attested Computation
 
