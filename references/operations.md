@@ -1,202 +1,243 @@
 # Wiki Operations
 
-This file defines how agents add, use, review, and record knowledge. [`local-settings.md`](local-settings.md) defines the current settings, and [`schema.md`](schema.md) defines the wiki schema.
-
-## Global Prerequisite: Safety
-
-Before every operation, read [Safety](local-settings.md#safety) and keep it in effect throughout the work. Apply its storage and sharing rules to source material, search queries, wiki content, logs, commits, responses, and external systems.
+Select an operation through [`AGENTS.md`](../AGENTS.md). Here, a **page** means a concept in `wiki/`; a **source** means original material used as evidence.
 
 ## Operating Principles
 
-### Bundle Boundaries
+Read only what the current step needs; reuse instructions, search results, and source text unless they change.
 
-Every member of the `wiki/` bundle must be UTF-8 Markdown with a `.md` filename. This is a local restriction beyond base OKF. Keep non-Markdown evidence and support files outside the bundle: retain evidence under `raw/`, or point to an external resource allowed by [Safety](local-settings.md#safety).
+### Safety And Permission
 
-### Authority
+Before each operation, read [Safety](local-settings.md#safety). Its restrictions apply to everything you read, save, search, or share, including responses. Never save prohibited material. Sharing restricted material outside the approved access boundary requires approval for the named audience, system, material, and purpose.
 
-Agents may perform ordinary, low-risk work under `wiki/` without separate approval when the user directly requests the work or accepts a suggested addition. This includes creating and updating concepts, sources, claim footnotes, links, metadata, indexes, and logs; fixing clear formatting or conformance errors; and making focused local commits when Git is enabled and host rules allow it.
+Explicit approval is required for
+- deleting pages or raw files, individually or within an explicitly approved cleanup scope;
+- broad merges, splits, moves, renames, or reorganizations;
+- changes to local settings, schema, operating rules, templates, autonomy, or OKF version;
+- new external connections or wider access;
+- and external writes.
 
-Approval is required before an agent:
+Ask when the requested outcome is materially unclear or the proposed action exceeds existing authorization. Describe the affected files or systems, intended result, and any replacement, move, or deletion of existing content.
 
-- adds a raw source on the user's behalf;
-- deletes a concept;
-- performs broad merges, splits, moves, renames, or reorganizations;
-- changes local settings;
-- changes the pinned OKF version, schema, operating rules, templates, or autonomy settings;
-- connects a new external system or increases existing access;
-- writes to an external system;
-- stores or exposes sensitive material beyond the stated settings; or
-- performs an ambiguous or unusually broad action.
+### Sources And Claims
 
-A direct user request is approval only for its stated scope. For approval-bound work, name the affected files, the intended result, and what happens to the originals before writing.
+Keep saved originals in `raw/`. Do not edit, overwrite, rename, or move retained raw files; save corrections as new files. Deletion follows [Safety And Permission](#safety-and-permission). Leave `raw/.gitkeep` unchanged; it is not evidence.
 
-### Information Use And Sharing
+Retained originals preserve provenance; they are not a second routinely searched knowledge layer. Ingest reads supplied source material before retaining it. Other operations inspect raw content only when Query has explicit raw scope or [Agent Review](#agent-review) requires source comparison.
 
-Apply [Safety](local-settings.md#safety) whenever information is read, stored, or shared. Agents with approved access may read and use material stored in the knowledge base. Never persist anything covered by `May not store` in the wiki, raw evidence, logs, or Git history. Ask before sharing anything covered by `May not share externally` with a person or system outside the knowledge base's approved access boundary. Approval applies only to the named audience, system, material, and purpose.
+For ordinary answers, use relevant wiki passages when their citations adequately support the answer and there are no material warnings about support or freshness. Seek current evidence when a time-sensitive claim depends on evidence too old for the task; if unavailable or outside scope, qualify the answer.
 
-### Raw Evidence
+Combine evidence only when it supports the conclusion; distinguish inference from direct source statements and cite the sources used. Remove or qualify unsupported claims. Report disagreements, missing evidence, and unreadable material. Never imply that an unavailable source or system was checked.
 
-Apply [Safety](local-settings.md#safety) before retaining evidence. Keep retained original evidence under `raw/` and authored knowledge under `wiki/`.
+### Finalize Changes
 
-Existing raw files are immutable to agents. Never modify, overwrite, rename, move, or delete one. A correction or derived artifact becomes a new source. Adding a new raw source on the user's behalf requires approval, even when the source was already identified. A human may manage raw material directly outside this workflow. `raw/.gitkeep` is only a tracked placeholder, not evidence; ignore it and leave it unchanged.
+After any operation changes knowledge-base files:
 
-Preserve each source in its useful native format. When repeated reading or evidence checking needs searchable text, an approved durable rendering may be added under `raw/_derived/` and recorded in `sources[].representation` as defined by [`schema.md`](schema.md#provenance-sources-and-usage_window). The rendering is an immutable aid, not a replacement for the original. Temporary extractions do not need to be retained.
-
-Do not pretend to have read an unavailable source or external system. Record the limitation instead.
-
-## Shared Completion
-
-After an operation changes the wiki:
-
-1. Update the complete root index and add one concise log entry using the rules in [`schema.md`](schema.md#reserved-files).
-2. Validate every directly changed path and the dependencies selected by the validator.
-3. Review the affected concepts manually. Confirm that boundaries remain atomic, claims match their sources, inference and uncertainty are clear, links express the intended relationships, and cascade effects were handled.
-4. Resolve unintended warnings. Stop and report any required check that cannot be corrected within scope.
-5. If Git is enabled and host rules allow it, create one focused local commit.
-6. Report the concepts changed, important uncertainty or conflict, and the log entry or commit.
+1. Update navigation and history when required by [`schema.md`](schema.md).
+2. Use [Review](#review) on the final state.
+3. Resolve required, in-scope findings within the originating operation. After repairs, update navigation and history again and repeat Review.
+4. If a required finding cannot be resolved, report the partial result and blocker.
 
 ## Core Operations
 
 ### Ingest
 
-Use Ingest when the user explicitly asks to add supplied or identified material to the wiki. Prefer one source at a time when practical.
+**What it does:** Turn material the user has asked to add, or an accepted retention proposal, into wiki knowledge.
 
-#### Intake
+Process independent sources or source sets sequentially. After completing step 6 for one source or source set, return to step 1 for the next, so each uses the latest pages.
 
-Apply [Safety](local-settings.md#safety) while accessing and assessing the source. Check its relevance, provenance, sensitivity, uncertainty, and storage restrictions. Ask for approval before retaining a new raw file. Preserve an approved source in its useful native format and create a durable representation only when justified.
+Treat multiple files as one source set only when they are alternate forms or parts of the same source, or must be understood together. Within a source set, assess the files together while preserving each source’s provenance, disagreements, and retention decision.
 
-#### Triage
+**Start with:** material the user has asked to add, or an accepted retention proposal.
 
-Read `wiki/index.md`, then search the complete wiki using the source's key terms, names, aliases, synonyms, identifiers, and material claims. Decide whether the source should create a concept, update a concept, add supporting evidence, record a conflict, or be retained but unused. The first four results may be combined; retained but unused is exclusive.
+**Steps** (repeat until all sources/source sets are ingested):
+1. **Read the source.** Identify its producer, date or version when known, main points, and search terms. Extract text temporarily if the file is difficult to read, then discard the extraction after use. Note unreadable sections. Stop work on an inaccessible source, report what is needed, and continue with accessible sources.
+2. **Find where it fits.** Use [Search](#search) with those topics and terms. Compare the source's actual claims with the matching pages. Decide relevance after this comparison.
+3. **Choose changes.** Plan changes with the table below; apply them in step 4. Keep a short working list of pages to create or update and the source passages supporting each change. One source may affect several pages. For an approved synthesis, consider the supporting sources together, including those already recorded.
 
-#### Compile
+   | What the source contributes | What to do |
+   |---|---|
+   | Additional facts about an existing concept | Add them to that page. |
+   | Useful evidence for an existing claim | Add the source and its citation; change the wording only if needed. |
+   | An explicit correction or replacement of an earlier source | Update the affected claim and explain which evidence replaced it. |
+   | A disagreement that the available evidence does not resolve | Keep the competing accounts and mark the disagreement. |
+   | A useful subject not covered by an existing page | Create a page for the new subject. |
+   | A useful synthesis across sources | Create or update a page for the synthesis when its retention is authorized. |
+   | Nothing useful beyond what is already recorded | Leave the pages unchanged. |
+   | Text cannot be read or a claim cannot be checked | Leave out unsupported claims and report the gap. |
 
-Create or update the atomic concepts that the source materially informs. Before adding or changing tags, read the [Tag Registry](local-settings.md#tag-registry) and use only approved tags. Add provenance in `sources`; use stable source IDs and matching footnotes for attributed claims. Do not create a source summary when the knowledge belongs in existing concepts. Preserve useful conflict instead of silently choosing one account.
+   Do not create a page merely to summarize an unused source.
 
-#### Check
+4. **Write the pages.** Read [`writing-style.md`](writing-style.md) and [`schema.md`](schema.md). Use [Types And Field Rules](schema.md#types-and-field-rules) to choose the page type, required fields, and optional body template based on the page's content. Assign tags under [Tags](schema.md#tags), using the approved [Tag Registry](local-settings.md#tag-registry). Apply the planned changes, including approved analyses and syntheses. For analyses, follow the [body guidance](writing-style.md#type-specific-structure) on scope, effective dates, and evidence versions. Add citations for new support or disagreement. Record only verification actually performed and defensible expiry dates.
 
-Check exact quotations, dates, numbers, and identifiers against accessible evidence. Review every material claim and distinguish direct support, synthesis, inference, dispute, unsupported content, and unavailable evidence. Correct or remove unsupported content.
+5. **Retain sources used by the result.** Check the resulting concepts against the schema's [raw-evidence requirement](schema.md#bundle-files). For each source they use as evidence through `sources[].resource` or as a subject through `resource`, reuse an identical retained original or save the new original unchanged under `raw/`. For an external source, preserve a permitted export or saved page; an approved live resource may remain external with its location and access limits recorded. If no resulting concept references the source, do not add it to retained evidence; report why and stop work on this source. Leave existing unreferenced raw files for a requested or scheduled Maintenance run.
 
-Record `verified` only after a real check against `resource` or `sources`. Assess freshness separately and add `stale_after` only when a defensible review or expiry date exists.
+6. **Finalize this source's changes.** Follow [Finalize Changes](#finalize-changes). Process the next source after finalization; report the combined results once.
 
-#### Cascade
+**Result:** saved source locations, the pages changed or reason no page changed, and any unresolved claims or unreadable material.
 
-Search the complete wiki for affected concepts, aliases, claims, sources, summaries, links, and index descriptions. Update every live concept whose meaning changed. Do not rewrite snapshots; note when their source concepts changed so Maintenance can review them.
+### Query
 
-#### Finish
+**What it does:** Answer questions and complete tasks using the knowledge retained in `wiki/`.
 
-Follow [Shared Completion](#shared-completion). If the retained source was not used, record it with the exact `Retained but unused` log form and explain why.
+**Start with:** a user query.
+
+**Steps:**
+1. **Find the answer material.** Use [Search](#search) for the user's question or task. Treat `wiki/` as the default queryable knowledge layer. Do not inspect or search `raw/` unless the user explicitly asks to inspect a particular raw file or search raw material.
+2. **Answer or complete the task.** Consult relevant sections of [`schema.md`](schema.md) when interpreting provenance, verification, or expiry dates. Use the relevant passages and link the wiki pages used. If wiki knowledge is insufficient, answer the supported portion and identify the gaps. When useful, tell the user they may ask you to search retained raw material, consult external sources, or provide a clearly labelled answer from general knowledge. If the request already calls for outside or current information, consult appropriate external sources. Clearly distinguish anything found outside the wiki from knowledge recorded in it, and cite external sources used. Mention disagreements, weak evidence, unavailable sources, and stale information that affect the answer.
+
+   For historical questions, distinguish what was recorded at the requested date from a current analysis of that period. Use historical versions for the former; identify any later evidence used for the latter. Logs and metadata dates alone do not reconstruct earlier page contents. Report missing versions and clarify the interpretation only when it is unresolved and changes the answer. A request for an overview or analysis does not by itself authorize saving it.
+
+3. **Consider retaining new knowledge.** Propose retaining supplied or newly surfaced new knowledge if it is relevant, likely to be reused, and not already recorded. Exclude sensitive, unreliable, or temporary material. Do not propose generic Q&A pages or chat-transcript archives. Name the knowledge and any files worth keeping. A later acceptance starts [Ingest](#ingest)
+
+**Result:** an answer or completed task with evidence and limitations; optionally, a short retention proposal.
 
 ### Research
 
-Use Research only when the user asks the agent to find sources for the knowledge base. Ordinary knowledge questions use Query and do not start autonomous source gathering.
+**What it does:** The knowledge-base wrapper for requests to find outside sources.
 
-Apply [Safety](local-settings.md#safety) to search queries, candidate sources, retained files, and research reports.
+It defines scope, evidence requirements, and the handoff to Ingest; it does not replace a research method. Use the strongest suitable research capability available, including a user-requested skill, plugin, or tool. The requirements below apply to the result regardless of the method used.
 
-1. Define the question, scope, and useful search angles.
-2. Search with official names, aliases, abbreviations, and synonyms. Deliberately look for criticism, failures, and opposing evidence.
-3. Assess candidates for relevance, authority, independence, recency, and duplication.
-4. Propose the sources worth retaining and obtain batch approval when adding raw files requires it.
-5. Pass each selected source through the full Ingest flow. Discovery may run in parallel, but compilation remains sequential because concepts, indexes, logs, and cascade updates share state.
-6. Report coverage, gaps, and unresolved conflict. Create a sourced `Analysis` only when a durable cross-source synthesis is useful and authorized.
+**Steps:**
+1. **Set the knowledge-base scope.** State the questions, relevant period, and any source or search limits from the request. Use [Search](#search) to identify existing knowledge, gaps, or claims needing fresh evidence.
+2. **Conduct the research.** Follow the selected research capability's method for discovery and synthesis. If none provides a method, search the identified gaps, read candidate sources, and look for criticism, failures, and opposing evidence. Match the depth to the request.
+3. **Prepare the evidence for knowledge-base use.** Map reported claims to identifiable sources that were actually read. Assess what each source adds, who produced it, its date, its independence, whether it duplicates existing evidence, and whether relevant sources disagree. Follow the selected method's stopping rule; otherwise stop when the questions have adequate support and counterevidence has been considered, or further revised searches add no useful evidence. Report remaining gaps, and do not log rejected sources that were never saved.
+4. **Deliver and hand off.** Answer the questions with citations, limitations, and disagreements. Identify any sources or synthesis worth retaining. Research does not save them directly: if retention is authorized, pass them through [Ingest](#ingest); otherwise propose them and finish. A later acceptance starts Ingest.
 
-Do not log rejected candidates that were never retained.
-
-### Query And Accumulation
-
-Read the complete `wiki/index.md`, then search the wiki using the question's key terms, aliases, and synonyms. Do not conclude that the wiki lacks relevant knowledge until both the index and full-text search are empty; say when that search found nothing.
-
-Follow relevant concepts and sources, and consult raw evidence when needed. Prefer wiki knowledge, link the concepts used in the answer, and label any outside knowledge clearly. Surface stale, disputed, inaccessible, or weakly supported knowledge instead of hiding the limitation. Distinguish evidence, interpretation, inference, uncertainty, and unresolved conflict.
-
-Answer the user before considering a wiki update. Then decide whether information supplied by the user or surfaced by the answer is likely worth storing. It should be durable, relevant to the current work or existing wiki, likely to be reused, and not already captured.
-
-When information is likely worth storing, briefly propose the knowledge itself. Do not require the user to review filenames, metadata, or full file contents. The user may accept, decline, or suggest changes. If the user suggests changes, present a revised proposal. Do not change the wiki until the proposal is accepted.
-
-After acceptance, update or create the appropriate atomic concepts and add justified sources, metadata, and links. An explicit ingest or wiki-update request already authorizes ordinary storage and skips this proposal. Broad structural, destructive, sensitive, or otherwise approval-bound work still requires its normal approval.
-
-Do not create generic Q&A pages or chat-transcript archives. Minor procedural, temporary, or disposable answers remain in chat.
-
-After an accepted addition, follow [Shared Completion](#shared-completion).
-
-### Snapshot
-
-Create a snapshot only when the user explicitly asks to preserve a point-in-time synthesis.
-
-1. Create a focused `Analysis` with `snapshot: true`.
-2. Use the canonical internal concepts it derives from in `sources`, with keyed footnotes for material claims.
-3. State that the result is a point-in-time synthesis and avoid copying its source concepts extensively.
-4. Do not cascade-update the snapshot when its sources change; Maintenance should surface the change.
-5. Follow [Shared Completion](#shared-completion).
+**Result:** findings and source recommendations, plus any approved wiki additions.
 
 ### Maintenance
 
-Maintenance may review a selected area or the complete wiki. It has three parts.
+**What it does:** Performs requested or scheduled maintenance on existing knowledge-base material.
 
-Before reviewing or changing tags, read the [Tag Registry](local-settings.md#tag-registry).
+**Start with:** a maintenance request and its scope.
 
-#### Validate
+**Steps:**
+1. **Review the scope.** Use [Review](#review) to identify maintenance needs.
+2. **Repair.** Resolve required, in-scope findings. Follow [`schema.md`](schema.md) for structure and metadata and [`writing-style.md`](writing-style.md) for concept bodies.
+3. **Finalize the changes.** Follow [Finalize Changes](#finalize-changes).
 
-Run the required mechanical checks for OKF and wiki-schema conformance, complete index coverage, metadata, paths, links, freshness, trust signals, provenance, snapshots, types, tags, and Attested Computations.
+**Result:** completed maintenance, confirmation that no changes were needed, or a partial result with blockers.
 
-#### Audit
+## Other Operations
 
-Review contradictions, unsupported or overstated claims, unjustified inference, stale or deprecated knowledge, missing conflict annotations, overloaded or duplicate concepts, weak or redundant links, orphaned concepts, missing provenance, important missing concepts, changed snapshot sources, extraction limitations, type drift, and tag drift.
+### Review
 
-#### Repair
+**What it does:** Inspects knowledge-base material or changes without modifying them.
 
-Apply deterministic, low-risk corrections automatically. Report ambiguous or semantic problems with a recommendation. Ask before structural, destructive, broad, sensitive, or otherwise approval-bound changes.
+**Start with:** the requested scope and, for changes, their intended result.
 
-Repair a broken link automatically only when one intended moved target is unambiguous. Remove dead index and navigational links. Never silently remove evidence, computation, provenance, or another load-bearing link; report it when the correct repair is unclear.
+**Steps:**
+1. **Select the scope.** Review the requested material and affected dependencies. Use [Search](#search) to find relevant material. For a complete review, enumerate everything in scope. Track anything that cannot be checked.
+2. **Run automated checks.** Follow [Automated Checks](#automated-checks).
+3. **Perform agent review.** Follow [Agent Review](#agent-review). For changes, confirm that the final state fulfills the intended result.
+4. **Report findings.** Group findings by file. Distinguish required findings from warnings and optional improvements. Include suggested corrections when clear, plus coverage and limitations.
 
-Applying an approved tag to a concept, or removing one that plainly does not apply, is ordinary maintenance. Changing the [Tag Registry](local-settings.md#tag-registry) requires the proposal described in `schema.md`, with the affected concepts and retrieval benefit.
+**Result:** findings and suggested corrections, or confirmation that no issue was found within the checked scope.
 
-Keep `wiki/` flat until navigation becomes genuinely difficult. Prefer titles, links, and a small maintained tag registry before folders. After repairs, repeat the affected checks and follow [Shared Completion](#shared-completion).
+#### Automated Checks
 
-## Specialized Operations
+`validate-wiki.py` checks mechanically enforceable schema rules. `check-evidence.py` checks evidence references and retained-source usage without interpreting source contents.
 
-### External Access And Connector Setup
+Run both checkers for wiki content, retained sources, schema, templates, or tag rules. Use full mode for complete or broad reviews and for changes to schema, templates, checker code, or the pinned OKF document. Otherwise, use changed mode with the reviewed paths and affected dependencies. For checker code, also run relevant tests. For other documentation or tooling, run relevant automated or behavior checks; run the wiki checkers only when those files affect the wiki.
 
-Use an approved `Database` or `Dataset` concept to keep external access discoverable. Its `# Access` section records the current access state, existing approved tools, intended method when known, allowed scope, storage and sharing restrictions, approval still needed, and next action. Its `# Limitations` section explains what cannot currently be retrieved or verified. When access is pending, say so in the concept's index description and record that fact in `wiki/log.md`.
+Full mode:
 
-Complete ordinary wiki work without requiring a connector when useful work remains possible. If setup is postponed, keep the external-resource concept current. Create a linked `Plan` concept only after the user chooses to proceed and the setup has multiple useful actions to track.
+```bash
+python3 references/validate-wiki.py --all
+python3 references/check-evidence.py --all
+```
 
-Connecting a new external system or increasing access requires a separate proposal and approval. The proposal names the system, integration, requested read or write scope, files or settings that will change, and how authentication will occur. Use an approved provider authentication flow and apply [Safety](local-settings.md#safety) to anything stored or shared during setup.
-
-After approved setup, verify the actual access rather than assuming it succeeded. Update the external-resource concept and preserve any remaining limitation, then follow [Shared Completion](#shared-completion).
-
-### Attested Computation
-
-OKF records a computation contract; it does not execute it. Treat each `Attested Computation` as its own concept.
-
-The contract requirements for draft and stable concepts live in [`schema.md`](schema.md). Apply them through the validation procedure below; do not redefine them here.
-
-Do not claim executable validity without a usable computation and executor. Do not claim attestable validity without a usable attester. During an attested run, an agent may supply values only for declared parameters. It must not author or alter the sanctioned computation. The consumer binds the values, the executor returns the declared receipt, and the deterministic attester checks what ran and the displayed result.
-
-A failed attestation blocks use or display of the value and must be surfaced. When `today >= stale_after`, warn or refuse according to the risk. `verified` records a check of the stored definition; attestation checks one execution. One never replaces the other, and per-run receipts are not stored in the bundle merely as verification history.
-
-## Validation And Conformance
-
-Before finalizing an ordinary wiki operation, run the validator from the knowledge-base root with every file directly created, changed, deleted, or renamed by that operation:
+Changed mode:
 
 ```bash
 python3 references/validate-wiki.py --changed <path> [<path> ...]
+python3 references/check-evidence.py --changed <path> [<path> ...]
 ```
 
-Pass deleted paths even though they no longer exist. For a rename, pass both the old and new paths; Git may not recognize a heavily edited rename. Pass `references/local-settings.md` when the Tag Registry changes. To validate all current Git changes together, omit the paths and run `python3 references/validate-wiki.py --changed`.
+Report the coverage shown by the tools. Agent Review covers claim truth, semantic dependencies, and instruction correctness.
 
-The changed mode uses Git to correlate old and new paths when Git recognizes a rename. It searches the current wiki and validates:
+#### Agent Review
 
-- directly changed wiki files;
-- wiki files whose Markdown links or frontmatter paths refer to a changed, deleted, or renamed wiki or raw file;
-- every concept using a tag whose registry entry was added, removed, renamed, or changed; and
-- the required root index and log.
+Read the reviewed material and affected passages in dependent files. Apply the relevant schema, writing style, local settings, and operation-specific rules.
 
-The search reads wiki files to find dependencies, but full YAML and schema validation runs only on the affected set. The output lists direct and dependent paths so the agent can check the selected scope. Bundle file kinds and required root files are always checked.
+- For concepts, assess meaning, source support, freshness, conflicts, atomicity, organization, and links.
+- When a source-backed claim, quotation, number, date, or citation changed—or the user requests evidence review—compare the affected claim with its cited source. This checks citation fidelity, not whether the source is true or current.
+- For rules, templates, or tooling, assess intended behavior, examples, links, and relevant test results.
 
-Run a complete validation with `python3 references/validate-wiki.py --all` after changing the schema, validator, templates, or pinned OKF version; during broad maintenance or reorganization; or whenever the affected set is uncertain. Running the script without a mode also performs a complete validation. Changed mode falls back to complete validation when Git history is unavailable.
+### External Access And Connector Setup
 
-Python 3 and PyYAML are required. If PyYAML is unavailable, the script prints the installation command and exits. Both modes report Base OKF failures, wiki-schema failures, and warnings separately, and preserve unknown fields and types.
+External Access And Connector Setup makes an external resource usable for the intended task within its approved access boundary. It records how to access the resource, what has been demonstrated to work, and any limits or unfinished setup.
 
-Correct every Base OKF or wiki-schema failure when the fix is clear and within scope. Otherwise stop: do not mark the operation complete or create its automatic commit. Report the failed check, affected files, retained changes, and the approval or information needed. Review warnings and resolve those that are not intentional.
+Before writing a resource page, read [`schema.md`](schema.md), [`writing-style.md`](writing-style.md), and the [Tag Registry](local-settings.md#tag-registry). Document a live system as a `Database` and a bounded collection as a `Dataset`, using the [shared page template](../templates/wiki-page.md) and the appropriate [Database](../templates/page-bodies/database.md) or [Dataset](../templates/page-bodies/dataset.md) body. Record the method, tools, access scope, restrictions, and next action under `# Access`; put unknowns under `# Limitations`.
 
-Then review the direct and dependent files manually. Confirm that concept boundaries are atomic, claims match their sources, uncertainty and conflicts are clear, links express the intended relationships, and any attester is deterministic and non-LLM. The script cannot determine whether a prose change alters another concept's meaning, so follow relevant links when semantic impact may extend beyond the selected structural dependencies. Never invent provenance, verification, access, or attestation to make validation pass.
+1. **Identify the resource and required access.** Establish the named system or collection, intended task, and smallest test that demonstrates the access needed. Use [Search](#search) to find its resource page. Distinguish what is authorized from what is known to work; a working connection alone is not authorization.
+2. **Resolve missing approval.** If the required access and setup are already authorized, continue to step 3. Otherwise, recommend creating or updating a draft resource page to record the proposed setup and known access. Summarize what the draft would contain and ask for approval before creating it. Do not treat approval to draft the page as approval to establish the connection or use the access. Once drafting is approved, create or update the page and follow [Finalize Changes](#finalize-changes), with connection work still pending. Request any remaining approval under [Safety And Permission](#safety-and-permission), naming the system, integration, read/write scope, affected files or settings, and authentication method. Pause each unapproved action until it is approved; continue other authorized work where useful.
+3. **Set up and test access.** Use the existing connection or establish it through the approved authentication flow. Create a separate `Plan` only when the user has chosen to proceed and several actions need tracking. Run the test from step 1 within the authorized scope. Confirm access to the required collection or action; successful authentication alone may be insufficient. Do not expand access to make a test pass.
+4. **Record and finish.** Create or update the resource page with what was configured, the test and observed result, and any limitations or next actions. Distinguish successful, partial, failed, and untested access. Claim verified access only for demonstrated capabilities. Follow [Finalize Changes](#finalize-changes) for any wiki changes.
+
+**Result:** a recommendation awaiting approval to draft, or an approved resource page describing the access, demonstrated capabilities, limitations, and any pending approval, setup, or testing.
+
+### Attested Computation
+
+Attested Computation keeps a reusable calculation clearly defined, supported by evidence, and checked against its declared method whenever it runs. It makes the definition's verification state and each run's outcome explicit.
+
+The executor runs the calculation and returns a receipt; the attester is deterministic, non-LLM code that checks that receipt. OKF describes this contract but does not supply the runtime. Definition verification and run attestation are separate; do not save run receipts as definition-verification history.
+
+Use [Search](#search) to locate the calculation, then follow only the requested branch below. Keep one concept per calculation. If a requested review, run, or test has no definition, report the gap; do not improvise one. Propose a governed definition when a recurring or consequential calculation would benefit from it.
+
+#### Define Or Change
+
+1. **Write the definition.** Read [`schema.md`](schema.md), [`writing-style.md`](writing-style.md), and the [Tag Registry](local-settings.md#tag-registry). Create or update the concept with the [shared template](../templates/wiki-page.md) and [Attested Computation body](../templates/page-bodies/attested-computation.md). Follow the [contract rules](schema.md#attested-computation) for the runtime, method, parameters, sources, executor, receipt, and attester.
+2. **Set the verification state.** Keep the definition draft until the schema's required checks and independent verification are satisfied. Record only verification actually performed. A definition change does not authorize execution; use Run Or Explicitly Test only when requested.
+3. **Finalize the definition.** Follow [Finalize Changes](#finalize-changes).
+
+#### Review The Definition
+
+1. **Request a definition review.** Use [Review](#review) for the concept and its [contract rules](schema.md#attested-computation). Request checks of source support and the usability of its computation, executor, and attester. A definition review does not authorize execution; distinguish inspected code from tested behavior.
+2. **Report findings.** Return the findings, coverage, and missing tools or evidence. If changes are requested, use Define Or Change.
+
+#### Run Or Explicitly Test
+
+1. **Check readiness and inputs.** Read the existing contract and [contract rules](schema.md#attested-computation). An ordinary run requires a stable definition with a usable computation, executor, and attester. A draft may be tested only when explicitly requested and those execution requirements are met. Check freshness and applicable access approval. Supply values only for declared parameters, respecting their types and requirements. Report unmet requirements without running or altering the definition.
+2. **Execute and attest.** Use the declared executor and pass its receipt to the declared attester. If either fails or is unavailable, report the failure without using or displaying the result value.
+3. **Return the checked result.** After successful attestation, return the value and verdict, including any stale-definition warning. Label draft results as test results. A run or test alone does not change the wiki or its verification metadata.
+
+**Result:** a definition with its verification state, a review with findings, or an attested result; otherwise, the unmet requirements or failure.
+
+### Search
+
+Return relevant page paths and passages, plus remaining gaps. For a question about one exact file, read it directly. Use search for cross-page questions and proposed changes.
+
+1. **Choose scope and terms.** Use specific topics, names, phrases, identifiers, aliases, and synonyms from the input. Cover each distinct topic in a long source. Identify whether the task needs ordinary discovery, a complete inventory or audit, or dependency review; step 4 gives each a stopping rule.
+2. **Search with a tool.** Use `rg` (ripgrep), or an equivalent full-text search tool, across Markdown page contents in `wiki/`. Searching the root or topic indexes is optional navigation help; use the search tool for those searches too. An index match does not replace searching page contents. Return matching filenames or short excerpts. Do not open every page to discover relevance.
+
+   Search `wiki/log.md` separately for history questions. Indexes may suggest terms or candidate pages, but must not confine a cross-wiki search to one folder. If full-text search is unavailable, use available indexes to select specific pages and report incomplete coverage; do not compensate by opening every page. Tool errors and inaccessible files are not evidence of no matches.
+
+   Run from the knowledge-base root, replacing terms:
+
+   ```bash
+   # Find candidate pages with a tool, including hidden or ignored Markdown files.
+   rg -l -i -F --hidden --no-ignore -g '*.md' -g '!index.md' -g '!log.md' -e 'access control' -e 'permissions' -- wiki/
+
+   # Optionally search the root index for navigation clues.
+   rg -n -i -F -e 'access control' -e 'permissions' -- wiki/index.md
+   ```
+
+   `-F` matches literal text; repeated `-e` options mean either term. `-i` ignores case, `-l` returns filenames, and `-n` adds line numbers. `--hidden --no-ignore` includes files that default exclusions might hide.
+
+3. **Inspect and read selected matches.** Inspect short matching excerpts to choose useful pages; filenames and tool output order are not relevance rankings. Work through candidate batches or refine broad terms. Read the selected passages with their qualifications and citations, then follow links needed to understand them.
+
+   To inspect candidates, replace the terms and supply one or more selected paths:
+
+   ```bash
+   rg -n -i -F -C 2 -m 3 -e 'access control' -e 'permissions' -- wiki/access-policy.md
+   ```
+
+   `-C 2` adds two lines of context; `-m 3` limits matching lines per file. This is a sample for selection, not a complete evidence review. Read more of selected pages when needed.
+
+4. **Check coverage and stop.** A search round means searching with one set of terms and reviewing the results; an optional index search is part of that round. Revise terms for unanswered topics. Use the rule for the task:
+
+   - **Ordinary discovery:** stop when the requested points have support and relevant caveats have been checked, or two consecutive revised rounds add no useful evidence for an unresolved topic. Honor any earlier user limit. Report gaps; an empty search does not prove absence.
+   - **Complete inventories and audits:** enumerate files in the requested scope with a file-listing tool and track coverage. Search helps navigate but cannot establish completeness. Finish when every in-scope item has been assessed, or report the unreviewed portion and why it remains. This may require reading every in-scope page for the review, not for discovery.
+   - **Dependency review:** track candidates found from changed page paths, source paths, and claims. Check link targets in their relative or bundle-relative forms. Process newly affected pages and repeat searches for their changes until no candidates remain unchecked. The ordinary search-round limit does not truncate this work; report any inaccessible dependencies or other coverage limits.

@@ -8,23 +8,25 @@ The pinned [`okf/v0.2/SPEC.md`](okf/v0.2/SPEC.md) remains authoritative. Consult
 
 Every file inside `wiki/` must be UTF-8 Markdown with a `.md` filename. This wiki-schema rule is stricter than base OKF, which permits other support files. Non-Markdown evidence, computation code, and other support assets are not bundle members. Keep retained evidence under `raw/` or point to an external resource.
 
+Every retained original under `raw/` must be used by at least one wiki concept as evidence through `sources[].resource` or as the concept's subject through `resource`. Do not retain material merely for storage. This requirement excludes `raw/.gitkeep`.
+
 ## Reserved Files
 
 ### Index
 
-`wiki/index.md` is mandatory and carries the bundle's `okf_version` declaration. It must list every concept exactly once, excluding reserved `index.md` and `log.md` files. Group entries under useful headings and include each concept's `description` when available. Mark deprecated concepts clearly.
+`wiki/index.md` is mandatory and carries the bundle's `okf_version` declaration. It must list every concept exactly once, excluding reserved `index.md` and `log.md` files. Group entries under useful headings and include each concept's `description`. Mark deprecated concepts clearly.
 
 Subdirectory indexes are optional additions for progressive disclosure; they do not replace the complete root index. Every index link must resolve relative to the index file.
 
 ### Log
 
-`wiki/log.md` is mandatory. It has no frontmatter, begins with `# Directory Update Log`, and groups concise operation bullets newest-first under date-only `YYYY-MM-DD` headings. Begin each bullet with a bold operation name such as `**Ingest**`, `**Snapshot**`, or `**Maintenance**`.
+`wiki/log.md` is mandatory. It has no frontmatter, begins with `# Directory Update Log`, and groups concise operation bullets newest-first under date-only `YYYY-MM-DD` headings. Begin each bullet with a bold operation name such as `**Ingest**` or `**Maintenance**`.
 
-An ingest entry names the retained source and the concepts created, updated, supported, or placed in conflict. When a retained source is intentionally unused, use the exact phrase `Retained but unused`, followed by the project-root-relative raw path and a short reason:
+Log changes to concepts or retained sources under the operation that produced them. Documentation-only, tooling-only, and no-change work has no log entry.
 
-```markdown
-* **Ingest**: Retained but unused `raw/report.pdf` — it repeats knowledge already covered by existing sources.
-```
+An ingest entry names each retained source and the concepts that use it as a subject or as evidence for created, updated, supported, or disputed knowledge.
+
+For a raw-file deletion, record the deleted path and reason in a Maintenance entry. Preserve earlier retention entries as history.
 
 ## Atomic Concepts And Links
 
@@ -36,7 +38,23 @@ Each concept file must cover one atomic concept: the smallest useful unit that c
 
 Use the fewest links needed for retrieval and reuse. Add a link only when it avoids repeating substantial content, connects an overview or index to its details, identifies a dependency needed to understand or use the concept, or provides required provenance or resource access. Do not link merely because concepts share a topic, repeat the same link unnecessarily, or add reciprocal links solely for symmetry. If the relationship cannot be explained clearly in the surrounding prose, omit the link.
 
+Keep `wiki/` flat until navigation becomes genuinely difficult. Prefer clear titles, links, and a small maintained tag registry before folders. Add subdirectories only when they materially improve navigation or progressive disclosure.
+
 Provenance should normally remain in `sources` and keyed footnotes rather than creating extra body links.
+
+## Claim Status Blocks
+
+When retaining a disputed or historically useful outdated claim, place a short block directly after it:
+
+```markdown
+> **Claim status: disputed**
+> The sources disagree about ...
+```
+
+```markdown
+> **Claim status: outdated since 2026-08-31**
+> The current understanding is ...
+```
 
 ## Frontmatter
 
@@ -48,6 +66,7 @@ Every concept under `wiki/`, except reserved `index.md` and `log.md` files, must
 ---
 type: Note
 title: Example note
+description: This is a description
 status: draft
 tags: []
 generated:
@@ -56,39 +75,37 @@ generated:
 ---
 ```
 
-Use [`templates/wiki-page.md`](../templates/wiki-page.md) as the shared starting point. It contains the five fields required for every concept:
+Use [`templates/wiki-page.md`](../templates/wiki-page.md) as the shared starting point. It contains the six fields required for every concept:
 
 - `type` is a non-empty type name.
 - `title` is a human-readable display name.
+- `description` is a one-sentence summary.
 - `status` is `draft`, `stable`, or `deprecated`. A draft may be incomplete; stable content is ready for consumption and meets the wiki schema; deprecated content is retained for links and history but is no longer current.
 - `tags` is a YAML list, which may be empty.
-- `generated` contains a non-empty `by` actor and an ISO 8601 `at` datetime. Change `generated.at` only after a meaningful content or metadata change.
-
-`description` is optional for early drafts and required before a concept becomes `stable`. Keep it to one sentence. This rule is conditional, so the draft template omits the field.
+- `generated` contains a non-empty `by` actor and the current ISO 8601 `at` datetime with seconds and timezone. Change it only after a meaningful content or metadata change.
 
 ### Optional And Conditional Fields
 
-Optional fields carry real meaning when present. Omit them when they do not apply; never add empty mappings, empty lists, `null`, or invented values merely to complete a template.
+Optional fields should be added when they apply.
 
 #### Resource
 
-`resource` identifies the canonical asset the concept describes. Use it when the subject is a particular source, file, dataset, database, API, dashboard, or other addressable asset. Omit it for abstract ideas and general instructions.
+`resource` identifies the single canonical asset the concept describes. Use it when the subject is a particular source, file, dataset, database, API, dashboard, or other addressable asset. Omit it for abstract ideas and general instructions.
 
 ```yaml
 resource: ../raw/customer-policy.pdf
 ```
 
-`resource` binds the concept to its subject. It does not say where the concept's claims came from; use `sources` for provenance. The allowed URL and path forms are described under [Links And Paths](#links-and-paths). See OKF sections 4.1 and 6.2 for normative details.
+Top-level `resource` is the subject resource. It does not say where the concept's claims came from; `sources` records that provenance. A concept may use either field or both. Use the same asset in both only when it genuinely serves as both subject and evidence. The allowed URL and path forms are described under [Links And Paths](#links-and-paths). See OKF sections 4.1 and 6.2 for normative details.
 
 #### Provenance: `sources` And `usage_window`
 
-Use `sources` when a concept derives material knowledge from internal or external evidence. Each entry requires `resource`. Add a stable `id` when the body attributes a claim to that source.
+Use `sources` when a concept derives knowledge from internal or external evidence. Each entry identifies one source and requires a stable `id` and `resource`; `sources[].resource` is the source location, not the concept's subject. Add another entry when new evidence supports, qualifies, or contradicts the concept.
 
 ```yaml
 sources:
   - id: policy
     resource: ../raw/customer-policy.pdf
-    representation: ../raw/_derived/customer-policy.md
     title: Customer policy
     author: human:owner
     last_modified: 2026-08-01
@@ -96,7 +113,6 @@ sources:
 
 A source may also carry:
 
-- `representation`: a local Markdown or text rendering used to inspect a retained source that is difficult to read directly. It must resolve inside `raw/_derived/`. The canonical evidence remains `resource`; omit `representation` when no durable rendering is needed.
 - `title`: a human-readable source name.
 - `author`: the source producer, using the actor convention below.
 - `last_modified`: when the source itself last changed, as `YYYY-MM-DD`.
@@ -104,15 +120,15 @@ A source may also carry:
 
 When any source uses `usage_count`, add a dated window beside `sources`, such as `usage_window: { from: 2026-08-01, to: 2026-08-31 }`. A source may provide its own window to override the shared one. Omit usage fields when the measurements or dates are not known. See OKF section 5.1 for normative details and credibility semantics.
 
-For claim-level attribution, use a Markdown footnote whose label matches `sources[].id`:
+Cite sourced material where it appears, but do not repeat a citation while its source and scope remain clear. Use a Markdown footnote whose label matches `sources[].id`. When `sources[].resource` is a path or URL, link the source title to that exact resource:
 
 ```markdown
 The policy took effect in August.[^policy]
 
-[^policy]: Customer policy
+[^policy]: [Customer policy](../raw/customer-policy.pdf)
 ```
 
-Every source-linked footnote must resolve to a matching source ID, and every cited source ID must have a footnote. Do not create a separate citations section.
+Use a plain-text footnote only when `sources[].resource` describes a non-addressable scope, such as `all product queries`. Every source ID must be cited in the body and have one matching footnote definition. Do not create a separate citations section. This follows [APA's guidance](https://apastyle.apa.org/style-grammar-guidelines/citations/appropriate-citation) to avoid both undercitation and overcitation and [Chicago's guidance](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/Documentation/faq0113.html) to cite wherever attribution would otherwise be unclear.
 
 #### Trust: `verified`
 
@@ -124,7 +140,7 @@ verified: { by: "human:owner", at: "2026-08-19T08:00:00Z" }
 
 Use a list for multiple independent checks. Each event contains `by` and `at`. Omit `verified` when no check occurred; absence means unverified, not invalid. Never infer or invent verification. See OKF sections 5.2, 5.3, and 7 for normative details and derived trust tiers.
 
-`verified` and `generated.at` remain independent. When the latest verification predates `generated.at`, the verification remains part of the concept's trust history, but consumers should warn that it predates the latest meaningful content change. Do not change the OKF trust tier or discard the event merely because the concept changed later.
+Each verification time uses the same ISO 8601 form as `generated.at`. `verified` and `generated.at` remain independent. When the latest verification predates `generated.at`, the verification remains part of the concept's trust history, but consumers should warn that it predates the latest meaningful content change. Do not change the OKF trust tier or discard the event merely because the concept changed later.
 
 #### Freshness: `stale_after`
 
@@ -137,10 +153,6 @@ stale_after: 2026-12-31
 A concept is stale when `today >= stale_after`. Omit the field when no meaningful date is known; do not guess one. See OKF section 5.5 for normative details.
 
 Verification and freshness answer different questions. `verified` records a check that the concept matches its evidence. `stale_after` records when the knowledge becomes stale. Unchanged immutable evidence does not make a time-sensitive claim permanently current, and timeless knowledge does not need an arbitrary expiry.
-
-#### Snapshot
-
-An `Analysis` may set `snapshot: true` when it records an explicitly requested point-in-time synthesis. Omit the field for ordinary analyses and all other concept types. A snapshot requires one or more `sources` whose `resource` values resolve to internal concepts; `generated.at` records when the synthesis was made.
 
 #### Attested Computation
 
@@ -166,7 +178,7 @@ Identity fields such as `generated.by`, `verified[].by`, and `sources[].author` 
 
 Actor identifiers are provenance labels. Use a unique stable identifier for each relevant actor. People who only read the knowledge base do not need identifiers.
 
-When agents and tools create or meaningfully update a concept, they use their own truthful `<producer>/<version>` identifier in `generated.by`. Never ask a user to choose an agent identifier, and never invent a producer or version.
+When agents and tools create or meaningfully update a concept, they use the most specific truthful `<producer>/<version>` identifier available, such as `codex/gpt-5.6-terra`. Never ask a user to choose an agent identifier, and never invent a producer or version.
 
 Use `human:` for human-authored or human-confirmed content. Do not represent a person or process with the agent pattern.
 
@@ -197,8 +209,8 @@ Use the smallest type that describes the concept itself. Begin with the shared p
 | `Note` | Provisional or general knowledge that does not need a narrower type | No additional fields | None; follow the material |
 | `Reference` | Durable explanation, instruction, topic, entity, or procedure | Use `resource` when bound to one canonical asset; use `sources` when derived from evidence | None; follow the material |
 | `Source Record` | A concept describing one source or evidence bundle | `resource` is required from creation | Summary |
-| `Analysis` | Comparison, investigation, synthesis, or reasoned conclusion | Use `sources` when conclusions depend on evidence; use `snapshot: true` only for an explicit point-in-time synthesis | Conclusion, Reasoning |
-| `Decision` | A settled choice and its reasoning | Use `sources` when evidence materially informed the choice | Decision, Rationale |
+| `Analysis` | Comparison, investigation, synthesis, or reasoned conclusion | Use `sources` when conclusions depend on evidence | Conclusion, Reasoning |
+| `Decision` | A settled choice and its reasoning | Use `sources` when evidence informed the choice | Decision, Rationale |
 | `Goal` | A desired outcome or declared priority | Use `stale_after` only for a real review or expiry date | Outcome, Success Measures, Progress |
 | `Plan` | An approach and actions intended to reach an outcome | Use `stale_after` only for a real review or expiry date | Approach, Actions, Progress |
 | `Dataset` | A bounded dataset, its schema, meaning, and limits | `resource` is required before `stable` | Schema, Data, Examples |
@@ -215,6 +227,10 @@ The suggested headings and matching files under `templates/page-bodies/` are opt
 
 The approved [Tag Registry](local-settings.md#tag-registry) and each tag's meaning live in `local-settings.md`. Use only tags recorded there. If the registry is empty, use `tags: []`.
 
+Every new concept should normally have at least one approved tag. Reuse an existing tag when its registered meaning applies. Do not add an irrelevant tag merely to avoid an empty list.
+
+Create a tag only when it provides a useful way to retrieve multiple concepts. Prefer cross-cutting topics or domains, such as `finance`, `product`, or `sales`, and useful content forms, such as `interview` or `pitch-deck`. Do not create page-specific tags, synonyms or near-duplicates, or tags that merely repeat a concept's type or status.
+
 Record each approved registry entry as one Markdown bullet:
 
 ```markdown
@@ -227,8 +243,8 @@ For example:
 - `customer-research`: Use for customer interviews, surveys, and related findings.
 ```
 
-Use the registry tag's exact spelling in concept frontmatter. Prefer short lowercase kebab-case names for new tags unless the domain requires another stable form. The description should explain both what the tag means and when to use it.
+Use the registry tag's exact spelling in concept frontmatter. Use short lowercase kebab-case names for all tags. The description should explain both what the tag means and when to use it.
 
 Keep the registry small and driven by real retrieval needs. Prefer links and clear titles before adding a tag.
 
-Propose a registry change before adding, renaming, merging, narrowing, or retiring a tag. The proposal should name the affected concepts and explain the retrieval benefit. Avoid synonyms, near-duplicates, and tags that merely repeat a type or status.
+If no suitable tag exists, propose a registry change before using a new tag. The proposal must give the proposed name, define its meaning and when to use it, name the affected concepts, and explain the retrieval benefit. After approval, add the tag to the registry and apply it to the new concept and other concepts that clearly match. Follow the same proposal process before renaming, merging, narrowing, or retiring a tag.

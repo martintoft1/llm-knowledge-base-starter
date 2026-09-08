@@ -2,30 +2,23 @@
 
 Keep the knowledge base simple, traceable, and conformant with OKF v0.2. Add structure only when it improves retrieval or reuse.
 
-## Read First
+## Rule Ownership
 
-Read these in order:
+Keep each rule in its owning file and link to it elsewhere instead of restating it: `schema.md` owns structure, `writing-style.md` owns concept bodies, `operations.md` owns workflows, and `local-settings.md` owns knowledge-base-specific choices.
 
-1. `README.md` for the overview, architecture, and source map.
-2. `references/local-settings.md` for writing style, approved tags, and storage and sharing restrictions.
-3. `references/schema.md` for the wiki schema: bundle structure, atomic concepts, frontmatter, actors, links and paths, types, body headings, and tag rules.
-4. `references/operations.md` for operating principles, core and specialized operations, approval boundaries, history-mode behavior, and validation.
-5. `references/writing-style.md` for reusable body-writing rules before creating or substantially rewriting bodies.
-6. `wiki/index.md` and relevant local indexes when they exist.
+## Select The Operation
 
-After this initial orientation, use each reference file's direct section links to revisit only the local settings needed for the current task.
+Read [Operating Principles](references/operations.md#operating-principles), then select and read the appropriate operation below.
 
-The pinned `references/okf/v0.2/SPEC.md` remains authoritative, but routine work should not require reading it in full. Read the relevant SPEC sections when the wiki schema does not cover a field or edge case, when resolving ambiguity, during a formal base-OKF conformance audit, or before changing the schema or OKF version.
+### Core Operations
 
-## Boundaries
+- Use [Ingest](references/operations.md#ingest) when the user asks to add material or knowledge to the wiki, or accepts an agent's suggestion.
+- Use [Query](references/operations.md#query) for ordinary questions and tasks, including hypothetical setup questions and one-off calculations.
+- Use [Research](references/operations.md#research) only when the user asks the agent to find sources for the knowledge base.
+- Use [Maintenance](references/operations.md#maintenance) for user-requested or scheduled maintenance of existing material.
 
-- Only `wiki/` is the OKF bundle. Keep original evidence under `raw/` and operating files in the approved root and `references/` paths.
-- Existing raw files are immutable to agents. Adding a raw source on the user's behalf requires approval. `raw/.gitkeep` is only a tracked placeholder; ignore it and leave it unchanged.
-- During ordinary questions, answer first and propose likely useful knowledge before changing the wiki. A direct ingest or update request, or an accepted proposal, authorizes ordinary wiki changes.
-- Keep one atomic concept in each concept file. Link related concepts instead of duplicating substantial content.
-- Use progressive autonomy for ordinary wiki work. Follow `references/operations.md` for actions that require approval.
-- Validate base OKF and wiki-schema conformance before finalizing any wiki operation. A failed required check blocks completion.
-- Preserve unknown OKF types and fields. Report broken links without treating them as an OKF conformance failure.
-- Never invent sources, verification, access, or attestation. Mark uncertainty and conflict clearly.
-- Do not add top-level files or directories outside the approved repository layout without a scoped proposal and approval.
-- Keep `wiki/log.md` current. Follow Git rules when Git is enabled.
+### Other Operations
+
+- Use [Review](references/operations.md#review) to inspect knowledge-base material or changes without modifying them.
+- Use [External Access And Connector Setup](references/operations.md#external-access-and-connector-setup) when the user asks to establish or change external access.
+- Use [Attested Computation](references/operations.md#attested-computation) for a governed, reusable calculation.

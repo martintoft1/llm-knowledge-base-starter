@@ -4,3 +4,4 @@ __pycache__/
 /.firecrawl/
 /.worktrees/
 /docs/
+/test/

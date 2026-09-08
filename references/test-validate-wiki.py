@@ -17,6 +17,7 @@ def concept(title: str, body: str = "", tags: str = "[]") -> str:
     return f'''---
 type: Note
 title: {title}
+description: A test concept.
 status: draft
 tags: {tags}
 generated:
@@ -93,6 +94,15 @@ class ValidatorCliTests(unittest.TestCase):
             capture_output=True,
             text=True,
         )
+
+    def test_description_is_required_for_drafts(self) -> None:
+        topic = concept("Topic").replace("description: A test concept.\n", "")
+        self.write("wiki/topic.md", topic)
+
+        result = self.run_validator("--all")
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("SCHEMA: wiki/topic.md: missing required field description", result.stdout)
 
     def test_changed_file_selects_direct_referrer_but_not_unrelated_file(self) -> None:
         self.write("wiki/target.md", concept("Target", "Original."))
@@ -301,75 +311,58 @@ class ValidatorCliTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertIn("SCHEMA: wiki/topic.md: broken link missing.md", result.stdout)
 
-    def test_snapshot_requires_analysis_type(self) -> None:
-        snapshot = concept("Snapshot").replace("type: Note\n", "type: Note\nsnapshot: true\n")
-        self.write("wiki/snapshot.md", snapshot)
+    def test_retired_snapshot_metadata_is_preserved_as_an_unknown_field(self) -> None:
+        for value in ("true", "false"):
+            with self.subTest(value=value):
+                imported = concept("Imported").replace(
+                    "type: Note\n", f"type: Note\nsnapshot: {value}\n",
+                )
+                self.write("wiki/imported.md", imported)
 
-        result = self.run_validator("--all")
+                result = self.run_validator("--all")
 
-        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertIn("SCHEMA: wiki/snapshot.md: snapshot requires type Analysis", result.stdout)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertEqual((self.root / "wiki/imported.md").read_text(), imported)
 
-    def test_snapshot_requires_internal_concept_sources(self) -> None:
-        snapshot = concept("Snapshot").replace(
+    def test_dated_analysis_accepts_external_evidence_without_special_fields(self) -> None:
+        analysis = concept(
+            "Demand assessment",
+            "Assessment as of 2026-08-01. Finding.[^report]\n\n"
+            "[^report]: [Report](https://example.com/report)",
+        ).replace(
             "type: Note\n",
-            "type: Analysis\nsnapshot: true\nsources:\n  - resource: https://example.com/report\n",
+            "type: Analysis\nsources:\n"
+            "  - id: report\n    resource: https://example.com/report\n",
         )
-        self.write("wiki/snapshot.md", snapshot)
-
-        result = self.run_validator("--all")
-
-        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertIn(
-            "SCHEMA: wiki/snapshot.md: snapshot sources must resolve to internal concepts",
-            result.stdout,
-        )
-
-    def test_snapshot_requires_at_least_one_source(self) -> None:
-        snapshot = concept("Snapshot").replace(
-            "type: Note\n",
-            "type: Analysis\nsnapshot: true\n",
-        )
-        self.write("wiki/snapshot.md", snapshot)
-
-        result = self.run_validator("--all")
-
-        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertIn(
-            "SCHEMA: wiki/snapshot.md: snapshot sources must resolve to internal concepts",
-            result.stdout,
-        )
-
-    def test_snapshot_field_must_be_true_when_present(self) -> None:
-        snapshot = concept("Snapshot").replace(
-            "type: Note\n",
-            "type: Analysis\nsnapshot: false\n",
-        )
-        self.write("wiki/snapshot.md", snapshot)
-
-        result = self.run_validator("--all")
-
-        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertIn("SCHEMA: wiki/snapshot.md: snapshot must be true when present", result.stdout)
-
-    def test_snapshot_accepts_an_internal_concept_source(self) -> None:
-        self.write("wiki/source.md", concept("Source"))
-        snapshot = concept("Snapshot").replace(
-            "type: Note\n",
-            "type: Analysis\nsnapshot: true\nsources:\n  - resource: source.md\n",
-        )
-        self.write("wiki/snapshot.md", snapshot)
+        self.write("wiki/assessment.md", analysis)
 
         result = self.run_validator("--all")
 
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
-    def test_source_representation_must_be_inside_raw_derived(self) -> None:
+    def test_retired_source_representation_is_rejected(self) -> None:
         self.write("raw/report.pdf", "evidence")
         self.write("raw/report.md", "rendering")
+        topic = concept(
+            "Topic",
+            "Claim.[^report]\n\n[^report]: [Report](../raw/report.pdf)",
+        ).replace(
+            "generated:\n",
+            "sources:\n  - id: report\n    resource: ../raw/report.pdf\n"
+            "    representation: ../raw/report.md\ngenerated:\n",
+        )
+        self.write("wiki/topic.md", topic)
+
+        result = self.run_validator("--all")
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("SCHEMA: wiki/topic.md: sources[0].representation is not supported", result.stdout)
+
+    def test_source_requires_stable_id(self) -> None:
+        self.write("raw/report.pdf", "evidence")
         topic = concept("Topic").replace(
             "generated:\n",
-            "sources:\n  - resource: ../raw/report.pdf\n    representation: ../raw/report.md\ngenerated:\n",
+            "sources:\n  - resource: ../raw/report.pdf\ngenerated:\n",
         )
         self.write("wiki/topic.md", topic)
 
@@ -377,16 +370,15 @@ class ValidatorCliTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertIn(
-            "SCHEMA: wiki/topic.md: sources[0].representation must be inside raw/_derived",
+            "SCHEMA: wiki/topic.md: sources[0].id is required",
             result.stdout,
         )
 
-    def test_source_representation_must_resolve(self) -> None:
+    def test_addressable_source_footnote_requires_resource_link(self) -> None:
         self.write("raw/report.pdf", "evidence")
-        topic = concept("Topic").replace(
+        topic = concept("Topic", "Claim.[^report]\n\n[^report]: Report").replace(
             "generated:\n",
-            "sources:\n  - resource: ../raw/report.pdf\n"
-            "    representation: ../raw/_derived/report.md\ngenerated:\n",
+            "sources:\n  - id: report\n    resource: ../raw/report.pdf\ngenerated:\n",
         )
         self.write("wiki/topic.md", topic)
 
@@ -394,39 +386,18 @@ class ValidatorCliTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertIn(
-            "SCHEMA: wiki/topic.md: unresolved sources[0].representation ../raw/_derived/report.md",
+            "SCHEMA: wiki/topic.md: source report footnote must link to ../raw/report.pdf",
             result.stdout,
         )
 
-    def test_changed_representation_selects_its_concept(self) -> None:
+    def test_addressable_source_footnote_accepts_resource_link(self) -> None:
         self.write("raw/report.pdf", "evidence")
-        self.write("raw/_derived/report.md", "rendering")
-        topic = concept("Topic").replace(
+        topic = concept(
+            "Topic",
+            "Claim.[^report]\n\n[^report]: [Report](../raw/report.pdf)",
+        ).replace(
             "generated:\n",
-            "sources:\n  - resource: ../raw/report.pdf\n"
-            "    representation: ../raw/_derived/report.md\ngenerated:\n",
-        )
-        self.write("wiki/topic.md", topic)
-        self.commit()
-        (self.root / "raw/_derived/report.md").unlink()
-
-        result = self.run_validator("--changed", "raw/_derived/report.md")
-
-        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertIn("DIRECT: raw/_derived/report.md", result.stdout)
-        self.assertIn("DEPENDENT: wiki/topic.md", result.stdout)
-        self.assertIn(
-            "SCHEMA: wiki/topic.md: unresolved sources[0].representation ../raw/_derived/report.md",
-            result.stdout,
-        )
-
-    def test_source_representation_accepts_a_local_text_rendering(self) -> None:
-        self.write("raw/report.pdf", "evidence")
-        self.write("raw/_derived/report.md", "rendering")
-        topic = concept("Topic").replace(
-            "generated:\n",
-            "sources:\n  - resource: ../raw/report.pdf\n"
-            "    representation: ../raw/_derived/report.md\ngenerated:\n",
+            "sources:\n  - id: report\n    resource: ../raw/report.pdf\ngenerated:\n",
         )
         self.write("wiki/topic.md", topic)
 
@@ -434,13 +405,10 @@ class ValidatorCliTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
-    def test_source_representation_must_be_markdown_or_text(self) -> None:
-        self.write("raw/report.pdf", "evidence")
-        self.write("raw/_derived/report.json", "{}")
-        topic = concept("Topic").replace(
+    def test_external_source_footnote_requires_resource_link(self) -> None:
+        topic = concept("Topic", "Claim.[^report]\n\n[^report]: Report").replace(
             "generated:\n",
-            "sources:\n  - resource: ../raw/report.pdf\n"
-            "    representation: ../raw/_derived/report.json\ngenerated:\n",
+            "sources:\n  - id: report\n    resource: https://example.com/report\ngenerated:\n",
         )
         self.write("wiki/topic.md", topic)
 
@@ -448,9 +416,20 @@ class ValidatorCliTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertIn(
-            "SCHEMA: wiki/topic.md: sources[0].representation must be Markdown or text",
+            "SCHEMA: wiki/topic.md: source report footnote must link to https://example.com/report",
             result.stdout,
         )
+
+    def test_non_addressable_source_scope_accepts_plain_footnote(self) -> None:
+        topic = concept("Topic", "Claim.[^queries]\n\n[^queries]: Product queries").replace(
+            "generated:\n",
+            "sources:\n  - id: queries\n    resource: all product queries\ngenerated:\n",
+        )
+        self.write("wiki/topic.md", topic)
+
+        result = self.run_validator("--all")
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_verification_before_generation_is_reported(self) -> None:
         topic = concept("Topic").replace(
@@ -467,6 +446,43 @@ class ValidatorCliTests(unittest.TestCase):
             "WARNING: wiki/topic.md: verification predates latest meaningful content change",
             result.stdout,
         )
+
+    def test_generated_at_requires_seconds_and_timezone(self) -> None:
+        for value in (
+            "2026-09-03",
+            "2026-09-03T14:30",
+            "2026-09-03T14:30:00",
+        ):
+            with self.subTest(value=value):
+                topic = concept("Topic").replace(
+                    '"2026-08-27T12:00:00+02:00"',
+                    f'"{value}"',
+                )
+                self.write("wiki/topic.md", topic)
+
+                result = self.run_validator("--all")
+
+                self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                self.assertIn(
+                    "generated.at must be an ISO 8601 datetime with seconds and timezone",
+                    result.stdout,
+                )
+
+    def test_generated_at_accepts_seconds_and_timezone(self) -> None:
+        for value in (
+            "2026-09-03T14:30:00Z",
+            "2026-09-03T16:30:00+02:00",
+        ):
+            with self.subTest(value=value):
+                topic = concept("Topic").replace(
+                    '"2026-08-27T12:00:00+02:00"',
+                    f'"{value}"',
+                )
+                self.write("wiki/topic.md", topic)
+
+                result = self.run_validator("--all")
+
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_reached_stale_after_is_reported(self) -> None:
         topic = concept("Topic").replace("generated:\n", "stale_after: 2000-01-01\ngenerated:\n")

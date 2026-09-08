@@ -1,6 +1,6 @@
 # Wiki Writing Style
 
-Keep the knowledge base intentionally flat and simple. Write the smallest useful page, then add structure only when it makes the content easier to retrieve or reuse.
+Write the smallest useful page, then add structure only when it makes the content easier to retrieve or reuse.
 
 This file defines the reusable rules for writing concept bodies. Before writing or substantially rewriting a body, read the selected local [Writing Style](local-settings.md#writing-style) and apply it throughout.
 
@@ -10,35 +10,18 @@ This file defines the reusable rules for writing concept bodies. Before writing 
 - Start with plain prose and the smallest useful structure.
 - Follow [Atomic Concepts And Links](schema.md#atomic-concepts-and-links).
 - Use headings, lists, tables, and fenced code blocks when they improve human reading or agent retrieval.
-- Distinguish evidence, interpretation, inference, uncertainty, and unresolved conflict when relevant. Do not force these into headings.
-- Attribute specific claims with footnotes keyed to `sources[].id`. Do not add a separate citations section.
+- Follow the schema's [provenance and citation rules](schema.md#provenance-sources-and-usage_window).
 
-Use tags and links before creating folders. A shared topic alone is not a reason for a directory.
+## Expressing Claims
 
-## Claims And Evidence
-
-- Locate exact quotations, dates, numbers, and identifiers in the source before writing them. Preserve the source's form when it matters. Show the source components behind a derived value.
-- Present a direct source statement as evidence, not as the writer's conclusion.
-- A synthesis may combine compatible evidence from several sources. Cite the material sources.
-- Identify an inference when the sources do not state the conclusion directly, and preserve the reasoning that supports it.
-- Remove or qualify claims that the available evidence does not support. Mark inaccessible evidence and unresolved conflict clearly.
-
-When retaining a disputed or historically useful outdated claim, place a short block directly after it:
-
-```markdown
-> **Claim status: disputed**
-> The sources disagree about ...
-```
-
-```markdown
-> **Claim status: outdated since 2026-08-31**
-> The current understanding is ...
-```
-
-Do not retain every superseded claim. Update the live concept and rely on Git and `wiki/log.md` when the old wording has no continuing value.
-
-An explicitly requested snapshot should state that it is a point-in-time synthesis and link to its canonical source concepts instead of copying them extensively.
+- Make clear whether a statement comes directly from a source or is the writer's interpretation.
+- Label inferences, uncertainty, and unresolved conflict plainly. Preserve supporting reasoning without forcing separate headings.
+- Preserve source wording and notation when precision matters. Show the source components behind a derived value.
 
 ## Type-Specific Structure
 
 Use the optional YAML-fields and headings in [`schema.md`](schema.md#types-and-field-rules) and the matching files under `templates/page-bodies/` when they help. New notes normally need no body template.
+
+For an `Analysis`, state its scope and whether it is a current assessment or an assessment as of a specified date. Put any effective date or period in the body; it may differ from when the page was written. Update a current assessment when its evidence changes. For an assessment tied to a past date, preserve what was concluded then and record later conclusions separately. Correct errors in how the dated assessment or its evidence is represented.
+
+For historical claims, identify the evidence versions used where available and explain any limits on reconstructing the assessment.

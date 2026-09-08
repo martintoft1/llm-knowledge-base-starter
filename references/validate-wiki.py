@@ -33,8 +33,11 @@ RESOURCE_REQUIRED = {"Source Record"}
 RESOURCE_REQUIRED_WHEN_STABLE = {"Dataset", "Database"}
 ACTOR_PATTERN = re.compile(r"^(?:human:.+|process:.+|[^\s/:]+/[^\s/]+)$")
 DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-DATETIME_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}T")
+DATETIME_PATTERN = re.compile(
+    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$"
+)
 FOOTNOTE_DEFINITION = re.compile(r"^\[\^([^\]]+)\]:", re.MULTILINE)
+FOOTNOTE_DEFINITION_TEXT = re.compile(r"^\[\^([^\]]+)\]:\s*(.*)$", re.MULTILINE)
 FOOTNOTE_REFERENCE = re.compile(r"\[\^([^\]]+)\]")
 MARKDOWN_LINK = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 MARKDOWN_REFERENCE_DEFINITION = re.compile(
@@ -92,12 +95,12 @@ def valid_date(value: object) -> bool:
 
 def valid_datetime(value: object) -> bool:
     if isinstance(value, datetime):
-        return True
-    if not isinstance(value, str) or not DATETIME_PATTERN.match(value):
+        return value.tzinfo is not None and value.utcoffset() is not None
+    if not isinstance(value, str) or not DATETIME_PATTERN.fullmatch(value):
         return False
     try:
-        datetime.fromisoformat(value.replace("Z", "+00:00"))
-        return True
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        return parsed.utcoffset() is not None
     except ValueError:
         return False
 
@@ -162,16 +165,6 @@ def is_inside(path: Path, directory: Path) -> bool:
         return False
 
 
-def is_internal_concept(path: Path) -> bool:
-    resolved = path.resolve()
-    return (
-        is_inside(resolved, WIKI)
-        and resolved.is_file()
-        and resolved.suffix == ".md"
-        and resolved.name not in {"index.md", "log.md"}
-    )
-
-
 def markdown_targets(text: str) -> list[str]:
     targets: list[str] = []
     for match in MARKDOWN_LINK.finditer(text):
@@ -187,6 +180,20 @@ def markdown_targets(text: str) -> list[str]:
         if not label.startswith("^"):
             targets.append(angled or plain)
     return targets
+
+
+def addressable_resource(value: object) -> bool:
+    if not nonempty_string(value):
+        return False
+    value = value.strip().strip("<>")
+    return bool(re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", value)) or any(
+        mark in value for mark in ("/", "\\", ".")
+    )
+
+
+def footnote_links_to_resource(definition: str, resource: str) -> bool:
+    expected = resource.strip().strip("<>")
+    return expected in {target.strip().strip("<>") for target in markdown_targets(definition)}
 
 
 def check_path(source_file: Path, value: object, field: str, allow_scope: bool = False) -> None:
@@ -235,7 +242,9 @@ def check_verified(path: Path, value: object) -> list[dict]:
         if not valid_actor(event.get("by")):
             SCHEMA_FAILURES.append(f"{relative(path)}: {label}.by is not a valid actor")
         if not valid_datetime(event.get("at")):
-            SCHEMA_FAILURES.append(f"{relative(path)}: {label}.at must be an ISO 8601 datetime")
+            SCHEMA_FAILURES.append(
+                f"{relative(path)}: {label}.at must be an ISO 8601 datetime with seconds and timezone"
+            )
         valid_events.append(event)
     return valid_events
 
@@ -248,7 +257,8 @@ def check_sources(path: Path, data: dict, body: str) -> list[dict]:
         SCHEMA_FAILURES.append(f"{relative(path)}: sources must be a non-empty list")
         return []
 
-    definitions = set(FOOTNOTE_DEFINITION.findall(body))
+    definition_text = dict(FOOTNOTE_DEFINITION_TEXT.findall(body))
+    definitions = set(definition_text)
     body_without_definitions = FOOTNOTE_DEFINITION.sub("", body)
     references = set(FOOTNOTE_REFERENCE.findall(body_without_definitions))
     ids: set[str] = set()
@@ -261,31 +271,26 @@ def check_sources(path: Path, data: dict, body: str) -> list[dict]:
             continue
         check_path(path, source.get("resource"), f"{label}.resource", allow_scope=True)
         if "representation" in source:
-            representation = source["representation"]
-            if not nonempty_string(representation):
-                SCHEMA_FAILURES.append(f"{relative(path)}: {label}.representation must be a non-empty local path")
-            else:
-                target = local_target(path, representation)
-                derived = ROOT / "raw" / "_derived"
-                if target is None or not is_inside(target, derived):
-                    SCHEMA_FAILURES.append(f"{relative(path)}: {label}.representation must be inside raw/_derived")
-                else:
-                    if target.suffix.lower() not in {".md", ".txt"}:
-                        SCHEMA_FAILURES.append(f"{relative(path)}: {label}.representation must be Markdown or text")
-                    if not target.is_file():
-                        SCHEMA_FAILURES.append(f"{relative(path)}: unresolved {label}.representation {representation}")
+            SCHEMA_FAILURES.append(f"{relative(path)}: {label}.representation is not supported")
         source_id = source.get("id")
-        if source_id is not None:
-            if not nonempty_string(source_id):
-                SCHEMA_FAILURES.append(f"{relative(path)}: {label}.id must be non-empty")
-            elif source_id in ids:
-                SCHEMA_FAILURES.append(f"{relative(path)}: duplicate source id {source_id}")
-            else:
-                ids.add(source_id)
-                if source_id not in references:
-                    SCHEMA_FAILURES.append(f"{relative(path)}: source {source_id} is not cited in the body")
-                if source_id not in definitions:
-                    SCHEMA_FAILURES.append(f"{relative(path)}: source {source_id} lacks a footnote definition")
+        if source_id is None:
+            SCHEMA_FAILURES.append(f"{relative(path)}: {label}.id is required")
+        elif not nonempty_string(source_id):
+            SCHEMA_FAILURES.append(f"{relative(path)}: {label}.id must be non-empty")
+        elif source_id in ids:
+            SCHEMA_FAILURES.append(f"{relative(path)}: duplicate source id {source_id}")
+        else:
+            ids.add(source_id)
+            if source_id not in references:
+                SCHEMA_FAILURES.append(f"{relative(path)}: source {source_id} is not cited in the body")
+            if source_id not in definitions:
+                SCHEMA_FAILURES.append(f"{relative(path)}: source {source_id} lacks a footnote definition")
+            elif addressable_resource(source.get("resource")) and not footnote_links_to_resource(
+                definition_text[source_id], source["resource"]
+            ):
+                SCHEMA_FAILURES.append(
+                    f"{relative(path)}: source {source_id} footnote must link to {source['resource']}"
+                )
         if "author" in source and not valid_actor(source["author"]):
             SCHEMA_FAILURES.append(f"{relative(path)}: {label}.author is not a valid actor")
         if "last_modified" in source and not valid_date(source["last_modified"]):
@@ -300,23 +305,6 @@ def check_sources(path: Path, data: dict, body: str) -> list[dict]:
                 SCHEMA_FAILURES.append(f"{relative(path)}: {label}.usage_count requires a usage window")
 
     return [source for source in sources if isinstance(source, dict)]
-
-
-def check_snapshot(path: Path, data: dict, sources: list[dict]) -> None:
-    if "snapshot" not in data:
-        return
-    if data["snapshot"] is not True:
-        SCHEMA_FAILURES.append(f"{relative(path)}: snapshot must be true when present")
-        return
-    if data.get("type") != "Analysis":
-        SCHEMA_FAILURES.append(f"{relative(path)}: snapshot requires type Analysis")
-    if not sources or not all(
-        nonempty_string(source.get("resource"))
-        and (target := local_target(path, source["resource"])) is not None
-        and is_internal_concept(target)
-        for source in sources
-    ):
-        SCHEMA_FAILURES.append(f"{relative(path)}: snapshot sources must resolve to internal concepts")
 
 
 def computation_section(body: str) -> str:
@@ -396,17 +384,15 @@ def check_concept(path: Path, text: str, tags: set[str]) -> None:
     if not nonempty_string(data.get("type")):
         BASE_FAILURES.append(f"{relative(path)}: type must be non-empty")
 
-    for field in ("type", "title", "status", "tags", "generated"):
+    for field in ("type", "title", "description", "status", "tags", "generated"):
         if field not in data:
             SCHEMA_FAILURES.append(f"{relative(path)}: missing required field {field}")
     if "title" in data and not nonempty_string(data["title"]):
         SCHEMA_FAILURES.append(f"{relative(path)}: title must be non-empty")
     if data.get("status") not in STATUSES:
         SCHEMA_FAILURES.append(f"{relative(path)}: status must be draft, stable, or deprecated")
-    if data.get("status") == "stable" and not nonempty_string(data.get("description")):
-        SCHEMA_FAILURES.append(f"{relative(path)}: stable concept requires a description")
     if "description" in data and not nonempty_string(data["description"]):
-        SCHEMA_FAILURES.append(f"{relative(path)}: description must be non-empty when present")
+        SCHEMA_FAILURES.append(f"{relative(path)}: description must be non-empty")
 
     concept_tags = data.get("tags")
     if not isinstance(concept_tags, list):
@@ -425,7 +411,9 @@ def check_concept(path: Path, text: str, tags: set[str]) -> None:
         if not valid_actor(generated.get("by")):
             SCHEMA_FAILURES.append(f"{relative(path)}: generated.by is not a valid actor")
         if not valid_datetime(generated.get("at")):
-            SCHEMA_FAILURES.append(f"{relative(path)}: generated.at must be an ISO 8601 datetime")
+            SCHEMA_FAILURES.append(
+                f"{relative(path)}: generated.at must be an ISO 8601 datetime with seconds and timezone"
+            )
 
     if "resource" in data:
         check_path(path, data["resource"], "resource")
@@ -440,7 +428,6 @@ def check_concept(path: Path, text: str, tags: set[str]) -> None:
 
     sources = check_sources(path, data, body)
     verified = check_verified(path, data["verified"]) if "verified" in data else []
-    check_snapshot(path, data, sources)
 
     generated_at = parsed_datetime(generated.get("at")) if isinstance(generated, dict) else None
     verification_times = [
@@ -659,9 +646,8 @@ def frontmatter_paths(data: dict) -> list[str]:
     if isinstance(sources, list):
         for source in sources:
             if isinstance(source, dict):
-                for field in ("resource", "representation"):
-                    if nonempty_string(source.get(field)):
-                        values.append(source[field])
+                if nonempty_string(source.get("resource")):
+                    values.append(source["resource"])
     for field in ("executor", "attester"):
         value = data.get(field)
         if isinstance(value, dict) and nonempty_string(value.get("resource")):

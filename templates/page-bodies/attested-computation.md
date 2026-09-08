@@ -6,4 +6,4 @@
 <sanctioned computation>
 ```
 
-When a claim uses a source, use a footnote label that matches the source's `sources[].id`.
+Follow the schema's [provenance and citation rules](../../references/schema.md#provenance-sources-and-usage_window).
