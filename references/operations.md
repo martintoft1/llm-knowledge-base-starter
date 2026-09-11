@@ -13,11 +13,20 @@ Before each operation, read [Safety](local-settings.md#safety). Its restrictions
 Explicit approval is required for
 - deleting pages or raw files, individually or within an explicitly approved cleanup scope;
 - broad merges, splits, moves, renames, or reorganizations;
-- changes to local settings, schema, operating rules, templates, autonomy, or OKF version;
+- changes to local settings other than new entries added under [Tag Registry Changes](#tag-registry-changes);
+- changes to schema, operating rules, templates, autonomy, or OKF version;
 - new external connections or wider access;
 - and external writes.
 
 Ask when the requested outcome is materially unclear or the proposed action exceeds existing authorization. Describe the affected files or systems, intended result, and any replacement, move, or deletion of existing content.
+
+An explicit Migrate request authorizes the selected stable release's operating-file changes, target-defined local-settings restructure, and mechanical wiki-frontmatter compatibility updates. It authorizes retaining compatible setting values and omitting values that have no destination in the target structure; it does not authorize reinterpreting those values or changing concept bodies, raw files, or other user-owned material.
+
+### Tag Registry Changes
+
+During an authorized operation, an agent may add a new entry to the [Tag Registry](local-settings.md#tag-registry) without separate approval when no existing tag applies. Follow the schema's [tag rules](schema.md#tags), apply the new tag only to concepts within the operation's scope, and report its name, definition, and affected concepts in the final result.
+
+This exception covers additions only. Renaming, merging, redefining, or retiring an existing tag requires explicit approval. Suggest broader application of a new tag as Maintenance rather than retagging unrelated concepts.
 
 ### Sources And Claims
 
@@ -25,13 +34,11 @@ Keep saved originals in `raw/`. Do not edit, overwrite, rename, or move retained
 
 Retained originals preserve provenance; they are not a second routinely searched knowledge layer. Ingest reads supplied source material before retaining it. Other operations inspect raw content only when Query has explicit raw scope or [Agent Review](#agent-review) requires source comparison.
 
-For ordinary answers, use relevant wiki passages when their citations adequately support the answer and there are no material warnings about support or freshness. Seek current evidence when a time-sensitive claim depends on evidence too old for the task; if unavailable or outside scope, qualify the answer.
-
 Combine evidence only when it supports the conclusion; distinguish inference from direct source statements and cite the sources used. Remove or qualify unsupported claims. Report disagreements, missing evidence, and unreadable material. Never imply that an unavailable source or system was checked.
 
 ### Finalize Changes
 
-After any operation changes knowledge-base files:
+After any operation other than Migrate changes knowledge-base files:
 
 1. Update navigation and history when required by [`schema.md`](schema.md).
 2. Use [Review](#review) on the final state.
@@ -68,13 +75,13 @@ Treat multiple files as one source set only when they are alternate forms or par
 
    Do not create a page merely to summarize an unused source.
 
-4. **Write the pages.** Read [`writing-style.md`](writing-style.md) and [`schema.md`](schema.md). Use [Types And Field Rules](schema.md#types-and-field-rules) to choose the page type, required fields, and optional body template based on the page's content. Assign tags under [Tags](schema.md#tags), using the approved [Tag Registry](local-settings.md#tag-registry). Apply the planned changes, including approved analyses and syntheses. For analyses, follow the [body guidance](writing-style.md#type-specific-structure) on scope, effective dates, and evidence versions. Add citations for new support or disagreement. Record only verification actually performed and defensible expiry dates.
+4. **Write the pages.** Read [`writing-style.md`](writing-style.md) and [`schema.md`](schema.md). Use [Concept Types And Requirements](schema.md#concept-types-and-requirements) to choose the page type and its additional field requirements, then use [Body Structure](schema.md#body-structure) for an optional body template. Assign at least one tag under [Tags](schema.md#tags), using the [Tag Registry](local-settings.md#tag-registry) or adding a suitable entry under [Tag Registry Changes](#tag-registry-changes). Apply the planned changes, including approved analyses and syntheses. For analyses, follow the [body guidance](writing-style.md#type-specific-structure) on scope, effective dates, and evidence versions. Add citations for new support or disagreement. Record only verification actually performed and defensible expiry dates.
 
-5. **Retain sources used by the result.** Check the resulting concepts against the schema's [raw-evidence requirement](schema.md#bundle-files). For each source they use as evidence through `sources[].resource` or as a subject through `resource`, reuse an identical retained original or save the new original unchanged under `raw/`. For an external source, preserve a permitted export or saved page; an approved live resource may remain external with its location and access limits recorded. If no resulting concept references the source, do not add it to retained evidence; report why and stop work on this source. Leave existing unreferenced raw files for a requested or scheduled Maintenance run.
+5. **Retain sources used by the result.** Check the resulting concepts against the schema's [raw-evidence requirement](schema.md#raw-files). For each source they use as evidence through `sources[].resource` or as a subject through `resource`, reuse an identical retained original or save the new original unchanged under `raw/`. For an external source, preserve a permitted export or saved page; an approved live resource may remain external with its location and access limits recorded. If no resulting concept references the source, do not add it to retained evidence; report why and stop work on this source. Leave existing unreferenced raw files for a requested or scheduled Maintenance run.
 
 6. **Finalize this source's changes.** Follow [Finalize Changes](#finalize-changes). Process the next source after finalization; report the combined results once.
 
-**Result:** saved source locations, the pages changed or reason no page changed, and any unresolved claims or unreadable material.
+**Result:** saved source locations, the pages changed or reason no page changed, any tags added, and any unresolved claims or unreadable material.
 
 ### Query
 
@@ -84,7 +91,7 @@ Treat multiple files as one source set only when they are alternate forms or par
 
 **Steps:**
 1. **Find the answer material.** Use [Search](#search) for the user's question or task. Treat `wiki/` as the default queryable knowledge layer. Do not inspect or search `raw/` unless the user explicitly asks to inspect a particular raw file or search raw material.
-2. **Answer or complete the task.** Consult relevant sections of [`schema.md`](schema.md) when interpreting provenance, verification, or expiry dates. Use the relevant passages and link the wiki pages used. If wiki knowledge is insufficient, answer the supported portion and identify the gaps. When useful, tell the user they may ask you to search retained raw material, consult external sources, or provide a clearly labelled answer from general knowledge. If the request already calls for outside or current information, consult appropriate external sources. Clearly distinguish anything found outside the wiki from knowledge recorded in it, and cite external sources used. Mention disagreements, weak evidence, unavailable sources, and stale information that affect the answer.
+2. **Answer or complete the task.** Consult relevant sections of [`schema.md`](schema.md) when interpreting provenance, verification, or expiry dates. For ordinary answers, use relevant wiki passages and link the wiki pages used when their citations adequately support the answer and there are no material warnings about support or freshness. If wiki knowledge is insufficient, answer the supported portion and identify the gaps. When useful, tell the user they may ask you to search retained raw material, consult external sources, or provide a clearly labelled answer from general knowledge. If the request already calls for outside or current information, consult appropriate external sources. Seek current evidence when a time-sensitive claim depends on evidence too old for the task; if unavailable or outside scope, qualify the answer. Clearly distinguish anything found outside the wiki from knowledge recorded in it, and cite external sources used. Mention disagreements, weak evidence, unavailable sources, and stale information that affect the answer.
 
    For historical questions, distinguish what was recorded at the requested date from a current analysis of that period. Use historical versions for the former; identify any later evidence used for the latter. Logs and metadata dates alone do not reconstruct earlier page contents. Report missing versions and clarify the interpretation only when it is unresolved and changes the answer. A request for an overview or analysis does not by itself authorize saving it.
 
@@ -188,18 +195,18 @@ Use [Search](#search) to locate the calculation, then follow only the requested 
 
 #### Define Or Change
 
-1. **Write the definition.** Read [`schema.md`](schema.md), [`writing-style.md`](writing-style.md), and the [Tag Registry](local-settings.md#tag-registry). Create or update the concept with the [shared template](../templates/wiki-page.md) and [Attested Computation body](../templates/page-bodies/attested-computation.md). Follow the [contract rules](schema.md#attested-computation) for the runtime, method, parameters, sources, executor, receipt, and attester.
+1. **Write the definition.** Read [`schema.md`](schema.md), [`writing-style.md`](writing-style.md), and the [Tag Registry](local-settings.md#tag-registry). Create or update the concept with the [shared template](../templates/wiki-page.md) and [Attested Computation body](../templates/page-bodies/attested-computation.md). Follow the [contract rules](schema.md#attested-computation-requirements) for the runtime, method, parameters, sources, executor, receipt, and attester.
 2. **Set the verification state.** Keep the definition draft until the schema's required checks and independent verification are satisfied. Record only verification actually performed. A definition change does not authorize execution; use Run Or Explicitly Test only when requested.
 3. **Finalize the definition.** Follow [Finalize Changes](#finalize-changes).
 
 #### Review The Definition
 
-1. **Request a definition review.** Use [Review](#review) for the concept and its [contract rules](schema.md#attested-computation). Request checks of source support and the usability of its computation, executor, and attester. A definition review does not authorize execution; distinguish inspected code from tested behavior.
+1. **Request a definition review.** Use [Review](#review) for the concept and its [contract rules](schema.md#attested-computation-requirements). Request checks of source support and the usability of its computation, executor, and attester. A definition review does not authorize execution; distinguish inspected code from tested behavior.
 2. **Report findings.** Return the findings, coverage, and missing tools or evidence. If changes are requested, use Define Or Change.
 
 #### Run Or Explicitly Test
 
-1. **Check readiness and inputs.** Read the existing contract and [contract rules](schema.md#attested-computation). An ordinary run requires a stable definition with a usable computation, executor, and attester. A draft may be tested only when explicitly requested and those execution requirements are met. Check freshness and applicable access approval. Supply values only for declared parameters, respecting their types and requirements. Report unmet requirements without running or altering the definition.
+1. **Check readiness and inputs.** Read the existing contract and [contract rules](schema.md#attested-computation-requirements). An ordinary run requires a stable definition with a usable computation, executor, and attester. A draft may be tested only when explicitly requested and those execution requirements are met. Check freshness and applicable access approval. Supply values only for declared parameters, respecting their types and requirements. Report unmet requirements without running or altering the definition.
 2. **Execute and attest.** Use the declared executor and pass its receipt to the declared attester. If either fails or is unavailable, report the failure without using or displaying the result value.
 3. **Return the checked result.** After successful attestation, return the value and verdict, including any stale-definition warning. Label draft results as test results. A run or test alone does not change the wiki or its verification metadata.
 
@@ -241,3 +248,17 @@ Return relevant page paths and passages, plus remaining gaps. For a question abo
    - **Ordinary discovery:** stop when the requested points have support and relevant caveats have been checked, or two consecutive revised rounds add no useful evidence for an unresolved topic. Honor any earlier user limit. Report gaps; an empty search does not prove absence.
    - **Complete inventories and audits:** enumerate files in the requested scope with a file-listing tool and track coverage. Search helps navigate but cannot establish completeness. Finish when every in-scope item has been assessed, or report the unreviewed portion and why it remains. This may require reading every in-scope page for the review, not for discovery.
    - **Dependency review:** track candidates found from changed page paths, source paths, and claims. Check link targets in their relative or bundle-relative forms. Process newly affected pages and repeat searches for their changes until no candidates remain unchecked. The ordinary search-round limit does not truncate this work; report any inaccessible dependencies or other coverage limits.
+
+### Migrate
+
+**What it does:** Moves an existing knowledge base to a newer stable starter release while preserving its knowledge, evidence, unknown files, and target-compatible local setting values. Content-quality work remains separate.
+
+**Start with:** an explicit user request to migrate and an optional target version. Never initiate Migrate automatically or as part of another operation.
+
+**Steps:**
+1. **Update the operating kit.** Run `python3 references/migrate.py --target <version-or-latest>`. For a release without this command, download and review `migrate.py` from the selected target release and run it with `--root <knowledge-base>`. The command downloads only the selected stable release, composes its cumulative adjacent transition route, and verifies the release version and ownership ledger before writing. It backs up only existing files it may modify, overlays final target-managed files, removes only retired source-owned files, and prepares declared merger sources and targets. It never changes `.git/`, `raw/`, `wiki/`, or unknown files. Stop and report any failure and its backup path.
+2. **Apply declared mergers and mechanical compatibility changes.** Reread the installed Migrate instructions, changelog, and action record. For each `target-structure` merger, begin with the saved target template and carry forward a source value only when it fits a section, field, or open collection present in that template. Put retained values only in target-defined locations; do not recreate removed headings, fields, placeholders, or unknown entries. Keep the target default when no compatible source value exists. Do not reinterpret or invert a value to make it fit. Report populated source settings that were omitted; the complete source remains in the backup. Apply documented, deterministic frontmatter changes with release-provided or ordinary command-line tools, copying each affected wiki file into the same backup before modification. Do not inspect or alter concept bodies or raw files. Leave changes requiring judgment untouched and report them for later Maintenance. If frontmatter changed, back up `wiki/log.md`, then add one Migrate entry naming the affected pages.
+3. **Validate once.** After all compatibility changes, run `python3 references/validate-wiki.py --all` and `python3 references/check-evidence.py --all`. Resolve mechanical migration errors only; do not perform Agent Review or content-quality repairs during Migrate.
+4. **Report and hand off.** Report the composed version route, release commit, operating files changed, retained and omitted settings, frontmatter changes, validation results, unresolved compatibility issues, and backup path. When content could benefit from the new rules or templates, suggest a separate Maintenance run in user-specified batch sizes (usually around twenty to fifty files), completing and reporting each batch before starting another.
+
+**Result:** a completed mechanical migration, or a partial result with validation failures, untouched judgment-dependent changes, and recovery information.

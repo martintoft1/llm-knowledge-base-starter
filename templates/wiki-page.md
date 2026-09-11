@@ -9,4 +9,4 @@ generated:
   at: "2000-01-01T00:00:00Z"
 ---
 
-<!-- Replace the title, description, most specific available producer/version, and current datetime with seconds and timezone. Remove this comment from the created file. -->
+<!-- Replace the title, description, empty tags list, most specific available producer/version, and current datetime with seconds and timezone. Every saved concept needs at least one tag from the Tag Registry. Remove this comment from the created file. -->

@@ -13,7 +13,7 @@ from pathlib import Path
 SCRIPT = Path(__file__).with_name("validate-wiki.py").resolve()
 
 
-def concept(title: str, body: str = "", tags: str = "[]") -> str:
+def concept(title: str, body: str = "", tags: str = "[test]") -> str:
     return f'''---
 type: Note
 title: {title}
@@ -39,7 +39,7 @@ class ValidatorCliTests(unittest.TestCase):
         (self.root / "wiki").mkdir()
         self.write(
             "references/local-settings.md",
-            "# Local Settings\n\n## Tag Registry\n\nNo tags are approved yet.\n",
+            "# Local Settings\n\n## Tag Registry\n\n- `test`: Used by validator fixtures.\n",
         )
         self.write("wiki/index.md", '---\nokf_version: "0.2"\n---\n\n# Knowledge Base\n')
         self.write("wiki/log.md", "# Directory Update Log\n")
@@ -103,6 +103,14 @@ class ValidatorCliTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertIn("SCHEMA: wiki/topic.md: missing required field description", result.stdout)
+
+    def test_empty_tags_are_rejected(self) -> None:
+        self.write("wiki/topic.md", concept("Topic", tags="[]"))
+
+        result = self.run_validator("--all")
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("SCHEMA: wiki/topic.md: tags must contain at least one approved tag", result.stdout)
 
     def test_changed_file_selects_direct_referrer_but_not_unrelated_file(self) -> None:
         self.write("wiki/target.md", concept("Target", "Original."))
@@ -217,14 +225,18 @@ class ValidatorCliTests(unittest.TestCase):
     def test_tag_definition_change_selects_every_file_using_the_tag(self) -> None:
         self.write(
             "references/local-settings.md",
-            "# Local Settings\n\n## Tag Registry\n\n- `topic`: Old meaning.\n",
+            "# Local Settings\n\n## Tag Registry\n\n"
+            "- `test`: Used by validator fixtures.\n"
+            "- `topic`: Old meaning.\n",
         )
         self.write("wiki/tagged.md", concept("Tagged", tags="[topic]"))
         self.write("wiki/unrelated.md", concept("Unrelated"))
         self.commit()
         self.write(
             "references/local-settings.md",
-            "# Local Settings\n\n## Tag Registry\n\n- `topic`: New meaning.\n",
+            "# Local Settings\n\n## Tag Registry\n\n"
+            "- `test`: Used by validator fixtures.\n"
+            "- `topic`: New meaning.\n",
         )
 
         result = self.run_validator("--changed", "references/local-settings.md")

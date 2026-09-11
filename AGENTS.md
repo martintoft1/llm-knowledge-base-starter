@@ -20,5 +20,6 @@ Read [Operating Principles](references/operations.md#operating-principles), then
 ### Other Operations
 
 - Use [Review](references/operations.md#review) to inspect knowledge-base material or changes without modifying them.
+- Use [Migrate](references/operations.md#migrate) only when the user explicitly asks to move the knowledge base to a newer starter release.
 - Use [External Access And Connector Setup](references/operations.md#external-access-and-connector-setup) when the user asks to establish or change external access.
 - Use [Attested Computation](references/operations.md#attested-computation) for a governed, reusable calculation.

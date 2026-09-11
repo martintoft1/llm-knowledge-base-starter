@@ -1,0 +1,71 @@
+{
+  "format_version": 2,
+  "repository": "https://github.com/martintoft1/llm-knowledge-base-starter.git",
+  "release_version": "0.2.0",
+  "managed_paths": [
+    ".gitignore",
+    "AGENTS.md",
+    "CHANGELOG.md",
+    "CLAUDE.md",
+    "LICENSE",
+    "NOTICE",
+    "README.md",
+    "VERSION",
+    "references/check-evidence.py",
+    "references/migrate.py",
+    "references/migration-manifest.json",
+    "references/okf/v0.2/README.md",
+    "references/okf/v0.2/SPEC.md",
+    "references/okf/v0.2/UPSTREAM.md",
+    "references/operations.md",
+    "references/schema.md",
+    "references/test-check-evidence.py",
+    "references/test-migrate.py",
+    "references/test-validate-wiki.py",
+    "references/validate-wiki.py",
+    "references/writing-style.md",
+    "templates/page-bodies/analysis.md",
+    "templates/page-bodies/attested-computation.md",
+    "templates/page-bodies/database.md",
+    "templates/page-bodies/dataset.md",
+    "templates/page-bodies/decision.md",
+    "templates/page-bodies/goal.md",
+    "templates/page-bodies/plan.md",
+    "templates/page-bodies/reference.md",
+    "templates/page-bodies/source-record.md",
+    "templates/wiki-page.md"
+  ],
+  "preserved_paths": [
+    ".git",
+    ".migration",
+    "raw",
+    "wiki"
+  ],
+  "preserve_unknown_paths": true,
+  "merged_paths": [
+    {
+      "path": "references/local-settings.md",
+      "strategy": "target-structure"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "0.1.0",
+      "to": "0.2.0",
+      "added_paths": [
+        "references/check-evidence.py",
+        "references/migrate.py",
+        "references/migration-manifest.json",
+        "references/test-check-evidence.py",
+        "references/test-migrate.py",
+        "references/test-validate-wiki.py",
+        "references/validate-wiki.py"
+      ],
+      "removed_paths": [
+        "references/initialization/BOOTSTRAP.md",
+        "templates/index.md",
+        "templates/log.md"
+      ]
+    }
+  ]
+}

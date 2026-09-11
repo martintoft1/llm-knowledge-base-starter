@@ -6,4 +6,4 @@
 <sanctioned computation>
 ```
 
-Follow the schema's [provenance and citation rules](../../references/schema.md#provenance-sources-and-usage_window).
+Follow the schema's [provenance and citation rules](../../references/schema.md#sources).

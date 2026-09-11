@@ -397,6 +397,8 @@ def check_concept(path: Path, text: str, tags: set[str]) -> None:
     concept_tags = data.get("tags")
     if not isinstance(concept_tags, list):
         SCHEMA_FAILURES.append(f"{relative(path)}: tags must be a YAML list")
+    elif not concept_tags:
+        SCHEMA_FAILURES.append(f"{relative(path)}: tags must contain at least one approved tag")
     else:
         for tag in concept_tags:
             if not nonempty_string(tag):

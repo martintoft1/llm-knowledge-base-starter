@@ -2,7 +2,7 @@
 
 ## Writing Style
 
-- **Writing style:** concise notes that preserve useful reasoning, examples, and such.
+- **Writing style:** concise notes that preserve useful context, reasoning, and examples.
 
 ## Safety
 
